@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:mvc="http://www.springframework.org/schema/mvc" 
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+       http://www.springframework.org/schema/mvc
+       http://www.springframework.org/schema/mvc/spring-mvc.xsd
+       http://www.springframework.org/schema/aop 
+       http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
+       http://www.springframework.org/schema/context 
+       http://www.springframework.org/schema/context/spring-context-3.0.xsd
+       
+       ">
+	<!-- 扫描web包，应用Spring的注解 -->
+	<mvc:annotation-driven />
+	<mvc:default-servlet-handler/>
+
+	<context:component-scan base-package="org.wang.tools" />
+
+<!-- 	<aop:aspectj-autoproxy />
+	<context:component-scan base-package="com.lovedata.utils"
+		use-default-filters="false">
+		<context:include-filter type="annotation"
+			expression="org.aspectj.lang.annotation.Aspect" />
+	</context:component-scan>
+
+	只扫描Controller 注解
+	<context:component-scan base-package="com.lovedata.controller"
+		use-default-filters="false">
+		<context:include-filter type="annotation"
+			expression="org.springframework.stereotype.Controller" />
+	</context:component-scan> -->
+
+
+	<mvc:resources mapping="/images/**" location="/images/" />
+	<mvc:resources mapping="/html/**" location="/html/" />
+	<mvc:resources mapping="/js/**" location="/js/" />
+	<mvc:resources mapping="/css/**" location="/css/" />
+	<mvc:resources mapping="/upload/**" location="/upload/" />
+	<mvc:resources mapping="/easyui/**" location="/easyui/" />
+	<mvc:resources mapping="/backendstatics/**" location="/backendstatics/" />
+
+
+
+	<!-- httl配置 -->
+	<!-- <bean id="viewResolver" class="httl.web.springmvc.HttlViewResolver"> 
+		<property name="contentType" value="text/html;charset=UTF-8" /> <property 
+		name="order" value="0" /> </bean> -->
+
+	<!-- velocity配置文件 -->
+	<!-- <bean id="velocityConfig" class="org.springframework.web.servlet.view.velocity.VelocityConfigurer"> 
+		<property name="resourceLoaderPath" value="/WEB-INF/views/"/> <property name="configLocation" 
+		value="classpath:velocity.properties"/> <property name="velocityProperties"> 
+		<props> <prop key="input.encoding">UTF-8</prop> <prop key="output.encoding">UTF-8</prop> 
+		</props> </property> </bean> -->
+	<!-- velocity视图信息 -->
+	<!-- <bean id="velocityViewResolver" class="org.springframework.web.servlet.view.velocity.VelocityViewResolver"> 
+		<property name="suffix" value=".vm" /> <property name="prefix" value="" /> 
+		<property name="order" value="2" /> </bean> -->
+
+	<!-- freeMarker配置文件 -->
+	<!-- <bean id="freemarkerConfiguration" class="org.springframework.beans.factory.config.PropertiesFactoryBean"> 
+		<property name="location" value="classpath:freemarker.properties" /> </bean> -->
+
+	<!-- 配置freeMarker的模板路径 -->
+	<!-- <bean id="freemarkerConfig" class="org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer"> 
+		<property name="templateLoaderPath"> <value>/WEB-INF/ftl/</value> </property> 
+		<property name="freemarkerVariables"> <map> <entry key="xml_escape" value-ref="fmXmlEscape" 
+		/> </map> </property> </bean> -->
+
+	<!-- <bean id="fmXmlEscape" class="freemarker.template.utility.XmlEscape" 
+		/> -->
+
+	<!-- 配置freeMarker视图解析器 -->
+	<!-- <bean id="viewResolverFreemarker" class="org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver"> 
+		<property name="requestContextAttribute" value="ctp" /> <property name="cache" 
+		value="false" /> <property name="prefix" value="" /> <property name="suffix" 
+		value=".html" /> <property name="contentType" value="text/html;charset=UTF-8" 
+		/> <property name="order" value="1" /> </bean> -->
+
+
+	<!-- 配置视图解析器，将ModelAndView及字符串解析为具体的页面 -->
+	<bean id="jspViewResolver"
+		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="viewClass"
+			value="org.springframework.web.servlet.view.JstlView" />
+		<property name="prefix" value="/" />
+		<!-- <property name="prefix" value="/WEB-INF/jsp/" /> -->
+		<property name="suffix" value=".jsp" />
+		<property name="order" value="3" />
+	</bean>
+
+
+
+
+	<mvc:annotation-driven>
+		<mvc:message-converters register-defaults="true">
+			<bean
+				class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
+				<!-- <bean class="org.springframework.http.converter.json.MappingJacksonHttpMessageConverter"> -->
+				<property name="supportedMediaTypes">
+					<list>
+						<value>text/html;charset=UTF-8</value>
+						<value>application/json;charset=UTF-8</value>
+					</list>
+				</property>
+			</bean>
+
+			<bean class="org.springframework.http.converter.StringHttpMessageConverter">
+				<constructor-arg value="UTF-8" />
+			</bean>
+
+		</mvc:message-converters>
+	</mvc:annotation-driven>
+
+	<bean id="multipartResolver"
+		class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+		<!-- 设置上传文件的最大尺寸为1MB -->
+		<property name="defaultEncoding" value="utf-8" />
+		<property name="maxUploadSize" value="1048576" />
+		<property name="maxInMemorySize" value="40960" />
+		<property name="uploadTempDir" value="tempFiles" />
+	</bean>
+
+	<!-- SpringMVC在超出上传文件限制时，会抛出org.springframework.web.multipart.MaxUploadSizeExceededException -->
+	<!-- 该异常是SpringMVC在检查上传的文件信息时抛出来的，而且此时还没有进入到Controller方法中 -->
+	<bean id="exceptionResolver"
+		class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver">
+		<property name="exceptionMappings">
+			<props>
+				<!-- 遇到MaxUploadSizeExceededException异常时，自动跳转到/WEB-INF/jsp/error_fileupload.jsp页面 -->
+				<prop
+					key="org.springframework.web.multipart.MaxUploadSizeExceededException">error_fileupload</prop>
+			</props>
+		</property>
+	</bean>
+
+
+	<!-- http session 过去管理 -->
+	<!-- <bean id="logoutFilter" class="org.springframework.security.web.authentication.logout.LogoutFilter">
+        <constructor-arg ref="logoutSuccessHandler" />
+        <constructor-arg>
+            <list>
+                <bean class="org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler" />
+            </list>
+        </constructor-arg>
+    </bean>     -->
+	<!-- 登出地址 -->
+   <!--  <bean id="logoutSuccessHandler" class="***">
+        <property name="logoutSuccessUrl" value="/login" />
+    </bean> -->
+
+</beans>
