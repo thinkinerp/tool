@@ -9,7 +9,7 @@
  
    <select id="getTableInfo" parameterType="java.lang.String" resultMap="BaseResultMap" >
       
-		select COLUMN_NAME , DATA_TYPE , COLUMN_COMMENT 
+		select COLUMN_NAME , DATA_TYPE , concat(COLUMN_COMMENT,':',COLUMN_NAME) as  COLUMN_COMMENT
         from information_schema.columns 
         where table_name=#{tableName , jdbcType=VARCHAR}
    </select>

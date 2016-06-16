@@ -10,9 +10,78 @@ function generateSql(cfg){
 	  var groupby = 'group by ' ;
 	  var join   = ' left join ' ;
 	  var sql = '' ;
+	  var resouces_col = '';
+	  var aggregate = '';
+	  var orderby = '';
+	  var groupby = '';
+	  var targetCol = '' ;
+	  var authority = 'left join ( ' +
+		              'select group_id ,dept_ids,class_ids,' +
+	                  'district_ids,province_ids ' +
+						'from  `yonghuibi`.sys_group_resources' +
+						'where group_id in (' +
+						'select group_id ' +
+						'from `yonghuibi`.sys_group_reports ' +
+						'where report_id = 13)) t3'  ;
+	  
+	  
+	  
+	  
+	  
 	$.each(cfg.tables,function(index , item){
-		  
-		var rows = $('#' + item).edatagrid('options').data ;
+		$.each($('#' + item + " tr"),function(index , i){
+			if("" != i.id){
+
+			if('easyui-textbox textbox-f' == $("#" + i.id + " input[id='resouces_col']").attr("class")){
+				
+				resouces_col= $("#" + i.id + " #resouces_col").textbox('getValue');
+			}	
+			if('easyui-combobox combobox-f combo-f textbox-f' == $("#" + i.id + " input[id='resouces_col']").attr("class")){
+
+				resouces_col= $("#" + i.id + " #resouces_col").combobox('getValue');
+			}	
+
+			aggregate = $("#" + i.id + " #aggregate").combobox('getValue');	
+			orderby = $("#" + i.id + " #order").combobox('getValue');	
+			groupby = $("#" + i.id + " #group").combobox('getValue');	
+
+			targetCol = i.id ;
+			targetCol = targetCol.slice(0,targetCol.length-2);	
+
+			if(1==index){
+				if("sum"==aggregate){
+					select += "sum(" + resouces_col + ")" + "\n" ;
+				} else if("avg"==aggregate){
+					select += "avg(" + resouces_col + ")" + "\n" ;
+				}else{
+					select += resouces_col + "\n" ;
+				}
+				insert += targetCol  + "\n" ;
+			} else if(index > 1 ){
+
+				if(''!=aggregate&&'sum'==aggregate){
+					select +=',' +  "sum(" + resouces_col + ")" + "\n" ;
+				} else if(''!=aggregate&&'avg'==aggregate){
+					select += ',' + "avg(" + resouces_col + ")" + "\n" ;
+					
+				}else{
+					if(''==resouces_col || null == resouces_col){
+					select +=' ,null \n' ;
+					}else{
+						select +=' ,' +  resouces_col + "\n" ;
+						
+					}
+				}
+				insert += ',' + targetCol + "\n" ;
+				
+			}							  
+			}
+		
+		
+		});
+		sql += insert + ")" + select ;	
+	});
+		/*		var rows = $('#' + item).edatagrid('options').data ;
 		
 		$.each(rows,function(index , item){
 			if(0==index){
@@ -46,6 +115,6 @@ function generateSql(cfg){
 			}
 		});
               sql += insert + ")" + select ;		
-	});
+	});*/
 	return sql ;
 }
