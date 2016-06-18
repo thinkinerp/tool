@@ -1,7 +1,7 @@
 /**
  * 将各个table的数据转换成sql。
  *参数说明：cfg.targeTable：目标的表
- *
+ *       tables:section的名称
  */
 function generateSql(cfg){
 	  var insert = 'insert into ' + cfg.targetable + '(' ;
@@ -23,7 +23,7 @@ function generateSql(cfg){
 						'select group_id ' +
 						'from `yonghuibi`.sys_group_reports ' +
 						'where report_id = 13)) t3'  ;
-	  
+	  var  where = ' where 1=1 ' ;
 	  
 	  
 	  
@@ -77,44 +77,16 @@ function generateSql(cfg){
 			}							  
 			}
 		
-		
 		});
-		sql += insert + ")" + select ;	
+		if( 'area'== sectionAttributions[index].authority ){
+			where = where + " and (t3.`district_ids`='all' or t3.`district_ids`='AZ' or LOCATE(t1.`store_group`,t3.`district_ids`)>0 ) "
+		} else if( 'group' == sectionAttributions[index].authority){
+			where = where + " and ( t3.dept_ids='all' or t3.`dept_ids`='AZ' or LOCATE(t1.store_id,t3.`dept_ids`)>0)" ;
+		} else if( 'shop' == sectionAttributions[index].authority){
+			where = where + " and (t3.`class_ids`='all' or t3.`class_ids`='AZ' or LOCATE(t1.`cat1_ID`,t3.`class_ids`)>0 )" ;
+		}
+		sql += insert + ")" + select + authority + where;	
 	});
-		/*		var rows = $('#' + item).edatagrid('options').data ;
-		
-		$.each(rows,function(index , item){
-			if(0==index){
-				if(0==item.aggregate){
-					select += "sum(" + item.SourceCol + ")" + "\n" ;
-				} else if(1==item.aggregate){
-					select += "avg(" + item.SourceCol + ")" + "\n" ;
-					
-				}else{
-					select += item.SourceCol + "\n" ;
-					
-				}
-				insert += item.targetCol + + "\n" ;
-			} else if(index > 0 ){
 
-				if(''!=item.aggregate&&'sum'==item.aggregate){
-					select +=',' +  "sum(" + item.SourceCol + ")" + "\n" ;
-				} else if(''!=item.aggregate&&'avg'==item.aggregate){
-					select += ',' + "avg(" + item.SourceCol + ")" + "\n" ;
-					
-				}else{
-					if(''==item.SourceCol || null == item.SourceCol){
-					select +=' ,null \n' ;
-					}else{
-						select +=' ,' +  item.SourceCol + "\n" ;
-						
-					}
-				}
-				insert += ',' + item.targetCol + "\n" ;
-				
-			}
-		});
-              sql += insert + ")" + select ;		
-	});*/
 	return sql ;
 }

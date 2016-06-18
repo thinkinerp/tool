@@ -37,6 +37,21 @@ public class ToolsController {
 		}
 
     }
+    @RequestMapping(value = "getTables" , method=RequestMethod.POST)
+    @ResponseBody
+    public void getTables(HttpServletResponse res , HttpServletRequest req ){
+    	String json = JSONObject.toJSONString(tm.getTablesName());
+    	res.setCharacterEncoding("UTF-8");
+    	res.setContentType("text/html;charset=UTF-8");
+    	Writer w;
+    	try {
+    		w = res.getWriter();
+    		w.write(json);
+    	} catch (IOException e) {
+    		e.printStackTrace();
+    	}
+    	
+    }
  
     
 }

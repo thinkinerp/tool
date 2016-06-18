@@ -5,4 +5,8 @@ import org.wang.tools.vo.Tables;
 
 public interface toolMapper {
 	List<Tables> getTableInfo(String tableName);
+	List<Tables> getTablesName();
+	
+	
+	
 }

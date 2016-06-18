@@ -11,7 +11,7 @@ var current = 0 ;
 var div = '' ;
 var sectionAttributions = new Array();
 $(function(){  
-	$('#pg').propertygrid({    
+/*	$('#pg').propertygrid({    
 	    showGroup: true,    
 	    scrollbarSize: 0,
 	    title:'属性',
@@ -40,7 +40,27 @@ $(function(){
 			            	    				}]}} },
 	            { "name": "日期维度的关联", "value": "", "group": "日期", "field": "date", "editor": "text" },
 	        ];
-	 $('#pg').propertygrid('loadData', rows);
+	 $('#pg').propertygrid('loadData', rows);*/
+	var input = '' ;
+	var input = "<input id = '_authority'   />" ;
+	$('#pg').append(input);
+	
+	$('#_authority').combobox({
+		 "valueField": 'value', 
+         "textField": 'name', 
+         "required": true,
+         "onSelect":setSectionAttr,
+         "data":[{
+      	       name: '大区',
+			   value: 'area'
+		       },{
+					name: '门店',
+					value: 'shop'
+				},{
+					name: '商行',
+					value: 'group'
+				}]
+	});
 /*	$.ajax({
 		  url: ctx + "/tool/getColums",
 		  cache: false,
@@ -111,8 +131,19 @@ $(function(){
 });  
 
 function setSectionAttr(record){
-	//console.log();
-	sectionAttributions.push({sectionId:current,authority:record.value,dataConfig:''});
+	var is = 0 ;
+	console.log(record);
+	$.each(sectionAttributions,function(index,item){
+		console.log(item);
+		if(current == item.sectionId){
+			sectionAttributions[index].authority = record.value ;
+		    is = 1 ;
+		}
+	});
+	if( 0 == is ){
+		sectionAttributions.push({sectionId:current,authority:record.value,dataConfig:''});
+	}
+	console.log(sectionAttributions);
 }
 
 function gen(){
@@ -122,6 +153,7 @@ function gen(){
 		ts.push('section' +  item.id);
 	});
     console.log(ts);
+    
 	var a = generateSql({
 		targeTable:tables[0].tableName,
 		tables:ts
@@ -421,9 +453,9 @@ function changLocation(title,index){
     		 authority = item.authority
     	 }
      });
-     var ed = $('#pg').propertygrid('getEditor',{index:0 ,field:'value'});
+/*     var ed = $('#pg').propertygrid('getEditor',{index:0 ,field:'value'});
      console.log(ed);
-/*     $(ed.target).combobox('setValue', authority);
+     $(ed.target).combobox('setValue', authority);
 */
 	 document.getElementById('editor').scrollTop = 1000*(index );
 }

@@ -13,5 +13,9 @@
         from information_schema.columns 
         where table_name=#{tableName , jdbcType=VARCHAR}
    </select>
- 
+   <select id="getTablesName" resultMap="BaseResultMap" >
+		select DISTINCT  table_name  as COLUMN_NAME 
+        from information_schema.columns 
+        where LOCATE('kpi',table_name) &gt; 0 
+   </select> 
  </mapper>

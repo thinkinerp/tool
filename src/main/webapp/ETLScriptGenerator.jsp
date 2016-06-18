@@ -21,7 +21,11 @@
 </head>
 <body>
 <div id="cc" class="easyui-layout" style="width:100%;height:400px;">  
-    <div data-options="region:'east',iconCls:'icon-reload',title:'East',split:true" style="width:100px;"></div>   
+    <div data-options="region:'east',iconCls:'icon-reload',title:'East',split:true" style="width:100px;">
+      <table id = 'dataSource'>
+      
+      </table>
+    </div>   
     <div data-options="region:'west',title:'West',split:true" style="width:100px;">
 	<a id="btn" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-add'" 
 	    >添加语句块</a>
@@ -31,7 +35,9 @@
 	 data-options = "onSelect:changLocation">   
   
    </div>
-	<table id="pg" style="width:300px"></table> 
+	<table id="pg" style="width:300px">
+	
+	</table> 
 	</div>   
     <div id = "editor" data-options="region:'center',title:'center title'" style="padding:5px;background:#eee;">
 <!--       <table id = 'section1'>
