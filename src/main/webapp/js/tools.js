@@ -11,38 +11,34 @@ var current = 0 ;
 var div = '' ;
 var sectionAttributions = new Array();
 $(function(){  
-/*	$('#pg').propertygrid({    
-	    showGroup: true,    
-	    scrollbarSize: 0,
-	    title:'属性',
-        columns: [[
-                   { field: 'name', title: 'Name', width: 100, resizable: true },
-                   { field: 'value', title: 'Value', width: 100, resizable: false }
-           ]]
+
+	$('#dataSource').datagrid({    
+	    url: ctx +  '/tool/getTables',
+	    method:'post',
+	    pagination:true ,
+	    rownumbers:true , 
+	    columns:[[    
+	        {field:'field',title:'表名称',width:100},    
+	    ]],
+	    onDblClickRow:function(rowIndex, rowData){
+	    	$('#source').val(rowData.field);
+	    	
+	    	$.each(tables,function(index , item ){
+	    		
+	    		if(current == item.sectionId){
+	    			sectionAttributions[index].tableName = item
+	    		}
+	    		
+	    	});
+	    	
+	    }
 	}); 
-	var rows = [
-	            { "name": "权限选项", "value": "", "group": "权限配置", "field": "authority", 
-	            	     "editor": { 
-	            	    	  "type": 'combobox', 
-	            	    	  "options": { "valueField": 'value', 
-	            	    		           "textField": 'name', 
-	            	    		           "required": true,
-	            	    		           "onSelect":setSectionAttr,
-	            	    		           "data":[{
-	            	    		        	   name: '大区',
-	            	    					   value: 'area'
-	            	    				       },{
-			            	    					name: '门店',
-			            	    					value: 'shop'
-			            	    				},{
-			            	    					name: '商行',
-			            	    					value: 'group'
-			            	    				}]}} },
-	            { "name": "日期维度的关联", "value": "", "group": "日期", "field": "date", "editor": "text" },
-	        ];
-	 $('#pg').propertygrid('loadData', rows);*/
+
+	
+	
+	
 	var input = '' ;
-	var input = "<input id = '_authority'   />" ;
+	var input = "<input id = '_authority'   /><br/>" ;
 	$('#pg').append(input);
 	
 	$('#_authority').combobox({
@@ -61,21 +57,13 @@ $(function(){
 					value: 'group'
 				}]
 	});
-/*	$.ajax({
-		  url: ctx + "/tool/getColums",
-		  cache: false,
-		  method:'post',
-		  dataType:'json',
-		  data:{tableName:'kpi_bonus_monthly'},
-		  success: function(data){
-			  //option.data = data
-		    console.log(option.data);
-		  }
-		});	
+	
+	$('#pg').append( "<input id = 'target'  type = 'text' /><br/>" );
+	$('#pg').append( "<input id = 'source' type = 'text'   /><br/>" );
+	
+	
 	
 
-*/
-	
     $('#btn').bind('click', function(){    
         $('#addSection').dialog('open');
   });   
@@ -179,6 +167,13 @@ function addSectionF(){
 		$.messager.alert('提示','报表ID号不能为空');
 		return ;
 	};
+	
+	if("" == $('#targetTable_i').val()){
+		$.messager.alert('提示','目标数据表不能为空');
+		return ;
+	};
+	
+	
 	if("" == $('#part_name_i').val()){
 		$.messager.alert('提示','ID号不能为空');
 		return ;
@@ -188,7 +183,11 @@ function addSectionF(){
 		return ;
 	};
 	
-	tables.push({id: ++index ,part_name:$('#part_name_i').val(),desc:$('#desc_i').val(),tableName:"kpi_bonus_monthly"});
+	tables.push({id: ++index ,part_name:$('#part_name_i').val(),
+		         desc:$('#desc_i').val(),
+		         tableName:"kpi_bonus_monthly",
+	             targetTable:$('#targetTable_i').val()	        
+	});
 	
 	current = index ;
 	$('#editor').append(Template({id:index}));

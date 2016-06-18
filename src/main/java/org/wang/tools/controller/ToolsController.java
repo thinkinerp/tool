@@ -2,6 +2,7 @@ package org.wang.tools.controller;
 
 import java.io.IOException;
 import java.io.Writer;
+import java.util.List;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -13,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.wang.tools.dao.toolMapper;
+import org.wang.tools.vo.Tables;
+import org.wang.tools.vo.ToJSON;
 
 import com.alibaba.fastjson.JSONObject;
 
@@ -40,7 +43,12 @@ public class ToolsController {
     @RequestMapping(value = "getTables" , method=RequestMethod.POST)
     @ResponseBody
     public void getTables(HttpServletResponse res , HttpServletRequest req ){
-    	String json = JSONObject.toJSONString(tm.getTablesName());
+    	ToJSON tj = new ToJSON();
+    	List<Tables> ts =  tm.getTablesName() ;
+    	tj.setRows(ts);
+    	
+    	tj.setTotal(ts.size());
+    	String json = JSONObject.toJSONString(tj);
     	res.setCharacterEncoding("UTF-8");
     	res.setContentType("text/html;charset=UTF-8");
     	Writer w;
