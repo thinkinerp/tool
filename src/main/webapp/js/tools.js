@@ -180,17 +180,13 @@ function setSectionAttr1(record){
 }
 function gen(){
 	
-	var ts = new Array();
+/*	var ts = new Array();
 	$.each(tables,function(index , item){
 		ts.push('section' +  item.id);
 	});
-    console.log(tables);
+*/    console.log(tables);
     
-	var a = generateSql({
-		targeTable:tables[0].targetTable,
-		sourceTable:tables[0].tableTable,
-		tables:ts
-	});
+	var a = generateSql(tables);
 	
 	
 //	$('#showSql').dialog('options').content = a;
@@ -254,6 +250,7 @@ function addSectionF(){
         $(item).combobox({
 			valueField: 'field',
 			textField: 'comment',
+			multiple:true,
 			method:'post',
 			url:ctx + "/tool/getColums?tableName=" + $('#source_i').combobox('getValue'),
 			});		
