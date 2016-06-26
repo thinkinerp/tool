@@ -19,7 +19,7 @@ function comboboxConfig(config){
 		      textField:  'textField',
 		      loader:function(param,success,error){
 		    	    $.ajax({  
-		    	    	url: ctx + '/app/report/getAnyForCombobox',  
+		    	    	url: 'http://localhost:8080/tool/tool/getAnyForCombobox',  
 		    	    	dataType: 'json',  
 		    	    	type:'post',
 		    	    	data:JSON.stringify(config.where), 

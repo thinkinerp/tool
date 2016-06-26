@@ -5,7 +5,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Insert title here</title>
+<title>ETL脚本生成器</title>
 <%@include file="/common/css.jsp" %> 
 <script type="text/javascript" >
     var ctx = "${ctx}";
@@ -26,7 +26,7 @@
       
       </table>
     </div>   
-    <div data-options="region:'west',title:'West',split:true" style="width:100px;">
+    <div data-options="region:'west',title:'导航',split:true" style="width:500px;">
 	<a id="btn" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-add'" 
 	    >添加语句块</a>
 	<a id="btn1" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-add'" onclick = 'gen()'>生成sql</a>
@@ -36,7 +36,8 @@
   
    </div>
 	<table id="pg" style="width:300px">
-	
+	   日期配置：<br/>
+	   <input id = 'dateConfig'  /><br/>
 	</table> 
 	</div>   
     <div id = "editor" data-options="region:'center',title:'center title'" style="padding:5px;background:#eee;">
@@ -49,16 +50,19 @@
 				text:'保存',
 				iconCls:'icon-edit',
 				handler:addSectionF
-			}]" >  
+			}]" > 
 	   ID号：<br/>
       <input id = "id_i" type = 'text' /> <br/>
 	   分块标志：<br/>
       <input id = "part_name_i" type = 'text' /> <br/>
-      <input id = "targetTable_i" type = 'text' /> <br/>
+               目标数据: <br/>
+      <input id = 'target_i' class = 'easyui-combobox' /> <br/>
+               源数据: <br/>
+      <input id = 'source_i' class = 'easyui-combobox'/> <br/>
 	  语句块描述：<br/>
 	  <input id = "desc_i" type = 'text' />
 	  
-	<div id="showSql"  class="easyui-dialog" title="ETL脚本" style="width:400px;height:200px;"   
+	<div id="showSql"  class="easyui-dialog" title="ETL脚本" style="width:1000px;height:500px;"   
         data-options="iconCls:'icon-save',resizable:true,modal:true,closed:true" >  
    </div> 
 </body>

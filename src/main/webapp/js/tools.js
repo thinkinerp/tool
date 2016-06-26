@@ -12,7 +12,7 @@ var div = '' ;
 var sectionAttributions = new Array();
 $(function(){  
 
-	$('#dataSource').datagrid({    
+/*	$('#dataSource').datagrid({    
 	    url: ctx +  '/tool/getTables',
 	    method:'post',
 	    pagination:true ,
@@ -22,7 +22,6 @@ $(function(){
 	    ]],
 	    onDblClickRow:function(rowIndex, rowData){
 	    	$('#source').val(rowData.field);
-	    	
 	    	$.each(tables,function(index , item ){
 	    		
 	    		if(current == item.sectionId){
@@ -32,14 +31,43 @@ $(function(){
 	    	});
 	    	
 	    }
-	}); 
-
-	
-	
-	
+	}); */
+	comboboxConfig({
+		id:              'source_i' ,
+		where:[
+		{key:'tableName',value:'information_schema.columns'},
+		{key:'idField',value:'table_name' },
+		{key:'nameField',value:      'table_name'},
+		{key:'w.TABLE_SCHEMA',value: 'yonghuibi'},
+	    ]
+	});	
+	comboboxConfig({
+		id:              'target_i' ,
+		where:[
+		{key:'tableName',value:'information_schema.columns'},
+		{key:'idField',value:'table_name' },
+		{key:'nameField',value:      'table_name'},
+		{key:'w.TABLE_SCHEMA',value: 'yonghuibi'},
+	    ]
+	});		
 	var input = '' ;
 	var input = "<input id = '_authority'   /><br/>" ;
 	$('#pg').append(input);
+	
+	
+	$('#dateConfig').combobox({
+		"valueField": 'value', 
+        "textField": 'name', 
+        "required": true,
+        onSelect:setSectionAttr1,
+        "data":[{
+     	       name: '最大日期',
+			   value: 'maxdate'
+		       },{
+					name: '周日期',
+					value: 'weekdate'
+				}]
+	});
 	
 	$('#_authority').combobox({
 		 "valueField": 'value', 
@@ -119,6 +147,7 @@ $(function(){
 });  
 
 function setSectionAttr(record){
+	
 	var is = 0 ;
 	console.log(record);
 	$.each(sectionAttributions,function(index,item){
@@ -129,27 +158,45 @@ function setSectionAttr(record){
 		}
 	});
 	if( 0 == is ){
-		sectionAttributions.push({sectionId:current,authority:record.value,dataConfig:''});
+		sectionAttributions.push({sectionId:current,authority:record.value,dataConfig:'',dateConfig:''});
 	}
 	console.log(sectionAttributions);
 }
-
+function setSectionAttr1(record){
+	
+	var is = 0 ;
+	console.log(record);
+	$.each(sectionAttributions,function(index,item){
+		console.log(item);
+		if(current == item.sectionId){
+			sectionAttributions[index].dateConfig = record.value ;
+		    is = 1 ;
+		}
+	});
+	if( 0 == is ){
+		sectionAttributions.push({sectionId:current,dateConfig:record.value,dataConfig:'',authority:''});
+	}
+	console.log(sectionAttributions);
+}
 function gen(){
 	
 	var ts = new Array();
 	$.each(tables,function(index , item){
 		ts.push('section' +  item.id);
 	});
-    console.log(ts);
+    console.log(tables);
     
 	var a = generateSql({
-		targeTable:tables[0].tableName,
+		targeTable:tables[0].targetTable,
+		sourceTable:tables[0].tableTable,
 		tables:ts
 	});
 	
 	
-	$('#showSql').dialog('options').content = a;
-	console.log(a);
+//	$('#showSql').dialog('options').content = a;
+	$('#showSql').dialog({
+		content:a
+	})
 	$('#showSql').dialog('open');
 }
 
@@ -182,11 +229,20 @@ function addSectionF(){
 		$.messager.alert('提示','ID号不能为空');
 		return ;
 	};
+	if("" == $('#source_i').combobox('getValue')){
+		$.messager.alert('提示','源数据不能为空');
+		return ;
+	};
+	if("" == $('#target_i').combobox('getValue')){
+		$.messager.alert('提示','目标表不能为空');
+		return ;
+	};	
+	
 	
 	tables.push({id: ++index ,part_name:$('#part_name_i').val(),
 		         desc:$('#desc_i').val(),
-		         tableName:"kpi_bonus_monthly",
-	             targetTable:$('#targetTable_i').val()	        
+		         tableName:$('#source_i').combobox('getValue'),
+	             targetTable:$('#target_i').combobox('getValue')	        
 	});
 	
 	current = index ;
@@ -199,7 +255,7 @@ function addSectionF(){
 			valueField: 'field',
 			textField: 'comment',
 			method:'post',
-			url:ctx + "/tool/getColums?tableName=kpi_bonus_monthly",
+			url:ctx + "/tool/getColums?tableName=" + $('#source_i').combobox('getValue'),
 			});		
 });
 
@@ -243,9 +299,8 @@ function addSectionF(){
 			content: $('#desc_i').val(),
 			selected: false
 		});
-		
+		$('#addSection').dialog('close');
 }
-
 function Template(cfg){
 	
 	var template =  "" +
