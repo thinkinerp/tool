@@ -18,4 +18,13 @@
         from information_schema.columns 
         where LOCATE('kpi',table_name) &gt; 0 
    </select> 
+   
+   
+   	<select id="selectAnyForComboBox" resultType="Map">
+		select DISTINCT ${idField} as id , ${nameField} as textField
+		from ${tableName}
+		<if test=" null != where and '' != where">
+			${where}
+		</if>
+	</select>
  </mapper>
