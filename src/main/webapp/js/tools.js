@@ -32,24 +32,7 @@ $(function(){
 	    	
 	    }
 	}); */
-	comboboxConfig({
-		id:              'source_i' ,
-		where:[
-		{key:'tableName',value:'information_schema.columns'},
-		{key:'idField',value:'table_name' },
-		{key:'nameField',value:      'table_name'},
-		{key:'w.TABLE_SCHEMA',value: 'yonghuibi'},
-	    ]
-	});	
-	comboboxConfig({
-		id:              'target_i' ,
-		where:[
-		{key:'tableName',value:'information_schema.columns'},
-		{key:'idField',value:'table_name' },
-		{key:'nameField',value:      'table_name'},
-		{key:'w.TABLE_SCHEMA',value: 'yonghuibi'},
-	    ]
-	});		
+	
 	var input = '' ;
 	var input = "<input id = '_authority'   /><br/>" ;
 	$('#pg').append(input);
@@ -92,7 +75,37 @@ $(function(){
 	
 	
 
-    $('#btn').bind('click', function(){    
+    $('#btn').bind('click', function(){   
+    	 
+		    	if(!$('#sourceConfig').val()){
+		    		$.messager.alert('提示','源数据的配置是必须的');
+		    		return ;
+		    	}
+		    	if(!$('#targetConfig').val()){
+		    		$.messager.alert('提示','目标数据的配置是必须的');
+		    		return ;
+		    	}
+		
+		    	comboboxConfig({
+		    		id:              'source_i' ,
+		    		where:[
+		    		{key:'tableName',value:'information_schema.columns'},
+		    		{key:'idField',value:'table_name' },
+		    		{key:'nameField',value:      'table_name'},
+		    		{key:'w.TABLE_SCHEMA',value: $('#sourceConfig').val()},
+		    	    ]
+		    	});	
+		    	comboboxConfig({
+		    		id:              'target_i' ,
+		    		where:[
+		    		{key:'tableName',value:'information_schema.columns'},
+		    		{key:'idField',value:'table_name' },
+		    		{key:'nameField',value:      'table_name'},
+		    		{key:'w.TABLE_SCHEMA',value:$('#targetConfig').val()},
+		    	    ]
+		    	});		
+
+    	
         $('#addSection').dialog('open');
   });   
 	$.each($('#section1 .easyui-combobox'),function(index , item){

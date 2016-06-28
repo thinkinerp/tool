@@ -44,9 +44,9 @@ function generateSql(cfg){
 	$.each(cfg,function(index , item){
 		
 		
-		  var insert = 'insert into ' + item.targetTable + '(' ;
+		  var insert = 'insert into ' + $('#targetConfig').val() + item.targetTable + '(' ;
 		  var select = 'select ' ;
-		  var from   = ' from ' + item.tableName + ' '   ;
+		  var from   = ' from ' + $('#sourceConfig').val() + item.tableName + '  as t1 '   ;
 		  var orderby = 'order by ' ;
 		  var groupby = 'group by ' ;
 		  var join   = ' left join ' ;
@@ -147,7 +147,7 @@ function generateSql(cfg){
 		} else if(  !!sectionAttributions & 'weekdate' == sectionAttributions[index].dateConfig){
 			 select =  select + weekdate.replace('%kpi.table%',item.tableName)  ;	
 		}
-		sql += insert + ")" + select + where;	
+		sql += insert + ")" + select + where + '<br/>' + ';<br/>';	
 
 	});
 

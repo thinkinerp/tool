@@ -21,12 +21,18 @@
 </head>
 <body>
 <div id="cc" class="easyui-layout" style="width:100%;height:400px;">  
-    <div data-options="region:'east',iconCls:'icon-reload',title:'East',split:true" style="width:100px;">
+    <div data-options="region:'east',iconCls:'icon-reload',title:'数据库的配置',split:true" style="width:200px;">
       <table id = 'dataSource'>
       
       </table>
+      
+      源数据：<br>
+      <input id = "sourceConfig" / ><br>
+      目标数据<br>
+      <input id = "targetConfig" / ><br>
+      
     </div>   
-    <div data-options="region:'west',title:'导航',split:true" style="width:500px;">
+    <div data-options="region:'west',title:'导航',split:true" style="width:200px;">
 	<a id="btn" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-add'" 
 	    >添加语句块</a>
 	<a id="btn1" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-add'" onclick = 'gen()'>生成sql</a>
