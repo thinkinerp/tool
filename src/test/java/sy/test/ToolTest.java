@@ -17,7 +17,9 @@ public class ToolTest {
 	@Resource private toolMapper tm;
 	@Test
 	public void test() {
-		log.info(JSONObject.toJSONString(tm.getTableInfo("kpi_bonus_monthly")));
+		
+        tm.updateDishWeighting("香拌牛肉");
+		
 	}
 
 }

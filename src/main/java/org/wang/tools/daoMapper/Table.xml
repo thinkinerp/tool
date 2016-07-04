@@ -7,6 +7,12 @@
     <result column="COLUMN_COMMENT" property="comment" jdbcType="VARCHAR" />
    </resultMap>
  
+   <resultMap id="menu" type="org.wang.tools.vo.Tables">
+    <result column="dish_name" property="field" jdbcType="VARCHAR" />
+    <result column="dish_price" property="type" jdbcType="VARCHAR" />
+    <result column="dish_weight" property="comment" jdbcType="VARCHAR" />
+   </resultMap>
+ 
    <select id="getTableInfo" parameterType="java.lang.String" resultMap="BaseResultMap" >
       
 		select COLUMN_NAME , DATA_TYPE , concat(COLUMN_COMMENT,':',COLUMN_NAME) as  COLUMN_COMMENT
@@ -20,11 +26,23 @@
    </select> 
    
    
-   	<select id="selectAnyForComboBox" resultType="Map">
+   	<select id="selectAnyForComboBox"  resultType="Map">
 		select DISTINCT ${idField} as id , ${nameField} as textField
 		from ${tableName}
 		<if test=" null != where and '' != where">
 			${where}
 		</if>
 	</select>
+   	<select  id="selectMenu"  resultMap="menu" >
+   		
+       select  dish_name , dish_price , (select sum(dish_weiht/(select  sum(dish_weiht) as a from orderDishes.menu)) 
+          from orderDishes.menu as t where t.id &lt;= t1.id) as dish_weight
+          from orderDishes.menu as t1
+	</select>
+	
+	<update id = "updateDishWeighting" parameterType="java.lang.String">
+		
+        update orderDishes.menu set dish_weiht = dish_weiht + 1  where dish_name =#{dishName , jdbcType=VARCHAR}
+	</update>
+	
  </mapper>

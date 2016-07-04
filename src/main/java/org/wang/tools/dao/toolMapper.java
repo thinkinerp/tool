@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.ibatis.annotations.Param;
+import org.wang.tools.vo.Order;
 import org.wang.tools.vo.Tables;
 
 public interface toolMapper {
@@ -14,6 +15,6 @@ public interface toolMapper {
 			@Param("nameField")String nameField , 
 			@Param("where")String where );
 
-	
-	
+	List<Order> selectMenu();
+	void updateDishWeighting(@Param("dishName")String dishName);
 }

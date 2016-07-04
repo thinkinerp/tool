@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.wang.tools.dao.toolMapper;
 import org.wang.tools.util.ComUtil;
+import org.wang.tools.vo.Order;
 import org.wang.tools.vo.ParamVo;
 import org.wang.tools.vo.Tables;
 import org.wang.tools.vo.ToJSON;
@@ -75,4 +76,28 @@ public class ToolsController {
 		return tm.selectAnyForComboBox(map.get("tableName").toString(), map.get("idField").toString()
 				      ,map.get("nameField").toString(), wher);
 	}
+    @RequestMapping(value = "selectMenu" , method=RequestMethod.POST)
+    @ResponseBody
+   public void selectMenu(HttpServletResponse res){
+    	  List<Order> order =  tm.selectMenu();
+    	  
+    	  String json = JSONObject.toJSONString(order);
+    	  log.info(json);
+    	   	res.setCharacterEncoding("UTF-8");
+        	res.setContentType("text/html;charset=UTF-8");
+        	Writer w;
+        	try {
+        		w = res.getWriter();
+        		w.write(json);
+        	} catch (IOException e) {
+        		e.printStackTrace();
+        	}
+          	  
+    	  
+    }
+    @RequestMapping(value = "updataWeighting" , method=RequestMethod.POST)
+    @ResponseBody  
+    public void updateDishWeighting(String dish_name){
+    	          tm.updateDishWeighting(dish_name);
+    }
 }
