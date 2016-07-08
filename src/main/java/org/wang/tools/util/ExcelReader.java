@@ -21,6 +21,8 @@ import org.aspectj.weaver.patterns.ThisOrTargetAnnotationPointcut;
 import org.springframework.util.StringUtils;
 import org.wang.tools.vo.ColProperty;
 
+import com.alibaba.fastjson.JSONObject;
+
 /**
  * descripton: 
  * 1.the version only support 97-2004 excel file.
@@ -35,8 +37,8 @@ public class ExcelReader {
     private HSSFRow row;
     private static String tableName ;
     private static final int USER_LIST     = 0 ;
-    private static final int GROUP_LIST  = 1 ;
-    private static final int ROLE_LIST      = 0 ;
+    private static final int GROUP_LIST  = 2 ;
+    private static final int ROLE_LIST      = 1 ;
     
     public static String getResourcePath(Class clazz) {
         String className = clazz.getName();
@@ -53,22 +55,28 @@ public class ExcelReader {
      * @param InputStream
      * @return String 表头内容的数组
      */
-    public String[] readExcelTitle(InputStream is) {
+    public String[] readExcelTitle(int sheetIndex, InputStream is  , List<ColProperty> list) {
         try {
             fs = new POIFSFileSystem(is);
             wb = new HSSFWorkbook(fs);
         } catch (IOException e) {
             e.printStackTrace();
         }
-        sheet = wb.getSheetAt(0);
+        sheet = wb.getSheetAt(sheetIndex);
         row = sheet.getRow(0);
         // 标题总列数
         int colNum = row.getPhysicalNumberOfCells();
         System.out.println("colNum:" + colNum);
         String[] title = new String[colNum];
         for (int i = 0; i < colNum; i++) {
-            //title[i] = getStringCellValue(row.getCell((short) i));
+        	
             title[i] = getCellFormatValue(row.getCell((short) i));
+            for( ColProperty col  :  list){
+            	     if(null != title[i] && title[i].endsWith(col.getExcelCol())){
+            	    	      col.setExcelIndex(i);
+            	     }
+            }    
+            
         }
         return title;
     }
@@ -78,22 +86,23 @@ public class ExcelReader {
      * @param InputStream
      * @return Map 包含单元格数据内容的Map对象
      */
-    public Map<Integer, String> readExcelContent(InputStream is , List<ColProperty> list) {
+    public Map<Integer, String> readExcelContent(InputStream is , List<ColProperty> userList ,List<ColProperty> roleList , List<ColProperty> groupList ) {
         Map<Integer, String> content = new HashMap<Integer, String>();
         String str = "" ; 
-        String sql = generator(list,tableName);
+        String sql = generator(userList,tableName);
+        
         try {
             fs = new POIFSFileSystem(is);
             wb = new HSSFWorkbook(fs);
         } catch (IOException e) {
             e.printStackTrace();
         }
-        
+        ///System.out.println(JSONObject.toJSON(list));
        int userColNumber = 0 ;
        
-       for (ColProperty colProperty : list) {
+       for (ColProperty colProperty : userList) {
 		   if( "0".equalsIgnoreCase(colProperty.getForeign()) ){
-    	           userColNumber = list.indexOf(colProperty) + 1;  			   
+    	           userColNumber = userList.indexOf(colProperty) + 1;  			   
 		   }
     	   
 	    }
@@ -104,7 +113,7 @@ public class ExcelReader {
         int rowNum = sheet.getLastRowNum();
         row = sheet.getRow(0);
 //        int colNum = row.getPhysicalNumberOfCells();
-           int colNum = list.size();
+           int colNum = userList.size();
            ColProperty  colProperty = null ;
            String groupInsertSql = "";
            String roleInsertSql = "" ;
@@ -129,30 +138,114 @@ public class ExcelReader {
 						    		   " left join sys_roles as r on 1=1\n " +
 						    		   " where u.user_name = '@user_name@' and r.role_name = '@role_name@' ;\n" ; 
  
-            while (j < colNum) {
-            	colProperty = list.get(j);
-            	  		   
-             groupInsertSql =	groupInsertSql.replaceAll("@"+colProperty.getCol()+"@", getCellFormatValue(row.getCell((short) j)).trim());
-             roleInsertSql = roleInsertSql.replaceAll("@"+colProperty.getCol()+"@", getCellFormatValue(row.getCell((short) j)).trim());
-            	
-            	roleInsertSql.replaceAll("@user_name@", getCellFormatValue(row.getCell((short) j)).trim());
-            	
-     	       if("int".equalsIgnoreCase(colProperty.getCtype()) && "0".equalsIgnoreCase(colProperty.getForeign())){
-    	    	            str += ("".equalsIgnoreCase(getCellFormatValue(row.getCell((short) j)).trim())? colProperty.getDefaults():getCellFormatValue(row.getCell((short) j)));
-                 } else if("varchar".equalsIgnoreCase(colProperty.getCtype()) && "0".equalsIgnoreCase(colProperty.getForeign())){
-        	            str += "'" + ("".equalsIgnoreCase(getCellFormatValue(row.getCell((short) j)).trim())? colProperty.getDefaults():getCellFormatValue(row.getCell((short) j))) + "'";
-                }
-            	    if(j == userColNumber -1 ){
-            	    	str +=   ");\n" ;
-            	    }else{
-            	    	  if( j < userColNumber -1)
-            	    	        str +=  ",";
-            	    }
-                j++;
-            }
+//            while (j < colNum) {
+//            	colProperty = list.get(j);
+//            	  		   
+//             groupInsertSql =	groupInsertSql.replaceAll("@"+colProperty.getCol()+"@", getCellFormatValue(row.getCell((short) j)).trim());
+//             roleInsertSql = roleInsertSql.replaceAll("@"+colProperty.getCol()+"@", getCellFormatValue(row.getCell((short) j)).trim());
+//            	
+//            	roleInsertSql.replaceAll("@user_name@", getCellFormatValue(row.getCell((short) j)).trim());
+//            	
+//     	       if("int".equalsIgnoreCase(colProperty.getCtype()) && "0".equalsIgnoreCase(colProperty.getForeign())){
+//    	    	            str += ("".equalsIgnoreCase(getCellFormatValue(row.getCell((short) j)).trim())? colProperty.getDefaults():getCellFormatValue(row.getCell((short) j)));
+//                 } else if("varchar".equalsIgnoreCase(colProperty.getCtype()) && "0".equalsIgnoreCase(colProperty.getForeign())){
+//        	            str += "'" + ("".equalsIgnoreCase(getCellFormatValue(row.getCell((short) j)).trim())? colProperty.getDefaults():getCellFormatValue(row.getCell((short) j))) + "'";
+//                }
+//            	    if(j == userColNumber -1 ){
+//            	    	str +=   ");\n" ;
+//            	    }else{
+//            	    	  if( j < userColNumber -1)
+//            	    	        str +=  ",";
+//            	    }
+//                j++;
+//            }
+	       
+	       for( ; j  < userList.size() ; j ++ ){
+	    	     colProperty = userList.get(j);
+             groupInsertSql =	groupInsertSql.replaceAll("@"+colProperty.getCol()+"@", getCellFormatValue(row.getCell((short) colProperty.getExcelIndex())).trim());
+             roleInsertSql     = roleInsertSql.replaceAll("@"+colProperty.getCol()+"@", getCellFormatValue(row.getCell((short) colProperty.getExcelIndex())).trim());
+	      
+   	       if("int".equalsIgnoreCase(colProperty.getCtype()) && "0".equalsIgnoreCase(colProperty.getForeign())){
+               str                     = str.replaceAll("@"+colProperty.getCol()+"@", 
+            		                                                            "".equalsIgnoreCase(getCellFormatValue(row.getCell((short) colProperty.getExcelIndex())).trim())?
+            		                                                            		!"".equalsIgnoreCase(colProperty.getDefaults())?colProperty.getDefaults():"NULL" 
+            		                                                                  :getCellFormatValue(row.getCell((short) colProperty.getExcelIndex())).trim() ) ;
+           } else if("varchar".equalsIgnoreCase(colProperty.getCtype()) && "0".equalsIgnoreCase(colProperty.getForeign())){
+               str                     = str.replaceAll("@"+colProperty.getCol()+"@", 
+            		         							"".equalsIgnoreCase(getCellFormatValue(row.getCell((short) colProperty.getExcelIndex())).trim())? 
+            		         							!"".equalsIgnoreCase(colProperty.getDefaults())? "'" + colProperty.getDefaults() + "'":"NULL" 
+            		         						    : "'" + getCellFormatValue(row.getCell((short) colProperty.getExcelIndex())).trim() + "'") ;
+          }
+	       
+	       }
+	       
+	       
             str += groupInsertSql + roleInsertSql ;
             content.put(i, str);
             str = "";
+        }
+        
+        str = "" ;
+        sql = generator(roleList,"sys_roles");
+        sheet = wb.getSheetAt(1);
+        rowNum = sheet.getLastRowNum();
+        row = sheet.getRow(0);
+        
+        this.readExcelTitle(ROLE_LIST, is, roleList);
+
+        for(int i = 1 ; i < rowNum ; i ++){
+        	     
+        	row = sheet.getRow(i);
+        	
+        	str = sql ;
+            for( int j = 0 ; j  < roleList.size() ; j ++ ){
+	    	     colProperty = roleList.get(j);
+
+  	       if("int".equalsIgnoreCase(colProperty.getCtype()) && "0".equalsIgnoreCase(colProperty.getForeign())){
+              str                     = str.replaceAll("@"+colProperty.getCol()+"@", 
+           		                                                            "".equalsIgnoreCase(getCellFormatValue(row.getCell((short) colProperty.getExcelIndex())).trim())?
+           		                                                            		!"".equalsIgnoreCase(colProperty.getDefaults())?colProperty.getDefaults():"NULL" 
+           		                                                                  :getCellFormatValue(row.getCell((short) colProperty.getExcelIndex())).trim() ) ;
+          } else if("varchar".equalsIgnoreCase(colProperty.getCtype()) && "0".equalsIgnoreCase(colProperty.getForeign())){
+              str                     = str.replaceAll("@"+colProperty.getCol()+"@", 
+           		         							"".equalsIgnoreCase(getCellFormatValue(row.getCell((short) colProperty.getExcelIndex())).trim())? 
+           		         							!"".equalsIgnoreCase(colProperty.getDefaults())? "'" + colProperty.getDefaults() + "'":"NULL" 
+           		         						    : "'" + getCellFormatValue(row.getCell((short) colProperty.getExcelIndex())).trim() + "'") ;
+         }
+            }
+            content.put(content.size() + 1, str);     
+        }
+    
+        
+        str = "" ;
+        sql = generator(groupList,"sys_groups");
+        sheet = wb.getSheetAt(this.GROUP_LIST);
+        rowNum = sheet.getLastRowNum();
+        row = sheet.getRow(0);
+        
+        this.readExcelTitle(GROUP_LIST, is, roleList);
+
+        for(int i = 1 ; i < rowNum ; i ++){
+        	     
+        	row = sheet.getRow(i);
+        	
+        	str = sql ;
+            for( int j = 0 ; j  < roleList.size() ; j ++ ){
+	    	     colProperty = roleList.get(j);
+
+  	       if("int".equalsIgnoreCase(colProperty.getCtype()) && "0".equalsIgnoreCase(colProperty.getForeign())){
+              str                     = str.replaceAll("@"+colProperty.getCol()+"@", 
+           		                                                            "".equalsIgnoreCase(getCellFormatValue(row.getCell((short) colProperty.getExcelIndex())).trim())?
+           		                                                            		!"".equalsIgnoreCase(colProperty.getDefaults())?colProperty.getDefaults():"NULL" 
+           		                                                                  :getCellFormatValue(row.getCell((short) colProperty.getExcelIndex())).trim() ) ;
+          } else if("varchar".equalsIgnoreCase(colProperty.getCtype()) && "0".equalsIgnoreCase(colProperty.getForeign())){
+              str                     = str.replaceAll("@"+colProperty.getCol()+"@", 
+           		         							"".equalsIgnoreCase(getCellFormatValue(row.getCell((short) colProperty.getExcelIndex())).trim())? 
+           		         							!"".equalsIgnoreCase(colProperty.getDefaults())? "'" + colProperty.getDefaults() + "'":"NULL" 
+           		         						    : "'" + getCellFormatValue(row.getCell((short) colProperty.getExcelIndex())).trim() + "'") ;
+         }
+            }
+            content.put(content.size() + 1, str);     
         }
         return content;
     }
@@ -164,6 +257,8 @@ public class ExcelReader {
     private String generator(List<ColProperty> list , String tableName){
     	
     	    String sql = " insert into " + tableName + " (";
+    	    
+    	    String values = "values(" ;
     	     int i = 0 ;
     	       for(ColProperty colProperty : list){
     	    	      if("0".equalsIgnoreCase(colProperty.getForeign())){
@@ -174,12 +269,14 @@ public class ExcelReader {
     	    	       if("1".equalsIgnoreCase(colProperty.getForeign())) continue ;
     	    	        if(i ==( list.lastIndexOf(colProperty)+ 1)){
     	    	        	      sql += colProperty.getCol()  + ")\n" ;
+    	    	        	      values += "@" + colProperty.getCol()  + "@);\n" ;
     	    	        }else{
+    	    	        	values += "@" + colProperty.getCol()  + "@," ;
     	    	        	  sql += colProperty.getCol()  +  "," ;
     	    	        	
     	    	        }
 			}
-    	    sql += " values(" ;
+    	    sql += values ;
     	    return sql ;
     }
     
@@ -299,17 +396,19 @@ public class ExcelReader {
             // 对读取Excel表格标题测试
             InputStream is = new FileInputStream("/Users/wangyifei/Documents/userList.xls");
             ExcelReader excelReader = new ExcelReader();
-            String[] title = excelReader.readExcelTitle(is);
+            List<ColProperty> user = ColumnLoader.sqlGenerator("importSome.xml", ColumnLoader.class, "sys_users");
+            List<ColProperty> group = ColumnLoader.sqlGenerator("importSome.xml", ColumnLoader.class, "sys_groups");
+            List<ColProperty> role = ColumnLoader.sqlGenerator("importSome.xml", ColumnLoader.class, "sys_roles");
+            String[] title = excelReader.readExcelTitle( ExcelReader.USER_LIST, is , user);
             System.out.println("获得Excel表格的标题:");
             for (String s : title) {
                 System.out.print(s + " ");
             }
 
             // 对读取Excel表格内容测试
-            InputStream is2 = new FileInputStream("/Users/wangyifei/Documents/userList.xls");
+            InputStream file = new FileInputStream("/Users/wangyifei/Documents/userList.xls");
             tableName = "sys_users" ;
-            List<ColProperty> cols = ColumnLoader.sqlGenerator("importSome.xml", ColumnLoader.class, "sys_users");
-            Map<Integer, String> map = excelReader.readExcelContent(is2 , cols );
+            Map<Integer, String> map = excelReader.readExcelContent( file , user  ,role , group   );
             System.out.println("获得Excel表格的内容:");
             for (int i = 1; i <= map.size(); i++) {
                 System.out.println(map.get(i));
