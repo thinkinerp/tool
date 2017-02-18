@@ -1,4 +1,5 @@
 package org.wang.tools.util;
+import java.io.BufferedInputStream;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -10,6 +11,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Stream;
 
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFDateUtil;
@@ -57,8 +59,10 @@ public class ExcelReader {
      */
     public String[] readExcelTitle(int sheetIndex, InputStream is  , List<ColProperty> list) {
         try {
-            fs = new POIFSFileSystem(is);
-            wb = new HSSFWorkbook(fs);
+        	  is.mark(1000000);
+            InputStream wrappedStream = POIFSFileSystem.createNonClosingInputStream(is);
+ 
+            wb = new HSSFWorkbook(wrappedStream);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -78,6 +82,12 @@ public class ExcelReader {
             }    
             
         }
+        try {
+			is.reset();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} 
         return title;
     }
 
@@ -88,16 +98,22 @@ public class ExcelReader {
      */
     public Map<Integer, String> readExcelContent(InputStream is , List<ColProperty> userList ,List<ColProperty> roleList , List<ColProperty> groupList ) {
         Map<Integer, String> content = new HashMap<Integer, String>();
+        
+        
         String str = "" ; 
-        String sql = generator(userList,tableName);
+        String sql = generator(userList,"sys_users");
+        
         
         try {
-            fs = new POIFSFileSystem(is);
-            wb = new HSSFWorkbook(fs);
+        this.readExcelTitle(ROLE_LIST, is, roleList);
+        this.readExcelTitle(GROUP_LIST, is, groupList);	
+        this.readExcelTitle(USER_LIST, is, userList);
+        InputStream wrappedStream = POIFSFileSystem.createNonClosingInputStream(is);
+
+            wb = new HSSFWorkbook(wrappedStream);
         } catch (IOException e) {
             e.printStackTrace();
         }
-        ///System.out.println(JSONObject.toJSON(list));
        int userColNumber = 0 ;
        
        for (ColProperty colProperty : userList) {
@@ -109,7 +125,6 @@ public class ExcelReader {
         
         sheet = wb.getSheetAt(0);
         
-        // 得到总行数
         int rowNum = sheet.getLastRowNum();
         row = sheet.getRow(0);
 //        int colNum = row.getPhysicalNumberOfCells();
@@ -138,27 +153,6 @@ public class ExcelReader {
 						    		   " left join sys_roles as r on 1=1\n " +
 						    		   " where u.user_name = '@user_name@' and r.role_name = '@role_name@' ;\n" ; 
  
-//            while (j < colNum) {
-//            	colProperty = list.get(j);
-//            	  		   
-//             groupInsertSql =	groupInsertSql.replaceAll("@"+colProperty.getCol()+"@", getCellFormatValue(row.getCell((short) j)).trim());
-//             roleInsertSql = roleInsertSql.replaceAll("@"+colProperty.getCol()+"@", getCellFormatValue(row.getCell((short) j)).trim());
-//            	
-//            	roleInsertSql.replaceAll("@user_name@", getCellFormatValue(row.getCell((short) j)).trim());
-//            	
-//     	       if("int".equalsIgnoreCase(colProperty.getCtype()) && "0".equalsIgnoreCase(colProperty.getForeign())){
-//    	    	            str += ("".equalsIgnoreCase(getCellFormatValue(row.getCell((short) j)).trim())? colProperty.getDefaults():getCellFormatValue(row.getCell((short) j)));
-//                 } else if("varchar".equalsIgnoreCase(colProperty.getCtype()) && "0".equalsIgnoreCase(colProperty.getForeign())){
-//        	            str += "'" + ("".equalsIgnoreCase(getCellFormatValue(row.getCell((short) j)).trim())? colProperty.getDefaults():getCellFormatValue(row.getCell((short) j))) + "'";
-//                }
-//            	    if(j == userColNumber -1 ){
-//            	    	str +=   ");\n" ;
-//            	    }else{
-//            	    	  if( j < userColNumber -1)
-//            	    	        str +=  ",";
-//            	    }
-//                j++;
-//            }
 	       
 	       for( ; j  < userList.size() ; j ++ ){
 	    	     colProperty = userList.get(j);
@@ -191,7 +185,7 @@ public class ExcelReader {
         rowNum = sheet.getLastRowNum();
         row = sheet.getRow(0);
         
-        this.readExcelTitle(ROLE_LIST, is, roleList);
+       
 
         for(int i = 1 ; i < rowNum ; i ++){
         	     
@@ -223,15 +217,14 @@ public class ExcelReader {
         rowNum = sheet.getLastRowNum();
         row = sheet.getRow(0);
         
-        this.readExcelTitle(GROUP_LIST, is, roleList);
 
         for(int i = 1 ; i < rowNum ; i ++){
         	     
         	row = sheet.getRow(i);
         	
         	str = sql ;
-            for( int j = 0 ; j  < roleList.size() ; j ++ ){
-	    	     colProperty = roleList.get(j);
+            for( int j = 0 ; j  < groupList.size() ; j ++ ){
+	    	     colProperty = groupList.get(j);
 
   	       if("int".equalsIgnoreCase(colProperty.getCtype()) && "0".equalsIgnoreCase(colProperty.getForeign())){
               str                     = str.replaceAll("@"+colProperty.getCol()+"@", 
@@ -258,9 +251,16 @@ public class ExcelReader {
     	
     	    String sql = " insert into " + tableName + " (";
     	    
-    	    String values = "values(" ;
-    	     int i = 0 ;
-    	       for(ColProperty colProperty : list){
+    	    String select = "select " ;
+    	    
+    	    String where = " from dual where not exists ( select keyCol from " + tableName + " where keyCol = @keyCol@ ); " ;
+    	    String k = "";
+    	    int i = 0 ;
+    	    
+    	    k= list.stream().filter(c -> "1".equalsIgnoreCase(c.getPrimary())  ).findFirst().get().getCol() ;  	    
+
+    	    for(ColProperty colProperty : list){
+    	    	   
     	    	      if("0".equalsIgnoreCase(colProperty.getForeign())){
     	    	      i = list.indexOf(colProperty) + 1;
     	    	      }
@@ -269,14 +269,14 @@ public class ExcelReader {
     	    	       if("1".equalsIgnoreCase(colProperty.getForeign())) continue ;
     	    	        if(i ==( list.lastIndexOf(colProperty)+ 1)){
     	    	        	      sql += colProperty.getCol()  + ")\n" ;
-    	    	        	      values += "@" + colProperty.getCol()  + "@);\n" ;
+    	    	        	      select += "@" + colProperty.getCol()  + "@" ;
     	    	        }else{
-    	    	        	values += "@" + colProperty.getCol()  + "@," ;
+    	    	        	select += "@" + colProperty.getCol()  + "@," ;
     	    	        	  sql += colProperty.getCol()  +  "," ;
     	    	        	
     	    	        }
 			}
-    	    sql += values ;
+    	    sql += select + where.replaceAll("keyCol", k);
     	    return sql ;
     }
     
@@ -393,21 +393,13 @@ public class ExcelReader {
 
     public static void main(String[] args) {
         try {
-            // 对读取Excel表格标题测试
-            InputStream is = new FileInputStream("/Users/wangyifei/Documents/userList.xls");
             ExcelReader excelReader = new ExcelReader();
             List<ColProperty> user = ColumnLoader.sqlGenerator("importSome.xml", ColumnLoader.class, "sys_users");
             List<ColProperty> group = ColumnLoader.sqlGenerator("importSome.xml", ColumnLoader.class, "sys_groups");
             List<ColProperty> role = ColumnLoader.sqlGenerator("importSome.xml", ColumnLoader.class, "sys_roles");
-            String[] title = excelReader.readExcelTitle( ExcelReader.USER_LIST, is , user);
-            System.out.println("获得Excel表格的标题:");
-            for (String s : title) {
-                System.out.print(s + " ");
-            }
-
             // 对读取Excel表格内容测试
-            InputStream file = new FileInputStream("/Users/wangyifei/Documents/userList.xls");
-            tableName = "sys_users" ;
+            InputStream file = new BufferedInputStream( new FileInputStream("/Users/wangyifei/Documents/userList.xls"));
+   
             Map<Integer, String> map = excelReader.readExcelContent( file , user  ,role , group   );
             System.out.println("获得Excel表格的内容:");
             for (int i = 1; i <= map.size(); i++) {

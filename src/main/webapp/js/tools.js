@@ -37,25 +37,26 @@ $(function(){
 	var input = "<input id = '_authority'   /><br/>" ;
 	$('#pg').append(input);
 	
+//	
+//	$('#dateConfig').combobox({
+//		"valueField": 'value', 
+//        "textField": 'name', 
+//        "required": true,
+//        onSelect:setSectionAttr1,
+//        "data":[{
+//     	       name: '最大日期',
+//			   value: 'maxdate'
+//		       },{
+//					name: '周日期',
+//					value: 'weekdate'
+//				}]
 	
-	$('#dateConfig').combobox({
-		"valueField": 'value', 
-        "textField": 'name', 
-        "required": true,
-        onSelect:setSectionAttr1,
-        "data":[{
-     	       name: '最大日期',
-			   value: 'maxdate'
-		       },{
-					name: '周日期',
-					value: 'weekdate'
-				}]
-	});
+//	});
 	
 	$('#_authority').combobox({
 		 "valueField": 'value', 
          "textField": 'name', 
-         "required": true,
+         multiple: true , 
          "onSelect":setSectionAttr,
          "data":[{
       	       name: '大区',
@@ -162,16 +163,18 @@ $(function(){
 function setSectionAttr(record){
 	
 	var is = 0 ;
-	console.log(record);
 	$.each(sectionAttributions,function(index,item){
 		console.log(item);
 		if(current == item.sectionId){
-			sectionAttributions[index].authority = record.value ;
+			sectionAttributions[index].authority = $('#_authority').combobox('getValues');
 		    is = 1 ;
 		}
 	});
+	
+	console.log(record);
+	
 	if( 0 == is ){
-		sectionAttributions.push({sectionId:current,authority:record.value,dataConfig:'',dateConfig:''});
+		sectionAttributions.push({sectionId:current,authority:$('#_authority').combobox('getValues'),dataConfig:'',dateConfig:''});
 	}
 	console.log(sectionAttributions);
 }
@@ -192,20 +195,16 @@ function setSectionAttr1(record){
 	console.log(sectionAttributions);
 }
 function gen(){
-	
-/*	var ts = new Array();
-	$.each(tables,function(index , item){
-		ts.push('section' +  item.id);
-	});
-*/    console.log(tables);
+
+	console.log(tables);
     
 	var a = generateSql(tables);
-	
-	
-//	$('#showSql').dialog('options').content = a;
+
 	$('#showSql').dialog({
-		content:a
-	})
+		content:'' + a + ''
+	});
+	//window.open(ctx + '/sql_context.jsp?content=' + a.replace(new RegExp("<br/>", 'g'),'\n'));
+	//console.log(a.replace(new RegExp("<br/>", 'g'),'\n'));
 	$('#showSql').dialog('open');
 }
 
@@ -231,11 +230,11 @@ function addSectionF(){
 	
 	
 	if("" == $('#part_name_i').val()){
-		$.messager.alert('提示','ID号不能为空');
+		$.messager.alert('提示','语句块标识不能为空');
 		return ;
 	};
 	if("" == $('#desc_i').val()){
-		$.messager.alert('提示','ID号不能为空');
+		$.messager.alert('提示','描述不能为空');
 		return ;
 	};
 	if("" == $('#source_i').combobox('getValue')){
@@ -248,16 +247,19 @@ function addSectionF(){
 	};	
 	
 	
-	tables.push({id: ++index ,part_name:$('#part_name_i').val(),
-		         desc:$('#desc_i').val(),
-		         tableName:$('#source_i').combobox('getValue'),
-	             targetTable:$('#target_i').combobox('getValue')	        
+	tables.push({ id: ++index ,
+		                 part_name:$('#part_name_i').val(),
+		                 report_id : $('#id_i').val(),
+		                 desc:$('#desc_i').val(),
+		                 tableName:$('#source_i').combobox('getValue'),
+	                     targetTable:$('#target_i').combobox('getValue')	        
 	});
 	
 	current = index ;
 	$('#editor').append(Template({id:index}));
-
-//  初始化组件
+    //$('#report_id_'+index + ' #resouces_col').combobox( 'setValue' , $('#id_i').val() );
+   console.log($('#report_id_'+index + ' input[id="resouces_col"]').val($('#id_i').val()));
+	//  初始化组件
 	$.parser.parse('#section' + index);
 	$.each($('#section'+index+' .easyui-combobox'),function(index , item){
         $(item).combobox({
@@ -332,13 +334,13 @@ function Template(cfg){
 	"</td>" +
 	"<tr id = 'report_id_"+cfg.id+"'>" +
 	"<td>report_id(报表的id):</td>" +
-	"<td><input  id = 'resouces_col' class = 'easyui-textbox'  /></td>" +
+	"<td><input  id = 'resouces_col' class = 'easyui-textbox'   /></td>" +
 	"<td><input  id = 'aggregate' class = 'aggregate'   /></td>" +
 	"<td><input  id = 'order' class = 'orderby'   /></td>" +
 	"<td><input  id = 'group' class = 'groupby'   /></td>" +
 	"</tr>" +
 	"<tr id = 'group_id_"+cfg.id+"'>" +
-	"<td>group_id(数据权限):</td><td><input  id = 'resouces_col' class = 'easyui-textbox' /></td>" +
+	"<td>group_id(数据权限):</td><td><input  id = 'resouces_col' class = 'easyui-textbox' value = 't3.group_id'/></td>" +
 	"<td><input  id = 'aggregate' class = 'aggregate' /></td>" +
 	"<td><input  id = 'order' class = 'orderby'   /></td>" +
 	"<td><input  id = 'group' class = 'groupby'   /></td>" +
@@ -427,7 +429,7 @@ function Template(cfg){
 	"<td><input  id = 'order' class = 'orderby'   /></td>" +
 	"<td><input  id = 'group' class = 'groupby'   /></td>" +
 	"</tr>" +
-	"<tr id = 'mea_int3_"+cfg.id+"'>" +
+	"<tr id = 'mea_int4_"+cfg.id+"'>" +
 	"<td >mea_int4(整形数据值4):</td><td><input  id = 'resouces_col' class = 'easyui-combobox' /></td>" +
 	"<td><input  id = 'aggregate' class = 'aggregate'   /></td>" +
 	"<td><input  id = 'order' class = 'orderby'   /></td>" +
@@ -510,7 +512,7 @@ function changLocation(title,index){
 
 	 var p = $('#aa').accordion('getSelected');
 	 var index = $('#aa').accordion('getPanelIndex', p);
-	 var current = index + 1 ;
+	 current = index + 1 ;
 	 var authority = '' ;
      $.each(sectionAttributions,function(i , item){
     	 if(current == item.sectionId){

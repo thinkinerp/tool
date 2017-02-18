@@ -1,24 +1,48 @@
 package org.wang.tools.controller;
 
+import java.beans.Statement;
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.Writer;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.fileupload.FileUploadException;
+import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.commons.CommonsMultipartFile;
+import org.wang.tools.dao.DB;
+import org.wang.tools.dao.Procdure;
 import org.wang.tools.dao.toolMapper;
+import org.wang.tools.util.ColumnLoader;
 import org.wang.tools.util.ComUtil;
-import org.wang.tools.vo.Order;
+import org.wang.tools.util.ExcelReader;
+import org.wang.tools.vo.ColProperty;
+import org.wang.tools.vo.Columns;
 import org.wang.tools.vo.ParamVo;
+import org.wang.tools.vo.PocedureVo;
+import org.wang.tools.vo.ROW;
 import org.wang.tools.vo.Tables;
 import org.wang.tools.vo.ToJSON;
 
@@ -29,6 +53,7 @@ import com.alibaba.fastjson.JSONObject;
 public class ToolsController {
     private final static Logger log =  Logger.getLogger(ToolsController.class);
 	@Resource private toolMapper tm;
+	@Resource private Procdure p;
     @RequestMapping(value = "getColums" , method=RequestMethod.POST)
     @ResponseBody
     public void getColums(HttpServletResponse res , HttpServletRequest req 
@@ -44,6 +69,64 @@ public class ToolsController {
 			e.printStackTrace();
 		}
 
+    }
+    
+    @RequestMapping(value = "upload" , method=RequestMethod.POST)
+    public void upload(HttpServletRequest request,  
+            HttpServletResponse response,@RequestParam("file_upload") CommonsMultipartFile file) throws FileUploadException{
+
+    	             String filePath = "" ;
+
+               	filePath  = request.getSession().getServletContext().getRealPath("/") + "/uploadXML/" ;
+              	
+               	try {
+               		// MultipartFile是对当前上传的文件的封装，当要同时上传多个文件时，可以给定多个MultipartFile参数(数组)
+               		if (!file.isEmpty()) {
+               			
+               		 String type = file.getOriginalFilename().substring(file.getOriginalFilename().indexOf("."));
+               		 String filename = System.currentTimeMillis() + type;		 
+               		
+               		File destFile = new File(filePath + filename);
+               		
+               	// FileUtils.copyInputStreamToFile()这个方法里对IO进行了自动操作，不需要额外的再去关闭IO流
+               		
+               		FileUtils.copyInputStreamToFile(file.getInputStream(), destFile);// 复制临时文件到指定目录下
+               		
+               		
+                
+                        ExcelReader excelReader = new ExcelReader();
+                        List<ColProperty> user = ColumnLoader.sqlGenerator("importSome.xml", ColumnLoader.class, "sys_users");
+                        List<ColProperty> group = ColumnLoader.sqlGenerator("importSome.xml", ColumnLoader.class, "sys_groups");
+                        List<ColProperty> role = ColumnLoader.sqlGenerator("importSome.xml", ColumnLoader.class, "sys_roles");
+                        // 对读取Excel表格内容测试
+                        InputStream f = new BufferedInputStream( new FileInputStream(filePath + filename));
+               
+                        Map<Integer, String> map = excelReader.readExcelContent( f , user  ,role , group   );
+                        
+                        List<String> sqllist = map.values().stream().collect(Collectors.toList());
+               		
+                        tm.excute(sqllist);
+                        
+               		}
+               	} catch (Exception e) {
+					e.printStackTrace();
+				}  
+               	
+               	
+               	
+    }
+    
+    
+    @RequestMapping(value = "getTimeout" , method=RequestMethod.POST)
+    @ResponseBody
+    public void getTimeout(HttpServletResponse res , HttpServletRequest req ) {
+    	     try {
+				Writer w = res.getWriter();
+				w.write("re");
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
     }
     @RequestMapping(value = "getTables" , method=RequestMethod.POST)
     @ResponseBody
@@ -65,6 +148,244 @@ public class ToolsController {
     	}
     	
     }
+
+    @RequestMapping(value = "getReportJSON" , method=RequestMethod.POST)
+    @ResponseBody    
+    public void getReportJSON(HttpServletResponse response,String report_id){
+    	
+    	String rtn = "" ;
+    	
+    	DB db = new DB();
+    	Connection  conn = db.getConnection();
+    	java.sql.Statement stmt = db.getStatemente(conn);
+    	ResultSet rs = db.getResultSet(stmt, 
+    			                                         "select content from sys_template_reports where report_id = " + report_id );
+    	
+    	try {
+			while(rs.next()){
+				rtn = rs.getString("content");
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}finally{
+			db.close(rs);
+			db.close(stmt);
+			db.close(conn);
+		}
+    	
+		response.setCharacterEncoding("UTF-8");
+		response.setContentType("text/html;charset=UTF-8");
+		response.setContentType("application/json");
+		Writer w;
+		try {
+			w = response.getWriter();
+			w.write(rtn);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}	
+    }
+    
+    @RequestMapping(value = "getData" , method=RequestMethod.POST)
+    @ResponseBody    
+    public void getData(HttpServletResponse response,String sql, String user_num){
+		String regex = "kpi_.*?\\b";
+		String regex1 = "( group | order ) by.*\\b";
+		log.info(sql + "   " + user_num);
+		Pattern p = Pattern.compile(regex1 , Pattern.CASE_INSENSITIVE);
+		Pattern p1 = Pattern.compile(regex , Pattern.CASE_INSENSITIVE);
+		Matcher m = p.matcher(sql);
+		Matcher m1 = p1.matcher(sql);
+		List<String> strings = new ArrayList<String>();
+		while(m.find()){
+			sql = sql.replaceAll(m.group(0),"" );
+		}
+		while(m1.find()){
+			if(!strings.contains(m1.group(0))){
+				strings.add(m1.group(0));
+			}
+		}
+		
+		ComUtil comUtil = new ComUtil();
+		
+		if(null != user_num && "" != user_num){
+			sql = sql + " and t3.group_id in ("+
+							  " select group_id "+
+							   "  from sys_user_groups "+ 
+							   "where user_id in ("+
+															" select id "+
+															  " from sys_users"+
+															" where user_num = '"+user_num+"'"+
+															")"+
+			")";
+		}
+		
+		response.setCharacterEncoding("UTF-8");
+		response.setContentType("text/html;charset=UTF-8");
+		response.setContentType("application/json");
+		Writer w;
+		try {
+			w = response.getWriter();
+			
+			w.write(comUtil.generateJavaObject(strings.get(0) ,"select * " + sql));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}	
+    }
+    
+    @RequestMapping(value = "getUserAuth" , method=RequestMethod.POST)
+    @ResponseBody    
+    public void getUserAuth(HttpServletResponse response,String userNum){
+    	
+    		String rtn = "" ;
+		DB db = new DB();
+		Connection conn = db.getConnection() ;
+		java.sql.Statement stmt = db.getStatemente(conn);
+		ResultSet rs = null ;
+		rs = db.getResultSet( stmt  ,"	SELECT list.user_name , list.group_id , list.group_name " +
+													"				, gr.district_ids , gr.class_ids , gr.dept_ids" +
+													"	FROM yonghuibi.user_power_list AS list" +
+													" LEFT JOIN yonghuibi.sys_group_resources AS gr ON list.group_id =  gr.group_id" +
+													"	WHERE list.user_num = '"+userNum+"';");
+		try {
+			while(rs.next()){
+				rtn = rtn + " user_name : " + rs.getString("user_name");
+				rtn = rtn + " group_id : " + rs.getString("group_id");
+				rtn = rtn + " group_name : " + rs.getString("group_name");
+				rtn = rtn + " district_ids : " + rs.getString("district_ids");
+				rtn = rtn + " class_ids : " + rs.getString("class_ids");
+				rtn = rtn + " dept_ids : " + rs.getString("dept_ids");
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}finally{
+			db.close(rs);
+			db.close(stmt);
+			db.close(conn);
+		}
+		response.setCharacterEncoding("UTF-8");
+		response.setContentType("text/html;charset=UTF-8");
+		Writer w;
+		try {
+			w = response.getWriter();
+			w.write(rtn);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}	
+}
+    
+    @RequestMapping(value = "getGridCols" , method=RequestMethod.POST)
+    @ResponseBody    
+    public void getGridCols(HttpServletResponse response,String sql){
+		DB db = new DB();
+		List<Columns> columns = new ArrayList<Columns>();
+		Columns column = null ;
+		String regex = "kpi_.*?\\b";
+		log.info(sql);
+		Pattern p = Pattern.compile(regex , Pattern.CASE_INSENSITIVE);
+		
+		Matcher m = p.matcher(sql);
+		List<String> strings = new ArrayList<String>();
+		while(m.find()){
+			if(!strings.contains(m.group(0))){
+				strings.add(m.group(0));
+			}
+		}
+		Connection conn = db.getConnection() ;
+		java.sql.Statement stmt = db.getStatemente(conn);
+		ResultSet rs = null ;
+		rs = db.getResultSet( stmt  ,"SHOW COLUMNS FROM yonghuibi_s."+strings.get(0)+";");
+		try {
+			while(rs.next()){
+				column = new Columns();
+				column.setField(rs.getString("Field"));
+				column.setTitle(rs.getString("Field"));
+				column.setWidth("100");
+				columns.add(column);
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}finally{
+			db.close(rs);
+			db.close(stmt);
+			db.close(conn);
+		}
+		response.setCharacterEncoding("UTF-8");
+		response.setContentType("text/html;charset=UTF-8");
+		response.setContentType("application/json");
+		Writer w;
+		try {
+			w = response.getWriter();
+			w.write(JSONObject.toJSONString(columns));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}	
+    }
+    @RequestMapping(value = "getSplitSql" , method=RequestMethod.POST)
+    @ResponseBody    
+    public void getSplitSql(HttpServletResponse response,String kpi_id){
+    	
+    		String procedureName = null ;
+    		int count = 0 ;
+    		procedureName = "ETL_report_id_" +(Integer.parseInt(kpi_id) > 9 ? "0" + kpi_id : "00" + kpi_id ) ;
+		List<PocedureVo> ls = p.getProcedureInfo(procedureName );
+	      String[] query = null;
+	      String item = null ;
+  	  	  int in = 0;
+	      String s = null ;
+	      List<ROW> list = new ArrayList<ROW>();
+	      ROW row = null ;
+	      List<String> partNames = ComUtil.getPartName(kpi_id);
+		for (PocedureVo pocedureVo : ls) {
+			query = pocedureVo.getProBody().split(";");
+			item = null;
+			s = null ;
+		      for(int i = 0 ; i < query.length ; i ++){
+		    	  	
+		    	  	item = query[i];
+		    	  	
+		    	  	if(item.indexOf("from") < 0){
+
+		    	  		continue;
+		    	  		
+		    	  	}
+		    	  	count++ ;
+		    	  	
+		    	  	for(String str : partNames){
+		    	  		  if(item.indexOf(str) > 0){
+		    	  			  row.setPartName(str);
+		    	  		  }
+		    	  	}
+		    	  	
+		    	  	item = item.replaceAll("\n", " ");
+		    	  	in =  (item.indexOf("group by") == -1? item.length():item.indexOf("group by"));
+		    	  	s = item.substring(item.indexOf("from") ,in);
+		    	  	in = (s.indexOf("order by") == -1? s.length():s.indexOf("order by"));
+		    	  	s = s.substring(s.indexOf("from") , in );
+
+
+		    	  	row = new ROW();
+		    	  	row.setIsCheck("");
+		    	  	row.setSQL(s.replaceAll("\n", " "));
+		    	  	list.add(row);
+		      }
+		}
+		JSONObject json = new JSONObject();
+		json.put("rows", list);
+		json.put("total", list.size());
+		response.setCharacterEncoding("UTF-8");
+		response.setContentType("text/html;charset=UTF-8");
+		response.setContentType("application/json");
+		Writer w;
+		try {
+			w = response.getWriter();
+			w.write(json.toJSONString());
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+    	
+    }
     @RequestMapping(value = "getAnyForCombobox" , method=RequestMethod.POST)
     @ResponseBody
 	public List<Map<String , String>> getAnyForCombobox(
@@ -76,7 +397,8 @@ public class ToolsController {
 		return tm.selectAnyForComboBox(map.get("tableName").toString(), map.get("idField").toString()
 				      ,map.get("nameField").toString(), wher);
 	}
-    @RequestMapping(value = "selectMenu" , method=RequestMethod.POST)
+    
+/*    @RequestMapping(value = "selectMenu" , method=RequestMethod.POST)
     @ResponseBody
    public void selectMenu(HttpServletResponse res){
     	  List<Order> order =  tm.selectMenu();
@@ -92,9 +414,8 @@ public class ToolsController {
         	} catch (IOException e) {
         		e.printStackTrace();
         	}
-          	  
-    	  
-    }
+    }*/
+    
     @RequestMapping(value = "updataWeighting" , method=RequestMethod.POST)
     @ResponseBody  
     public void updateDishWeighting(String dish_name){

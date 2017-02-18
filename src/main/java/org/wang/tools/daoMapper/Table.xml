@@ -19,6 +19,22 @@
         from information_schema.columns 
         where table_name=#{tableName , jdbcType=VARCHAR}
    </select>
+   <select id="getTableColumn" parameterType="java.lang.String" resultMap="BaseResultMap" >
+      
+		SELECT COLUMN_NAME 
+		             , DATA_TYPE 
+		             , COLUMN_COMMENT
+          FROM information_schema.columns 
+        WHERE table_name=#{tableName , jdbcType=VARCHAR}
+   </select>
+
+  <select id="getKpiBases" parameterType="java.lang.String" resultMap="BaseResultMap" >
+		SELECT   kpi_id        as COLUMN_NAME 
+		             , kpi_name  as DATA_TYPE 
+		             , kpi_group as COLUMN_COMMENT
+          FROM  kpi_bases
+   </select>
+   
    <select id="getTablesName" resultMap="BaseResultMap" >
 		select DISTINCT  table_name  as COLUMN_NAME 
         from information_schema.columns 

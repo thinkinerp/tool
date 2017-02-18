@@ -16,10 +16,11 @@
 <script type="text/javascript" src="${ctx}/js/formatter.js"></script>
 <script type="text/javascript" src="${ctx}/js/generateSql.js"></script>
 <script type="text/javascript" src="${ctx}/js/jquery.edatagrid.js"></script>
-
-
+<script type="text/javascript" src="${ctx}/js/ace.js"></script>
 </head>
 <body>
+
+<div id = "editor_sql" style="position:absolute;z-index:9"></div>
 <div id="cc" class="easyui-layout" style="width:100%;height:400px;">  
     <div data-options="region:'east',iconCls:'icon-reload',title:'数据库的配置',split:true" style="width:200px;">
       <table id = 'dataSource'>
@@ -42,34 +43,37 @@
   
    </div>
 	<table id="pg" style="width:300px">
-	   日期配置：<br/>
-	   <input id = 'dateConfig'  /><br/>
+	   权限配置：<br/>
+
 	</table> 
 	</div>   
     <div id = "editor" data-options="region:'center',title:'center title'" style="padding:5px;background:#eee;">
 
 	</div>   
+	
 </div> 
 
 	<div id="addSection"  class="easyui-dialog" title="添加语句块" style="width:400px;height:200px;"   
         data-options="iconCls:'icon-save',resizable:true,modal:true,closed:true,toolbar:[{
 				text:'保存',
-				iconCls:'icon-edit',
+				iconCls:'icon-edit',	
 				handler:addSectionF
 			}]" > 
-	   ID号：<br/>
+	   报表ID：<br/>
       <input id = "id_i" type = 'text' /> <br/>
 	   分块标志：<br/>
       <input id = "part_name_i" type = 'text' /> <br/>
-               目标数据: <br/>
+       目标数据: <br/>
       <input id = 'target_i' class = 'easyui-combobox' /> <br/>
-               源数据: <br/>
+      源数据: <br/>
       <input id = 'source_i' class = 'easyui-combobox'/> <br/>
 	  语句块描述：<br/>
 	  <input id = "desc_i" type = 'text' />
-	  
+
 	<div id="showSql"  class="easyui-dialog" title="ETL脚本" style="width:1000px;height:500px;"   
         data-options="iconCls:'icon-save',resizable:true,modal:true,closed:true" >  
-   </div> 
+
+   </div>
+   
 </body>
 </html>

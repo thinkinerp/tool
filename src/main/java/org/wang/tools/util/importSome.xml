@@ -1,29 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <content >
 	<table name = "sys_users">
-	<c col = "user_name" excelCol = "" default = ""  ctype="varchar" foreign = "0">用户名称</c>
-	<c col = "user_num" excelCol = "" default = ""   ctype="varchar" foreign = "0">用户账号</c>
-	<c col = "user_pass" excelCol = "" default = "e10adc3949ba59abbe56e057f20f883e" foreign = "0"   ctype="varchar" >密码</c>
-	<c col = "email" excelCol = "" default = ""  ctype="varchar" foreign = "0">电子邮件</c>
-	<c col = "mobile" excelCol = "" default = ""  ctype="varchar" foreign = "0">手机号</c>
-	<c col = "tel" excelCol = "" default = "" ctype="varchar" foreign = "0">固定电话</c>
-	<c col = "position" excelCol = "" default = ""  ctype="varchar"  foreign = "0">职位</c>
-	<c col = "dept_id" excelCol = "" default = "null"  ctype="int"  foreign = "0">部门编码</c>
-	<c col = "dept_name" excelCol = "" default = "" ctype="varchar"  foreign = "0">部门</c>
-	<c col = "active_flag" excelCol = "" default = "1" ctype="int" foreign = "0">状态</c>
-	<c col = "memo" excelCol = "" default = "" ctype="varchar"  foreign = "0">备注</c>
-	<c col = "role_name" excelCol = "" default = "" ctype="varchar"  foreign = "1">角色</c>
-	<c col = "group_name" excelCol = "" default = "" ctype="varchar" foreign = "1">群组</c>
+	<c col = "user_name" excelCol = "" default = ""  ctype="varchar" foreign = "0" primary = "0">用户名称</c>
+	<c col = "user_num" excelCol = "" default = ""   ctype="varchar" foreign = "0" primary = "1">用户账号</c>
+	<c col = "user_pass" excelCol = "" default = "e10adc3949ba59abbe56e057f20f883e" foreign = "0"   ctype="varchar" primary = "0">密码</c>
+	<c col = "email" excelCol = "" default = ""  ctype="varchar" foreign = "0" primary = "0">电子邮件</c>
+	<c col = "mobile" excelCol = "" default = ""  ctype="varchar" foreign = "0" primary = "0">手机号</c>
+	<c col = "tel" excelCol = "" default = "" ctype="varchar" foreign = "0"  primary = "0">固定电话</c>
+	<c col = "position" excelCol = "" default = ""  ctype="varchar"  foreign = "0" primary = "0">职位</c>
+	<c col = "dept_id" excelCol = "" default = "null"  ctype="int"  foreign = "0" primary = "0">部门编码</c>
+	<c col = "dept_name" excelCol = "" default = "" ctype="varchar"  foreign = "0" primary = "0">部门</c>
+	<c col = "active_flag" excelCol = "" default = "1" ctype="int" foreign = "0" primary = "0">状态</c>
+	<c col = "memo" excelCol = "" default = "" ctype="varchar"  foreign = "0" primary = "0">备注</c>
+	<c col = "role_name" excelCol = "" default = "" ctype="varchar"  foreign = "1" primary = "0">角色</c>
+	<c col = "group_name" excelCol = "" default = "" ctype="varchar" foreign = "1" primary = "0">群组</c>
 	</table>
 
 	<table name = "sys_roles" >
-		<c col = "role_name" excelCol = "" default = "" ctype="varchar" foreign = "0">角色名称</c>
-		<c col = "memo" excelCol = "" default = "" ctype="varchar" foreign = "0">备注</c>
+		<c col = "role_name" excelCol = "" default = "" ctype="varchar" foreign = "0" primary = "1">角色名称</c>
+		<c col = "memo" excelCol = "" default = "" ctype="varchar" foreign = "0" primary = "0">备注</c>
 	</table>
 	
 	<table name = "sys_groups">
-		<c col = "group_name" excelCol = "" default = "" ctype="varchar" foreign = "0">群组名称</c>
-		<c col = "memo" excelCol = "" default = "" ctype="varchar" foreign = "0">备注</c>
+		<c col = "group_name" excelCol = "" default = "" ctype="varchar" foreign = "0" primary = "1">群组名称</c>
+		<c col = "memo" excelCol = "" default = "" ctype="varchar" foreign = "0" primary = "0">备注</c>
 	</table>
 
 </content>

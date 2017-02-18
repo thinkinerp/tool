@@ -3,7 +3,7 @@
 	"http://mybatis.org/dtd/mybatis-3-config.dtd">
 <configuration>
 	<typeAliases>
-		<package name="org.wang.tools.vo*"></package>
+		<package name="org.wang.tools.vo.*"></package>
 	</typeAliases>
 
 	<!-- 将mapper文件加入到配置文件中  这里指定实体类配置文件了，那spring文件就不用指定-->

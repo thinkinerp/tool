@@ -9,6 +9,7 @@ public class ColProperty {
 	String ctype ;
 	String foreign ;
 	int      excelIndex ;
+	String  primary ;
 	public String getExcelCol() {
 		return excelCol;
 	}
@@ -44,5 +45,11 @@ public class ColProperty {
 	}
 	public void setExcelIndex(int excelIndex) {
 		this.excelIndex = excelIndex;
+	}
+	public String getPrimary() {
+		return primary;
+	}
+	public void setPrimary(String primary) {
+		this.primary = primary;
 	}
 }

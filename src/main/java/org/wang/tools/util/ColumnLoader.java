@@ -48,6 +48,7 @@ public static List<ColProperty> sqlGenerator(String xmlFileName , Class clazz , 
 				colProperty.setDefaults(element.getAttribute("default").getValue()+"");
 				colProperty.setForeign(element.getAttribute("foreign").getValue()+"");
 				colProperty.setExcelCol(element.getValue() + "");
+				colProperty.setPrimary(element.getAttribute("primary").getValue() + "");
                 list.add(colProperty);
 			}
 		}

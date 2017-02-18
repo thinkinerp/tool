@@ -5,20 +5,21 @@
  */
 function generateSql(cfg){
 
-	var sql = '' ;
-	  var resouces_col = '';
-	  var aggregate = '';
+	  var sql                 = '' ;
+	  var resouces_col = '' ;
+	  var comment      = '' ;
+	  var aggregate     = '' ;
 
 	  var targetCol = '' ;
-	  var authority = 'left join ( ' +
+	  var authority = 'left join (  <br/>' +
 		              'select group_id ,dept_ids,class_ids,'  + "<br/>" +
 	                  'district_ids,province_ids ' +
 						'from  `yonghuibi`.sys_group_resources'  + "<br/>" +
-						'where group_id in (' +
-						'select group_id ' +
+						'where group_id in ( <br/>' +
+						'select group_id <br/>' +
 						'from `yonghuibi`.sys_group_reports '  + "<br/>"+
-						'where report_id = 13)) t3 on 1=1 '  ;
-	  var maxdate = 'left join ( ' +
+						'where report_id = '+cfg[0].report_id+')) t3 on 1=1 '  ;
+	  var maxdate = 'left join ( <br/>' +
 		            '     select  max(`sales_date`) as maxdate,  '  + "<br/>"+
 	                '     date_format(DATE_SUB(max(`sales_date`), '  + "<br/>"+ 
 	                '     INTERVAL 1 DAY),\'%Y%m%d\') as day2 ' + "<br/>" +
@@ -36,22 +37,18 @@ function generateSql(cfg){
 			  '   order by concat(concat(left(week_num,4),\'w\'),right(    week_num,2)) DESC  ' + "<br/>" +
 			  '    limit 2 ) yweek  ' + "<br/>" +
 			  ' ) t2 on 1=1 ' ;
-	  var  where = ' where 1=1 ' ;
-	  
-	  
-	  
 	  
 	$.each(cfg,function(index , item){
 		
-		
-		  var insert = 'insert into ' + $('#targetConfig').val() + item.targetTable + '(' ;
+		  var  where = ' where 1=1 ' ;	
+		  var insert = 'insert into ' + $('#targetConfig').val() + '.' + item.targetTable + '(' ;
 		  var select = 'select ' ;
-		  var from   = ' from ' + $('#sourceConfig').val() + item.tableName + '  as t1 '   ;
+		  var from   = ' from ' + $('#sourceConfig').val() + '.' + item.tableName + '  as t1 '   ;
 		  var orderby = 'order by ' ;
 		  var groupby = 'group by ' ;
 		  var join   = ' left join ' ;
+		  
 		$.each($('#' + "section" +  item.id+ " tr"),function(index , i){
-			
 			
 			if("" != i.id){
 
@@ -62,6 +59,7 @@ function generateSql(cfg){
 			if('easyui-combobox combobox-f combo-f textbox-f' == $("#" + i.id + " input[id='resouces_col']").attr("class")){
 
 				resouces_col= $("#" + i.id + " #resouces_col").combobox('getValues');
+				comment     = $("#" + i.id + " #resouces_col").combobox('getText');
 			}	
 
 			aggregate = $("#" + i.id + " #aggregate").combobox('getValues');	
@@ -96,7 +94,7 @@ function generateSql(cfg){
 				
 			targetCol = i.id ;
 			targetCol = targetCol.slice(0,targetCol.length-2);	
-
+            console.log(targetCol);
 			if(1==index){
 				if("sum"==aggregate){
 					select += "sum(" + resouces_col + ")" + "<br/>" ;
@@ -115,39 +113,43 @@ function generateSql(cfg){
 					
 				}else{
 					if(!resouces_col){
-					select +=' ,null <br/>' ;
+					//select +=' ,null <br/>' ;
 					}else{
-						select +=' ,' +  resouces_col + "<br/>" ;
-						
+
+						select +=' ,' +  resouces_col + " as " + targetCol + " /*"+(comment.split(":"))[0]+"*/<br/>" ;
+						insert += ',' + targetCol + "<br/>" ;
+					
 					}
 				}
-				insert += ',' + targetCol + "<br/>" ;
 			}							  
 			}
 		
 		});
 		
-		select = select + from ;
+		select = select + ',now()  <br/>' + from ;
 		
-		if( !!sectionAttributions & 'area'== sectionAttributions[index].authority ){
-			where = where  + " and (t3.`district_ids`='all' or t3.`district_ids`='AZ' or LOCATE(t1.`store_group`,t3.`district_ids`)>0 ) "
-			select =  select + authority ;
-		} else if(  !!sectionAttributions & 'group' == sectionAttributions[index].authority){
-			where = where + " and ( t3.dept_ids='all' or t3.`dept_ids`='AZ' or LOCATE(t1.store_id,t3.`dept_ids`)>0)" ;
-			select =  select + authority ;
-		} else if( !!sectionAttributions & 'shop' == sectionAttributions[index].authority){
-			where = where + " and (t3.`class_ids`='all' or t3.`class_ids`='AZ' or LOCATE(t1.`cat1_ID`,t3.`class_ids`)>0 )" ;
-			select =  select + authority  ;
+		if( !!sectionAttributions   ){
+			var auth = sectionAttributions[index].authority ;
+			$.each( auth , function(index  , item){
+				     if('area'==item){
+							where = where  + " and (t3.`district_ids`='all' or t3.`district_ids`='AZ' or LOCATE(t1.`store_group`,t3.`district_ids`)>0 ) "
+				     }else if(  'shop' == item){
+							where = where + " and ( t3.dept_ids='all' or t3.`dept_ids`='AZ' or LOCATE(t1.store_id,t3.`dept_ids`)>0)" ;
+						} else if(  'group' == item){
+							where = where + " and (t3.`class_ids`='all' or t3.`class_ids`='AZ' or LOCATE(t1.`cat1_ID`,t3.`class_ids`)>0 )" ;
+						}
+				     
+			});
+			select =  select + '<br/>' + authority  ;
 		}
-        
 		console.log(sectionAttributions);
 		
-		if( !!sectionAttributions & 'maxdate'== sectionAttributions[index].dateConfig ){
-			select =  select + weekdate.replace('%kpi.table%',item.tableName)  ;
-		} else if(  !!sectionAttributions & 'weekdate' == sectionAttributions[index].dateConfig){
-			 select =  select + weekdate.replace('%kpi.table%',item.tableName)  ;	
-		}
-		sql += insert + ")" + select + where + '<br/>' + ';<br/>';	
+//		if( !!sectionAttributions & 'maxdate'== sectionAttributions[index].dateConfig ){
+//			select =  select + weekdate.replace('%kpi.table%',item.tableName)  ;
+//		} else if(  !!sectionAttributions & 'weekdate' == sectionAttributions[index].dateConfig){
+//			 select =  select + weekdate.replace('%kpi.table%',item.tableName)  ;	
+//		}
+		sql += insert + " , load_time) <br/>" + select + where + '<br/>' ;	
 
 	});
 
