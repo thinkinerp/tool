@@ -277,7 +277,6 @@ public class ComUtil{
 	        fw.write(src);  
 	        fw.flush();  
 	        fw.close();  
-	        // 使用JavaCompiler 编译java文件  
 	        JavaCompiler jc = ToolProvider.getSystemJavaCompiler();  
 	        StandardJavaFileManager fileManager = jc.getStandardFileManager(null, null, null);  
 	        Iterable<? extends JavaFileObject> fileObjects = fileManager.getJavaFileObjects(filename);  
@@ -289,15 +288,7 @@ public class ComUtil{
 	        		  													, fileObjects);  
 	        cTask.call();  
 	        fileManager.close();   
-	        // 使用URLClassLoader加载class到内存  
-//	        URL[] urls = new URL[] { new URL("file:" + currentDir.replaceAll("util", "vo") ) };   org.wang.tools.vo;
-//	        URL[] urls = new URL[] { new URL("file:/Users/wangyifei/Documents/java/apache-tomcat-8.0.36/webapps/tool/WEB-INF/classes/org/wang/tools/vo/" ) };  
-//	        URLClassLoader cLoader = new URLClassLoader(urls);  
-	        
-//	        Class<?> c = cLoader.loadClass("org.wang.tools.vo.Kpi_budget_group_profit_json");  
 	        Class<?> c = Class.forName("org.wang.tools.vo." + className + "_json"  ,true,Thread.currentThread().getContextClassLoader()); 
-//	        cLoader.close();  
-	        // 利用class创建实例，反射执行方法  
 	        Object obj = c.newInstance();  
 	        Object[] argspara=new Object[]{conn}; 
 	        Method method = c.getMethod("to_" + className + "_json" , Connection.class);  

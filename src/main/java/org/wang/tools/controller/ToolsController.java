@@ -1,6 +1,5 @@
 package org.wang.tools.controller;
 
-import java.beans.Statement;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -24,7 +23,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -234,7 +232,7 @@ public class ToolsController {
     
     @RequestMapping(value = "getUserAuth" , method=RequestMethod.POST)
     @ResponseBody    
-    public void getUserAuth(HttpServletResponse response,String userNum){
+    public void getUserAuth(HttpServletResponse response,String userNum , String reportId){
     	
     		String rtn = "" ;
 		DB db = new DB();
@@ -242,18 +240,21 @@ public class ToolsController {
 		java.sql.Statement stmt = db.getStatemente(conn);
 		ResultSet rs = null ;
 		rs = db.getResultSet( stmt  ,"	SELECT list.user_name , list.group_id , list.group_name " +
-													"				, gr.district_ids , gr.class_ids , gr.dept_ids" +
+													"				, gr.district_ids , gr.class_ids , gr.dept_ids , gr1.report_id" +
 													"	FROM yonghuibi.user_power_list AS list" +
 													" LEFT JOIN yonghuibi.sys_group_resources AS gr ON list.group_id =  gr.group_id" +
-													"	WHERE list.user_num = '"+userNum+"';");
+													" LEFT JOIN yonghuibi.sys_group_reports AS gr1 on gr1.group_id = list.group_id AND gr1.report_id = " + reportId +
+													"	WHERE list.user_num = '"+(userNum == null ? "-1100":userNum)+"';");
+		log.info("reportId:"+reportId);
 		try {
 			while(rs.next()){
 				rtn = rtn + " user_name : " + rs.getString("user_name");
-				rtn = rtn + " group_id : " + rs.getString("group_id");
-				rtn = rtn + " group_name : " + rs.getString("group_name");
-				rtn = rtn + " district_ids : " + rs.getString("district_ids");
-				rtn = rtn + " class_ids : " + rs.getString("class_ids");
-				rtn = rtn + " dept_ids : " + rs.getString("dept_ids");
+				rtn = rtn + " | group_id : " + rs.getString("group_id");
+				rtn = rtn + " | group_name : " + rs.getString("group_name");
+				rtn = rtn + "  | district_ids : " + rs.getString("district_ids");
+				rtn = rtn + "  | class_ids : " + rs.getString("class_ids");
+				rtn = rtn + "  | dept_ids : " + rs.getString("dept_ids");
+				rtn = rtn + "  |  用户所在群组是否有此报表的权限 : " + (rs.getString("report_id") == null ? "否":"是" );
 			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block

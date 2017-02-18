@@ -40,7 +40,8 @@ $('#query_sql_content').datagrid({
 		 $.ajax({  
 			 	type : "post",  
 			 	url : ctx +  "/tool/getUserAuth",
-			 	data:{userNum:$('#user_num').val()} ,
+			 	data:{userNum:$('#user_num').val()
+			 			, reportId : $('#kpi').combobox('getValue') } ,
 			 	success : function(result) {  
 			 		console.log(result)
 			 		$('#userAuth').html(result);
