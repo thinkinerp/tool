@@ -3,12 +3,12 @@
 <mapper namespace="org.wang.tools.dao.Procdure" >
 
     <resultMap id="PocedureVo" type="org.wang.tools.vo.PocedureVo">
-    <result column="proBody" property="proBody" jdbcType="VARCHAR" />
-    <result column="proName" property="proName" jdbcType="VARCHAR" />
+    <result column="Create Procedure" property="proBody" jdbcType="VARCHAR" />
+    <result column="Procedure" property="proName" jdbcType="VARCHAR" />
    </resultMap>
  
      <select id="getProcedureInfo" parameterType="java.lang.String" resultMap="PocedureVo">
-		select DISTINCT name  as proName , body as proBody
+		select DISTINCT name  as proName , body_utf8 as proBody
         from mysql.proc 
         where LOCATE(#{procedureName , jdbcType=VARCHAR},name) &gt; 0 
    </select> 

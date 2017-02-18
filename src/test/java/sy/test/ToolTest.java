@@ -180,7 +180,7 @@ public class ToolTest {
 	@Test
 	public void getProcedureTest(){
 		
-		String procedureName = "ETL_report_id_030";
+		String procedureName = "ETL_report_id_030_main";
 		List<PocedureVo> ls = p.getProcedureInfo(procedureName );
 	      String[] query = null;
 	      String item = null ;

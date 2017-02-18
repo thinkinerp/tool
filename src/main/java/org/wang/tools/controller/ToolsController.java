@@ -9,6 +9,7 @@ import java.io.Writer;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -36,6 +37,7 @@ import org.wang.tools.dao.toolMapper;
 import org.wang.tools.util.ColumnLoader;
 import org.wang.tools.util.ComUtil;
 import org.wang.tools.util.ExcelReader;
+import org.wang.tools.util.ProcedureUtil;
 import org.wang.tools.vo.ColProperty;
 import org.wang.tools.vo.Columns;
 import org.wang.tools.vo.ParamVo;
@@ -183,40 +185,75 @@ public class ToolsController {
 		}	
     }
     
-    @RequestMapping(value = "getData" , method=RequestMethod.POST)
+    @RequestMapping(value = "getToExcuteSQl" , method=RequestMethod.POST)
     @ResponseBody    
-    public void getData(HttpServletResponse response,String sql, String user_num){
+    public void getToExcuteSQl(HttpServletResponse response,String sql, String user_num){
 		String regex = "kpi_.*?\\b";
 		String regex1 = "( group | order ) by.*\\b";
-		log.info(sql + "   " + user_num);
-		Pattern p = Pattern.compile(regex1 , Pattern.CASE_INSENSITIVE);
-		Pattern p1 = Pattern.compile(regex , Pattern.CASE_INSENSITIVE);
-		Matcher m = p.matcher(sql);
-		Matcher m1 = p1.matcher(sql);
-		List<String> strings = new ArrayList<String>();
-		while(m.find()){
-			sql = sql.replaceAll(m.group(0),"" );
-		}
-		while(m1.find()){
-			if(!strings.contains(m1.group(0))){
-				strings.add(m1.group(0));
+		
+		String where = " where 1=1 " ;
+		String[] clauses = sql.substring(sql.lastIndexOf("where") , sql.length()).replace("where", "").split("and") ;
+		 
+		for (String string : clauses) {
+			if(!string.contains("t3")){
+				where = where +" and " +string;
 			}
 		}
-		
-		ComUtil comUtil = new ComUtil();
-		
-		if(null != user_num && "" != user_num){
-			sql = sql + " and t3.group_id in ("+
-							  " select group_id "+
-							   "  from sys_user_groups "+ 
-							   "where user_id in ("+
-															" select id "+
-															  " from sys_users"+
-															" where user_num = '"+user_num+"'"+
-															")"+
-			")";
+		Pattern p1 = Pattern.compile(regex1 , Pattern.CASE_INSENSITIVE);
+		Pattern p = Pattern.compile(regex , Pattern.CASE_INSENSITIVE);
+		Matcher m1 = p1.matcher(sql);
+		Matcher m = p.matcher(sql);
+		List<String> strings = new ArrayList<String>();
+		while(m1.find()){
+			sql = sql.replaceAll(m1.group(0),"" );
 		}
-		
+		while(m.find()){
+			if(!strings.contains(m.group(0))){
+				strings.add(m.group(0));
+			}
+		}
+			DB db = new DB();
+			
+			Connection conn = db.getConnection();
+			Statement stmt = db.getStatemente(conn);
+			ResultSet rs = db.getResultSet(stmt,    " select gr.district_ids , gr.class_ids , gr.dept_ids  " +
+																		"   from sys_group_resources as gr "+
+																		"where group_id in ("+
+																		"        select group_id from sys_user_groups "+
+																		"       where user_id in ("+
+																		"               select id from sys_users where user_num = '"+user_num +"'"
+																		+")"
+																		+")");
+			log.info( " select gr.district_ids , gr.class_ids , gr.dept_ids  " +
+																		"   from sys_group_resources as gr "+
+																		"where group_id in ("+
+																		"        select group_id from sys_user_groups "+
+																		"       where user_id in ("+
+																		"               select id from sys_users where user_num = '"+user_num +"'"
+																		+")"
+																		+")");
+			try {
+				while(rs.next()){
+					
+					if(null != rs.getString("district_ids") &&  !"all".equalsIgnoreCase(rs.getString("district_ids"))){
+						where = where + " and store_group = '"  + rs.getString("district_ids") + "'";
+					}
+
+					if(null != rs.getString("class_ids")  && !"all".equalsIgnoreCase(rs.getString("class_ids"))){
+						where = where + " and cat1_id in ("  + rs.getString("class_ids") + ")";
+					}
+					
+					if(null != rs.getString("dept_ids") && !"all".equalsIgnoreCase(rs.getString("dept_ids"))){
+						where = where + " and store_id in ("  + rs.getString("dept_ids") + ")";
+					}
+				}
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}finally{
+				db.close(rs);
+				db.close(stmt);
+				db.close(conn);
+			}
 		response.setCharacterEncoding("UTF-8");
 		response.setContentType("text/html;charset=UTF-8");
 		response.setContentType("application/json");
@@ -224,7 +261,87 @@ public class ToolsController {
 		try {
 			w = response.getWriter();
 			
-			w.write(comUtil.generateJavaObject(strings.get(0) ,"select * " + sql));
+			w.write("select * from yonghuibi_s." + strings.get(0) + " as t1 " + where + " limit 50");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}	
+}
+    
+    
+    @RequestMapping(value = "getData" , method=RequestMethod.POST)
+    @ResponseBody    
+    public void getData(HttpServletResponse response,String sql, String user_num){
+		String regex = "kpi_.*?\\b";
+		String regex1 = "( group | order ) by.*\\b";
+		
+		String where = " where 1=1" ;
+		String[] clauses = sql.substring(sql.lastIndexOf("where") , sql.length()).replace("where", "").split("and") ;
+		for (String string : clauses) {
+			if(!string.contains("t3")){
+				where = where +" and " +string;
+			}
+		}
+		
+		Pattern p1 = Pattern.compile(regex1 , Pattern.CASE_INSENSITIVE);
+		Pattern p = Pattern.compile(regex , Pattern.CASE_INSENSITIVE);
+		Matcher m1 = p1.matcher(sql);
+		Matcher m = p.matcher(sql);
+		List<String> strings = new ArrayList<String>();
+		while(m1.find()){
+			sql = sql.replaceAll(m1.group(0),"" );
+		}
+		while(m.find()){
+			if(!strings.contains(m.group(0))){
+				strings.add(m.group(0));
+			}
+		}
+		ComUtil comUtil = new ComUtil();
+		
+		if(null != user_num){
+			DB db = new DB();
+			
+			Connection conn = db.getConnection();
+			Statement stmt = db.getStatemente(conn);
+			ResultSet rs = db.getResultSet(stmt,    " select gr.district_ids , gr.class_ids , gr.dept_ids  " +
+																		"   from sys_group_resources as gr "+
+																		"where group_id in ("+
+																		"        select group_id from sys_user_groups "+
+																		"       where user_id in ("+
+																		"               select id from sys_users where user_num = '"+user_num +"'"
+																		+")"
+																		+")");
+			
+			try {
+				while(rs.next()){
+					
+					if(null != rs.getString("district_ids") &&  !"all".equalsIgnoreCase(rs.getString("district_ids"))){
+						where = where + " and store_group = '"  + rs.getString("district_ids") + "'";
+					}
+
+					if(null != rs.getString("class_ids")  && !"all".equalsIgnoreCase(rs.getString("class_ids"))){
+						where = where + " and cat1_id in ("  + rs.getString("class_ids") + ")";
+					}
+					
+					if(null != rs.getString("dept_ids") && !"all".equalsIgnoreCase(rs.getString("dept_ids"))){
+						where = where + " and store_id in ("  + rs.getString("dept_ids") + ")";
+					}
+				}
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}finally{
+				db.close(rs);
+				db.close(stmt);
+				db.close(conn);
+			}
+		}
+		response.setCharacterEncoding("UTF-8");
+		response.setContentType("text/html;charset=UTF-8");
+		response.setContentType("application/json");
+		Writer w;
+		try {
+			w = response.getWriter();
+			
+			w.write(comUtil.generateJavaObject(strings.get(0) ,"select * from yonghuibi_s." + strings.get(0) + " as t1 " + where + " limit 50"));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}	
@@ -239,7 +356,7 @@ public class ToolsController {
 		Connection conn = db.getConnection() ;
 		java.sql.Statement stmt = db.getStatemente(conn);
 		ResultSet rs = null ;
-		rs = db.getResultSet( stmt  ,"	SELECT list.user_name , list.group_id , list.group_name " +
+		rs = db.getResultSet( stmt  ,"	SELECT list.user_name , list.group_id , list.group_name , list.role_name " +
 													"				, gr.district_ids , gr.class_ids , gr.dept_ids , gr1.report_id" +
 													"	FROM yonghuibi.user_power_list AS list" +
 													" LEFT JOIN yonghuibi.sys_group_resources AS gr ON list.group_id =  gr.group_id" +
@@ -249,6 +366,7 @@ public class ToolsController {
 		try {
 			while(rs.next()){
 				rtn = rtn + " user_name : " + rs.getString("user_name");
+				rtn = rtn + " | role_name : " + rs.getString("role_name");
 				rtn = rtn + " | group_id : " + rs.getString("group_id");
 				rtn = rtn + " | group_name : " + rs.getString("group_name");
 				rtn = rtn + "  | district_ids : " + rs.getString("district_ids");
@@ -330,7 +448,7 @@ public class ToolsController {
     		String procedureName = null ;
     		int count = 0 ;
     		procedureName = "ETL_report_id_" +(Integer.parseInt(kpi_id) > 9 ? "0" + kpi_id : "00" + kpi_id ) ;
-		List<PocedureVo> ls = p.getProcedureInfo(procedureName );
+		List<PocedureVo> ls =ProcedureUtil.getProcedureBodys(procedureName, p);
 	      String[] query = null;
 	      String item = null ;
   	  	  int in = 0;
@@ -340,6 +458,7 @@ public class ToolsController {
 	      List<String> partNames = ComUtil.getPartName(kpi_id);
 		for (PocedureVo pocedureVo : ls) {
 			query = pocedureVo.getProBody().split(";");
+			
 			item = null;
 			s = null ;
 		      for(int i = 0 ; i < query.length ; i ++){
@@ -353,22 +472,25 @@ public class ToolsController {
 		    	  	}
 		    	  	count++ ;
 		    	  	
-		    	  	for(String str : partNames){
-		    	  		  if(item.indexOf(str) > 0){
-		    	  			  row.setPartName(str);
-		    	  		  }
-		    	  	}
-		    	  	
 		    	  	item = item.replaceAll("\n", " ");
 		    	  	in =  (item.indexOf("group by") == -1? item.length():item.indexOf("group by"));
 		    	  	s = item.substring(item.indexOf("from") ,in);
 		    	  	in = (s.indexOf("order by") == -1? s.length():s.indexOf("order by"));
 		    	  	s = s.substring(s.indexOf("from") , in );
-
-
+		    	  	
+		    	  	if(s.contains("report_data")){
+		    	  		continue ;
+		    	  	}
+		    	  	
 		    	  	row = new ROW();
+		    	  	for(String str : partNames){
+		    	  		  if(item.indexOf(str) > 0){
+		    	  			  row.setPartName(str);
+		    	  		  }
+		    	  	}
 		    	  	row.setIsCheck("");
 		    	  	row.setSQL(s.replaceAll("\n", " "));
+		    	  	log.info(s.replaceAll("\n", " "));
 		    	  	list.add(row);
 		      }
 		}

@@ -52,6 +52,9 @@
 <br/>
 <br/>
 <br/>
+
+<div id = "toExcuteSQl"></div>
+
 		<table id="query_sql" class="easyui-datagrid">
 			<thead>
 			</thead>

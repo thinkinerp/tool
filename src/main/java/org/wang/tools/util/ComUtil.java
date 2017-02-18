@@ -237,6 +237,8 @@ public class ComUtil{
 		}
 		vo = vo + "}\n";
 		getjson = getjson + 								     "}\n"+
+						"rs.close();" + 
+						"st.close();" + 
 						"JSONObject json = new JSONObject();" +
 						" json.put(\"rows\", records);" +
 						"json.put(\"total\", records.size());"  + 

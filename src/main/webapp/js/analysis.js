@@ -1,4 +1,6 @@
 
+$('#jsoneditor').hide();
+
 comboboxConfig({
 		id:'kpi',
 		where:[
@@ -27,7 +29,6 @@ $('#query_sql_content').datagrid({
         {title:'SQL',field:'sQL',width:150},
 	]],
 	onDblClickRow:function(rowIndex, rowData){
-		alert($('#user_num').val());
 		//加载列信息
 		loadColumns({
 			gridName:'query_sql',
@@ -51,7 +52,23 @@ $('#query_sql_content').datagrid({
 			 		$('#userAuth').html(errorMsg.responseText);
 			 	}  
 			 }); 	 
-		
+		//加载执行的 SQL 
+		 
+		 $.ajax({  
+			 	type : "post",  
+			 	url : ctx +  "/tool/getToExcuteSQl",
+			 	data:{user_num:$('#user_num').val()
+			 			, sql : rowData.sQL } ,
+			 	success : function(result) {  
+			 		console.log(result)
+			 		$('#toExcuteSQl').html(result);
+			 	},  
+			 	error : function(errorMsg) {  
+			 		console.log(errorMsg)
+			 		$('#toExcuteSQl').html(errorMsg.responseText);
+			 	}  
+			 }); 	 
+		 
 		//加载数据
 		$('#query_sql').datagrid({url:ctx + "/tool/getData?sql=" + rowData.sQL + "&user_num=" + $('#user_num').val()});
 	}

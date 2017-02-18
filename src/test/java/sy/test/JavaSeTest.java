@@ -45,6 +45,78 @@ public class JavaSeTest {
 		
 		return new Integer(++i);
 	}
+	@Test
+	public void getClauses(){
+		
+		String sql = 	    		  "select\n" +
+	    		  "  37\n" +
+	    		  " , t3.group_id  \n" +
+	    		  " , null as period \n" +
+	    		  " ,  concat(t1.store_group,if(t1.amountTB = 0 , 0  , if(t1.amount -t1.amountTB > 0 ,1-ABS(t1.amountTB -t1.amount)/t1.amountTB ,1- ABS(t1.amountTB -t1.amount)/t1.amountTB)) , t1.store_name ) as num \n" +
+	    		  " ,'grid1'     as part_name\n" +
+	    		  " , 2           as `LEVEL`\n" +
+	    		  " , t1.store_id       as dim1\n" +
+	    		  " , t1.store_name    as dim_com\n" +
+	    		  " , t1.store_group   as dim2\n" +
+	    		  " ,'sale'   as dim3\n" +
+	    		  " ,'kpi_financial_area_mans_sales_daily'     as dim4\n" +
+	    		  " , t1.amount/10000		 as mea_float1 /*销售金额*/\n" +
+	    		  " , (t1.amount -t1.amountTB )/t1.amountTB           as mea_float2 /*来客数'*/\n" +
+	    		  " , (t1.amount-t1.amountHB)/t1.amountHB           as mea_float3/*毛利'*/\n" +
+	    		  " , null			             as mea_float4 /*客单价*/\n" +
+	    		  " , null								 as mea_float5 /**/\n" +
+	    		  " , null 								 as mea_float6 /**/\n" +
+	    		  " , null 								 as mea_float7 /*毛利率'*/\n" +
+	    		  " , null 								 as mea_float8 /*'动销量*/\n" +
+	    		  " , null                   			 as mea_float9 /*'动销率*/\n" +
+	    		  " , now()         					 as updatetime /*'*/\n" +
+	    		  "from yonghuibi_s.kpi_financial_area_mans_sales_daily as t1\n" +
+	    		  "left join (\n" +
+	    		  "select group_id ,dept_ids,class_ids,gids ,\n" +
+	    		  "       district_ids,province_ids from  `yonghuibi`.sys_group_resources \n" +
+	    		  "       where group_id in (select group_id from yonghuibi.sys_group_reports where report_id = 37 )\n" +
+	    		  ") t3 on 1=1 \n" +
+	    		  "where  1=1 and t1.store_class = 'sf' and  (t3.district_ids = 'all' or locate(t1.store_group,t3.district_ids) > 0)\n" +
+	    		  "          and (t3.dept_ids = 'all' or locate(t1.store_id,t3.dept_ids) > 0)  \n" +
+	    		  "          and \n" +
+	    		  "           store_group is not null and store_id is not  null and cat1_id is null\n" ;
+		
+		String[] clauses = sql.substring(sql.lastIndexOf("where") , sql.length()).replace("where", "").split("and") ;
+		 
+		for (String string : clauses) {
+			if(!string.contains("t3")){
+				System.out.println(string);
+			}
+		}
+		
+	}
+	
+	@Test
+	public void getProcedureTest1(){
+		
+		DB db = new DB();
+		String body = "" ;
+		Connection conn = db.getConnection();
+		Statement stmt = db.getStatemente(conn);
+		ResultSet rs = db.getResultSet(stmt, " show create procedure ETL_report_id_030_main");
+		
+		try {
+			while(rs.next()){
+				body = rs.getString("Create Procedure");
+				System.out.println(body);
+				body = body.substring(body.toLowerCase().indexOf("begin") ,body .toLowerCase().lastIndexOf("end"));
+				System.out.println(body);
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}finally{
+			db.close(conn);
+			db.close(stmt);
+			db.close(rs);
+		}
+		
+	}
 	
 	@Test
 	public void CalendarTest() throws Exception{
