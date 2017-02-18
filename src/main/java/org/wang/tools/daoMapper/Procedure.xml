@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://www.mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.wang.tools.dao.Procdure" >
+
+    <resultMap id="PocedureVo" type="org.wang.tools.vo.PocedureVo">
+    <result column="proBody" property="proBody" jdbcType="VARCHAR" />
+    <result column="proName" property="proName" jdbcType="VARCHAR" />
+   </resultMap>
+ 
+     <select id="getProcedureInfo" parameterType="java.lang.String" resultMap="PocedureVo">
+		select DISTINCT name  as proName , body as proBody
+        from mysql.proc 
+        where LOCATE(#{procedureName , jdbcType=VARCHAR},name) &gt; 0 
+   </select> 
+	
+ </mapper>
