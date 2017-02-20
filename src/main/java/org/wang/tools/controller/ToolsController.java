@@ -191,14 +191,23 @@ public class ToolsController {
 		String regex = "kpi_.*?\\b";
 		String regex1 = "( group | order ) by.*\\b";
 		
-		String where = " where 1=1 " ;
-		String[] clauses = sql.substring(sql.lastIndexOf("where") , sql.length()).replace("where", "").split("and") ;
-		 
+		boolean isDistrict = false ;
+		boolean isClass = false ;
+		boolean isDept = false ;
+		
+		String where = " where 1=1" ;
+		String oWhere = sql.substring(sql.lastIndexOf("where") , sql.length());
+		String[] clauses = oWhere.replace("where", "").split("and") ;
 		for (String string : clauses) {
 			if(!string.contains("t3")){
 				where = where +" and " +string;
 			}
 		}
+		
+		isDistrict = "district_ids".equalsIgnoreCase(oWhere);
+		isClass = "class_ids".equalsIgnoreCase(oWhere);
+		isDept = "dept_ids".equalsIgnoreCase(oWhere);
+		
 		Pattern p1 = Pattern.compile(regex1 , Pattern.CASE_INSENSITIVE);
 		Pattern p = Pattern.compile(regex , Pattern.CASE_INSENSITIVE);
 		Matcher m1 = p1.matcher(sql);
@@ -235,15 +244,15 @@ public class ToolsController {
 			try {
 				while(rs.next()){
 					
-					if(null != rs.getString("district_ids") &&  !"all".equalsIgnoreCase(rs.getString("district_ids"))){
+					if(null != rs.getString("district_ids") && isDistrict &&  !"all".equalsIgnoreCase(rs.getString("district_ids"))){
 						where = where + " and store_group = '"  + rs.getString("district_ids") + "'";
 					}
 
-					if(null != rs.getString("class_ids")  && !"all".equalsIgnoreCase(rs.getString("class_ids"))){
+					if(null != rs.getString("class_ids") && isClass  && !"all".equalsIgnoreCase(rs.getString("class_ids"))){
 						where = where + " and cat1_id in ("  + rs.getString("class_ids") + ")";
 					}
 					
-					if(null != rs.getString("dept_ids") && !"all".equalsIgnoreCase(rs.getString("dept_ids"))){
+					if(null != rs.getString("dept_ids") && isDept && !"all".equalsIgnoreCase(rs.getString("dept_ids"))){
 						where = where + " and store_id in ("  + rs.getString("dept_ids") + ")";
 					}
 				}
@@ -274,13 +283,23 @@ public class ToolsController {
 		String regex = "kpi_.*?\\b";
 		String regex1 = "( group | order ) by.*\\b";
 		
+		boolean isDistrict = false ;
+		boolean isClass = false ;
+		boolean isDept = false ;
+		
 		String where = " where 1=1" ;
-		String[] clauses = sql.substring(sql.lastIndexOf("where") , sql.length()).replace("where", "").split("and") ;
+		String oWhere = sql.substring(sql.lastIndexOf("where") , sql.length());
+		String[] clauses = oWhere.replace("where", "").split("and") ;
 		for (String string : clauses) {
 			if(!string.contains("t3")){
 				where = where +" and " +string;
 			}
 		}
+		
+		isDistrict = "district_ids".equalsIgnoreCase(oWhere);
+		isClass = "class_ids".equalsIgnoreCase(oWhere);
+		isDept = "dept_ids".equalsIgnoreCase(oWhere);
+		
 		
 		Pattern p1 = Pattern.compile(regex1 , Pattern.CASE_INSENSITIVE);
 		Pattern p = Pattern.compile(regex , Pattern.CASE_INSENSITIVE);
@@ -314,15 +333,15 @@ public class ToolsController {
 			try {
 				while(rs.next()){
 					
-					if(null != rs.getString("district_ids") &&  !"all".equalsIgnoreCase(rs.getString("district_ids"))){
+					if(null != rs.getString("district_ids") && isDistrict &&  !"all".equalsIgnoreCase(rs.getString("district_ids"))){
 						where = where + " and store_group = '"  + rs.getString("district_ids") + "'";
 					}
 
-					if(null != rs.getString("class_ids")  && !"all".equalsIgnoreCase(rs.getString("class_ids"))){
+					if(null != rs.getString("class_ids") && isClass  && !"all".equalsIgnoreCase(rs.getString("class_ids"))){
 						where = where + " and cat1_id in ("  + rs.getString("class_ids") + ")";
 					}
 					
-					if(null != rs.getString("dept_ids") && !"all".equalsIgnoreCase(rs.getString("dept_ids"))){
+					if(null != rs.getString("dept_ids") && isDept && !"all".equalsIgnoreCase(rs.getString("dept_ids"))){
 						where = where + " and store_id in ("  + rs.getString("dept_ids") + ")";
 					}
 				}
