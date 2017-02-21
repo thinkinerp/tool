@@ -204,9 +204,9 @@ public class ToolsController {
 			}
 		}
 		
-		isDistrict = "district_ids".equalsIgnoreCase(oWhere);
-		isClass = "class_ids".equalsIgnoreCase(oWhere);
-		isDept = "dept_ids".equalsIgnoreCase(oWhere);
+		isDistrict = oWhere.contains("district_ids");
+		isClass = oWhere.contains("class_ids");
+		isDept = oWhere.contains("dept_ids");
 		
 		Pattern p1 = Pattern.compile(regex1 , Pattern.CASE_INSENSITIVE);
 		Pattern p = Pattern.compile(regex , Pattern.CASE_INSENSITIVE);
@@ -296,9 +296,9 @@ public class ToolsController {
 			}
 		}
 		
-		isDistrict = "district_ids".equalsIgnoreCase(oWhere);
-		isClass = "class_ids".equalsIgnoreCase(oWhere);
-		isDept = "dept_ids".equalsIgnoreCase(oWhere);
+		isDistrict = oWhere.contains("district_ids");
+		isClass = oWhere.contains("class_ids");
+		isDept = oWhere.contains("dept_ids");
 		
 		
 		Pattern p1 = Pattern.compile(regex1 , Pattern.CASE_INSENSITIVE);
