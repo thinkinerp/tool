@@ -187,10 +187,9 @@ public class ToolsController {
     
     @RequestMapping(value = "getToExcuteSQl" , method=RequestMethod.POST)
     @ResponseBody    
-    public void getToExcuteSQl(HttpServletResponse response,String sql, String user_num){
+    public void getToExcuteSQl(HttpServletResponse response,HttpServletRequest request, String sql, String user_num){
 		String regex = "kpi_.*?\\b";
 		String regex1 = "( group | order ) by.*\\b";
-		
 		boolean isDistrict = false ;
 		boolean isClass = false ;
 		boolean isDept = false ;
@@ -279,7 +278,7 @@ public class ToolsController {
     
     @RequestMapping(value = "getData" , method=RequestMethod.POST)
     @ResponseBody    
-    public void getData(HttpServletResponse response,String sql, String user_num){
+    public void getData(HttpServletResponse response,HttpServletRequest request ,String sql, String user_num){
 		String regex = "kpi_.*?\\b";
 		String regex1 = "( group | order ) by.*\\b";
 		
@@ -360,7 +359,9 @@ public class ToolsController {
 		try {
 			w = response.getWriter();
 			
-			w.write(comUtil.generateJavaObject(strings.get(0) ,"select * from yonghuibi_s." + strings.get(0) + " as t1 " + where + " limit 50"));
+			w.write(comUtil.generateJavaObject(strings.get(0) 
+																	,"select * from yonghuibi_s." + strings.get(0) + " as t1 " + where + " limit 50"
+																	,request.getSession().getServletContext().getRealPath("/") ));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}	
@@ -476,7 +477,7 @@ public class ToolsController {
 	      ROW row = null ;
 	      List<String> partNames = ComUtil.getPartName(kpi_id);
 		for (PocedureVo pocedureVo : ls) {
-			query = pocedureVo.getProBody().split(";");
+			query = pocedureVo.getProBody().toLowerCase().split(";");
 			
 			item = null;
 			s = null ;

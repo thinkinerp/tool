@@ -242,6 +242,9 @@ public class ToolTest {
 	
 	
 	@Test
+	/*
+	 * @desc:梳理接口表-存储过程-业务表的关系，保存到 Excel 中。
+	 * */
 	public void relation() {
 
         List<PocedureVo> l = null ;
@@ -343,8 +346,8 @@ public class ToolTest {
 // System.out.println(JSONObject.toJSONString(ts));
 //System.out.println(JSONObject.toJSONString(pre_kpi));
 //        DataDictionaryExcel.generateDataDictionaryExcel(ts, "/Users/wangyifei/dataDic/dataDict.xls");        	
-//        DataDictionaryExcel.generateDataDictionaryExcel(pre_kpi, "/Users/wangyifei/dataDic/pre_kpi_Dict.xls");        	
-        DataDictionaryExcel.generateDataDictionaryExcel(pre_report_data, "/Users/wangyifei/dataDic/pre_report_dataDict.xls");        	
+        DataDictionaryExcel.generateDataDictionaryExcel(pre_kpi, "/Users/wangyifei/dataDic/pre_kpi_Dict.xls");        	
+//        DataDictionaryExcel.generateDataDictionaryExcel(pre_report_data, "/Users/wangyifei/dataDic/pre_report_dataDict.xls");        	
 	}
 	
 	public String groupConcate( List<String> list){

@@ -185,7 +185,7 @@ public class ComUtil{
 		
 		return where;
 	}
-	public String generateJavaObject(String className , String query) {
+	public String generateJavaObject(String className , String query , String libPath) {
 		String vo =   "public class "+captureName(className)+"{\n" ;
 	
 		String getjson =   "import  java.sql.ResultSet;\n"+
@@ -246,7 +246,7 @@ public class ComUtil{
 				        "}"+
 			     		vo+
 			     		"\n}"; 
-		return javaObjectInvoke(captureName(className) , getjson ,db.getConnection() );
+		return javaObjectInvoke(captureName(className) , getjson ,db.getConnection() ,libPath);
 }
 	public String captureName(String name){
 		
@@ -267,7 +267,7 @@ public class ComUtil{
         path = StringUtils.replace(path, StringUtils.replace(className , clazz.getPackage().getName() + ".", "") + ".class", "");
         return path;
     }
-	public String javaObjectInvoke( String className , String classBody , Connection conn){
+	public String javaObjectInvoke( String className , String classBody , Connection conn , String libPath){
 		String currentDir = getResourcePath(this.getClass()); 
 		String src = "package org.wang.tools.vo; " +
 							classBody;
@@ -285,7 +285,7 @@ public class ComUtil{
 	        CompilationTask cTask = jc.getTask( null
 	        															, fileManager
 	        		  													, null 
-	        		  													, Arrays.asList("-classpath","/Users/wangyifei/Documents/java/apache-tomcat-8.0.36/webapps/tool/WEB-INF/lib/fastjson-1.2.7.jar")
+	        		  													, Arrays.asList("-classpath", libPath + "/WEB-INF/lib/fastjson-1.2.7.jar")
 	        		  													, null
 	        		  													, fileObjects);  
 	        cTask.call();  
