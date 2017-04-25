@@ -6,9 +6,21 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
-<%@include file="/common/taglibs.jsp"%>
-<%@include file="/common/css.jsp" %> 
-    <link href="${ctx}/js/bootstrap3/css/bootstrap-dialog.min.css" rel="stylesheet" type="text/css">
+
+<%@include file="/common/taglibs.jsp" %>
+<link rel="stylesheet" href="${ctx}/bootstrap-3.3.5/css/bootstrap.min.css">
+<script type="text/javascript" src="${ctx}/bootstrap/js/jquery-1.8.3.min.js" charset="UTF-8"></script>
+<script type="text/javascript" src="${ctx}/bootstrap/js/jquery.form.js" charset="UTF-8"></script>
+<script src="${ctx}/bootstrap/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="${ctx}/bootstrap/bootstrap-table/bootstrap-table.min.css">
+<%-- <link rel="stylesheet" href="${ctx}/bootstrap/bootstrap-table/extensions/sticky-header/bootstrap-table-sticky-header.css"> --%>
+<script src="${ctx}/bootstrap/bootstrap-table/bootstrap-table.min.js"></script>
+<script src="${ctx}/bootstrap/bootstrap-table/bootstrap-table.js"></script>
+<script src="${ctx}/bootstrap/bootstrap-table/bootstrap-table-locale-all.js"></script>
+<script src="${ctx}/bootstrap/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
+<%-- <script src="${ctx}/bootstrap/bootstrap-table/extensions/sticky-header/bootstrap-table-sticky-header.min.js"></script> --%>
+<script src="${ctx}/bootstrap/bootstrap-table/extensions/export/bootstrap-table-export.min.js"></script>
+<script src="${ctx}/bootstrap/bootstrap-table/extensions/export/bootstrap-table-export.js"></script>
     <script src="${ctx}/js/bootstrap3/bootstrap-dialog.min.js"></script>
 <script type="text/javascript" >
     var ctx = "${ctx}";	
@@ -20,33 +32,21 @@
 
 
 BootstrapDialog.show({
-title: '无效账号汇总',
-message: '任务名称为**' + Window.objResult.jobName +'**,共有' + Window.objResult.unCheckedCount+'个',
-buttons: [{
-    label: '导出 Excel',
-    action: function(dialog) {
-    	window.location.href =ctx + '/message/returnUncheckedContactExcel?jobName=sadfasdfa';
-    }
-},{
-		label: '导出 SQL 语句',
-		action: function(dialog) {
-        	$.ajax({
-        		url:ctx + '/message/returnUncheckedContactSQL',
-        		type:'get',
-				data:{
-					jobName:'sadfasdfa'
-				},
-				success:function(result){
-					dialog.setMessage(result);
-				},
-				error:function(result){
+		title: '提示',
+		message: '您的微信号（${openid}）已经与门店（${oldStoreName}）绑定，您本次扫码对应的门店为${newStoreName},是否绑定新门店？',
+		buttons: [{
+			label: '是',
+			action: function(dialog) {
+				window.location.href =ctx + '${redirectUrl}';
+			}
+		},{
+				label: '否',
+				action: function(dialog) {
+					window.location.href = ctx + '/error.jsp?msg=请退出后重新扫码';
 					
-				}
-        	});
-			
-		}      	
-    }
-]
+				}      	
+			}
+		]
 });
 
 

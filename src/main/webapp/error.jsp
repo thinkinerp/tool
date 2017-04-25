@@ -10,6 +10,8 @@
 
 <div style="font-color:red;font-size:30px">
 ${errorMsg}
+
+<%= null == request.getParameter("msg") ?"": request.getParameter("msg") %>
 </div>
 </body>
 </html>

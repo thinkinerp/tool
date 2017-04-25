@@ -201,15 +201,33 @@ public class dataCommunicationController implements ApplicationContextAware {
     	return "redirect:"+uri;
     }
     
+    @RequestMapping(value = "gotoBindingStore" , method=RequestMethod.GET)
+    public String gotoBindingStore(HttpServletResponse res , HttpServletRequest req , HttpSession session , String openid , String storeName , String uuid ,String keyid){
+    	
+    	Map<String, String> where = new HashMap<String , String >();
+    	where.put("weixinid", openid);
+		List<Users> records = um.selectByWhere(where);
+		
+		if(0 < records.size()){
+			Users record = records.get(0);
+			record.setStoreName(storeName);
+			record.setStoreUuid(uuid);
+			um.updateByPrimaryKey(record);
+			return "redirect:/index.jsp";
+		}else{
+			session.setAttribute("errorMsg", "无此账号");
+			return "redirect:/error.jsp";
+			
+		}
+    }
+    
     
     @RequestMapping(value = "checkOnUser" , method=RequestMethod.GET)
     public String checkOnUser(HttpServletResponse res , HttpServletRequest req,HttpSession session,String uuid, String keyid , String code){
     	
-    log.info("can:" +uuid +" " + keyid +" code : " + code);
+    	log.info("can:" +uuid +" " + keyid +" code : " + code);
     
-    Map<String , String> where = new HashMap<String,String>();
-
-    
+    	Map<String , String> where = new HashMap<String,String>();
 
     	JuheDemo.setCharset("GBK");
         Map<String , String> rs = JuheDemo.check(uuid , keyid);
@@ -233,38 +251,64 @@ public class dataCommunicationController implements ApplicationContextAware {
             
             if(null !=object.getString("errcode")){
             	log.info("code request fail:" + object.getString("errmsg"));
-            	req.setAttribute("errorMsg", "微信服务器出现错误，请重试");
+            	session.setAttribute("errorMsg", "微信服务器出现错误，请重试");
             	return "redirect:/error.jsp";
             }else{
             	
+            	JuheDemo.setCharset("UTF-8");
+                try {
+					result = JuheDemo.net("https://api.weixin.qq.com/sns/userinfo?access_token="+object.getString("access_token")+"&openid="+object.getString("openid")+"&lang=zh_CN", param, "GET",null);
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+                JSONObject object1 = JSONObject.parseObject(result);         
+                if(null !=object1.getString("errcode")){
+                	log.info("userInfo request fail:openid:" + object.getString("openid")+ " error msg:" +object1.getString("errmsg"));
+                	return "redirect:/error.jsp";
+                }
+                
+                
                 where.put("uuid", uuid);
                 where.put("keyid", keyid);
                 where.put("weixinid", object.getString("openid"));
                 List<Users> users = um.selectByWhere(where);
                 // 0 < users.size() 说明此微信用户已经绑定过门店，另外一种情况是重新绑定，即已经绑定过了，例如 A 绑定了门店1
-                // 然后，本次扫的是门店2，此时需要另外判断。
+                // 然后，本次扫的是门店2，此时需要另外判断。这种情况的条件为 0 = users.size()
+                
                 if(0 < users.size()){
+                	
+                	log.info("微信id 与门店绑定");
+                	
                 	session.setAttribute("uuid", uuid);
                 	session.setAttribute("storeName", users.get(0).getStoreName());
                 	session.setAttribute("userId", users.get(0).getWeixinId());
                 	return "forward:/index.jsp";
                 }else{	
-                
+                	log.info("微信id 与门店未绑定");
                 	// 这里的情况分两种
                 	//一种是重绑定
                 	// 一种是第一次绑定
+                	
+                	//先判断 uuid（门店id）是否有效，如果无效，则发送给用户提示信息
+                	if("1".equalsIgnoreCase(rs.get("result"))){
+                    	log.info("code request fail:" + object.getString("errmsg"));
+                    	session.setAttribute("errorMsg", "二维码无效，请联系管理员");
+                    	return "redirect:/error.jsp";
+                	}
+                	//开始片段微信账号是否已经绑定了其他的门店
                 	where.clear();
-                	
                 	where.put("userId", object.getString("openid"));
-                	
                 	List<Users> regeUsers = um.selectByWhere(where);
-                	
                 	if( 0 < regeUsers.size()){
-                		//此微信账号已经绑定过，但是本次扫码还未绑定
-                		
-                		req.setAttribute("redirectUrl", "/data/gotoBindingStore?code="+code);
-                		req.setAttribute("oldStoreName", regeUsers.get(0).getStoreName());
-                		req.setAttribute("newStoreName","");
+                		//此微信账号已经绑定过，但是本次扫码对应的门店还未绑定
+                		session.setAttribute("redirectUrl", "/data/gotoBindingStore?openid="+object.getString("openid")
+                																															+"&uuid="+uuid
+                																															+"&keyid="+keyid
+                																															+"&storeName="+rs.get("shop"));
+                		session.setAttribute("oldStoreName", regeUsers.get(0).getStoreName());
+                		session.setAttribute("newStoreName",rs.get("shop"));
+                		session.setAttribute("openid", object1.getString("nickname"));
                 		return "redirect:/redirect.jsp";
                 				
                 	}
@@ -276,17 +320,9 @@ public class dataCommunicationController implements ApplicationContextAware {
 	                param2.put("code",code);
 	                param2.put("grant_type", "authorization_code");
 	                JuheDemo.setCharset("UTF-8");
-	                try {
-						result = JuheDemo.net("https://api.weixin.qq.com/sns/userinfo?access_token="+object.getString("access_token")+"&openid="+object.getString("openid")+"&lang=zh_CN", param, "GET",null);
-					} catch (Exception e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-	                JSONObject object1 = JSONObject.parseObject(result);
-	                if(null !=object1.getString("errcode")){
-	                	log.info("userInfo request fail:openid:" + object.getString("openid")+ " error msg:" +object1.getString("errmsg"));
-	                	return "redirect:/error.jsp";
-	                }else{
+
+
+
 	                	log.info("userInfo request success: nickname"  + object1.getString("nickname") + "    openid:" + object.getString("openid"));
 	                    if("成功".equalsIgnoreCase(rs.get("message"))){
 	                    	Users record = new Users();
@@ -302,8 +338,6 @@ public class dataCommunicationController implements ApplicationContextAware {
 	                    	req.setAttribute("storeName", rs.get("shop"));
 	                    	
 	                    	return "forward:/index.jsp";
-                    }
-                	
                 }
             }
             }
