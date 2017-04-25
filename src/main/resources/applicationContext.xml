@@ -51,7 +51,7 @@
 		  <!-- 指定sqlMapConfig总配置文件，订制的environment在spring容器中不在生效-->
 		  <!--  <property name="configLocation" value="classpath:mybatis-config.xml" /> -->
 		  <!--  <property name="mapperLocations" value="classpath:com/yonghui/portal/daomapper/*.xml"></property> -->
-		   <property name="mapperLocations" value="classpath:org/wang/tools/daoMapper/**/*.xml"></property>
+		   <property name="mapperLocations" value="classpath:com/intfocus/hdk/daomapper/**/*.xml"></property>
 	</bean>
 	
 	
@@ -61,7 +61,7 @@
     </bean>  
 
 	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
-	  <property name="basePackage" value="org.wang.tools.dao" />
+	  <property name="basePackage" value="com.intfocus.hdk.dao" />
 	</bean>
 	 
 	 <!-- 可通过注解控制事务 -->
@@ -94,5 +94,4 @@
             </props>
          </property>
      </bean>
-		
 </beans>

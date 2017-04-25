@@ -4,7 +4,7 @@
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/test/java"/>
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/resources"/>
         <wb-resource deploy-path="/" source-path="/src/main/webapp" tag="defaultRootSource"/>
-        <property name="context-root" value="tool"/>
-        <property name="java-output-path" value="/tool/target/classes"/>
+        <property name="java-output-path" value="/hdk/target/classes"/>
+        <property name="context-root" value="hdk"/>
     </wb-module>
 </project-modules>
