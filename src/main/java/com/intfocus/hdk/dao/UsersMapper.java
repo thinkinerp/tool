@@ -17,6 +17,6 @@ public interface UsersMapper {
     int updateByPrimaryKeySelective(Users record);
 
     int updateByPrimaryKey(Users record);
-
-	List<Users> selectByWhere(Map<String, String> where);
+    
+    List<Users> selectByWhere(Map<String, String> where);
 }

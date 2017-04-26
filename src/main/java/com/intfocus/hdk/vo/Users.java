@@ -1,5 +1,7 @@
 package com.intfocus.hdk.vo;
 
+import java.util.Date;
+
 public class Users {
     private Integer id;
 
@@ -14,6 +16,10 @@ public class Users {
     private String storeName;
 
     private String remark;
+
+    private Date createdAt;
+
+    private Date updatedAt;
 
     public Integer getId() {
         return id;
@@ -69,5 +75,21 @@ public class Users {
 
     public void setRemark(String remark) {
         this.remark = remark == null ? null : remark.trim();
+    }
+
+    public Date getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public Date getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(Date updatedAt) {
+        this.updatedAt = updatedAt;
     }
 }

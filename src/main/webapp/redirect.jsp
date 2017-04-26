@@ -25,7 +25,7 @@
 <script type="text/javascript" >
     var ctx = "${ctx}";	
 </script>
-<title>数据通-${storeName}</title>
+<title>跳转</title>
 </head>
 <body>
 <script type="text/javascript">

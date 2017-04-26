@@ -21,9 +21,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.fastjson.JSONObject;
+import com.intfocus.hdk.dao.JsapiTicketMapper;
 import com.intfocus.hdk.dao.SalesDataMapper;
 import com.intfocus.hdk.dao.UsersMapper;
 import com.intfocus.hdk.util.JuheDemo;
+import com.intfocus.hdk.util.WeiXinUserInfoUtil;
 import com.intfocus.hdk.vo.SalesData;
 import com.intfocus.hdk.vo.Users;
 
@@ -36,6 +38,8 @@ public class dataCommunicationController implements ApplicationContextAware {
     	private SalesDataMapper sdm ;
     	@Resource 
     	private         UsersMapper um ;
+    	@Resource 
+    	private         JsapiTicketMapper jtm   ;
 
     private static ApplicationContext applicationContext;
     @RequestMapping(value = "submit" , method=RequestMethod.POST)
@@ -121,7 +125,7 @@ public class dataCommunicationController implements ApplicationContextAware {
 //			e.printStackTrace();
 //		}
     	uri = uri.replace("SCOPE", "code");
-    	log.info("wangyifeiURI"+uri);
+    	log.info("redirectURI"+uri);
     	return "redirect:"+uri;
     }
     
@@ -167,6 +171,7 @@ public class dataCommunicationController implements ApplicationContextAware {
                 	log.info("userInfo request fail:openid:" + object.getString("openid")+ " error msg:" +object1.getString("errmsg"));
                 	return "redirect:/error.jsp";
                 }else{
+                	
                 	Map<String , String> where = new HashMap<String,String>();
                     where.put("weixinid", object.getString("openid"));
                     List<Users> users = um.selectByWhere(where);
@@ -233,7 +238,6 @@ public class dataCommunicationController implements ApplicationContextAware {
         Map<String , String> rs = JuheDemo.check(uuid , keyid);
 
         Map<String , String> param = new HashMap<String ,String>();
-        //?appid=APPID&secret=SECRET&code=CODE&grant_type=authorization_code
         param.put("appid", "wx1b5cef3e2e36fa21");
         param.put("secret", "62eb7eb80215894d51996ab26e00236b");
         param.put("code",code);
@@ -254,6 +258,40 @@ public class dataCommunicationController implements ApplicationContextAware {
             	session.setAttribute("errorMsg", "微信服务器出现错误，请重试");
             	return "redirect:/error.jsp";
             }else{
+            	
+            	log.info("判断是否已经关注公众号");
+            	// 在这里判断是否关注微信公众好。
+//            	JSONObject  jb = WeiXinUserInfoUtil.getUserInfo(object.getString("access_token"),object.getString("openid"),null);
+//            	
+//                if(null !=jb.getString("errcode")){
+//                	log.info("userInfo request fail: error msg:" +jb.getString("errmsg"));
+//                	session.setAttribute("errorMsg", "微信服务器出现错误，请重试");
+//                	return "redirect:/error.jsp";
+//                }else{
+                	
+//                	if(null != jb.getString("subscribe") && "0".equalsIgnoreCase(jb.getString("subscribe"))){
+            	if(true){
+                		String ticket = WeiXinUserInfoUtil.getSign(object.getString("access_token"), jtm);
+                		log.info("用户没有关注公众号");
+                		if("error".equalsIgnoreCase(ticket)){
+                        	log.info("code request fail:获取 ticket 失败" );
+                        	session.setAttribute("errorMsg", "微信验证无效，请重试");
+                        	return "redirect:/error.jsp";
+                		}
+                		
+                		Map<String,String> sign = WeiXinUserInfoUtil.sign(ticket, "http://www.chuanzhen.mobi/hdk/followeWeiXinPublic.jsp");
+                		
+                		session.setAttribute("appId", "wx1b5cef3e2e36fa21");
+                		session.setAttribute("timestamp", sign.get("timestamp"));
+                		session.setAttribute("nonceStr", sign.get("nonceStr"));
+                		session.setAttribute("signature", sign.get("signature"));
+                		log.info("获取的 signature：" + sign.get("signature"));
+                		return "redirect:http://www.chuanzhen.mobi/hdk/followeWeiXinPublic.jsp";
+            	}
+//                	}
+//                	
+//                }
+
             	
             	JuheDemo.setCharset("UTF-8");
                 try {
@@ -296,9 +334,9 @@ public class dataCommunicationController implements ApplicationContextAware {
                     	session.setAttribute("errorMsg", "二维码无效，请联系管理员");
                     	return "redirect:/error.jsp";
                 	}
-                	//开始片段微信账号是否已经绑定了其他的门店
+                	//开始判断微信账号是否已经绑定了其他的门店
                 	where.clear();
-                	where.put("userId", object.getString("openid"));
+                	where.put("weixinid", object.getString("openid"));
                 	List<Users> regeUsers = um.selectByWhere(where);
                 	if( 0 < regeUsers.size()){
                 		//此微信账号已经绑定过，但是本次扫码对应的门店还未绑定

@@ -1,20 +1,22 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.intfocus.hdk.dao.UsersMapper" >
-  <resultMap id="BaseResultMap" type="com.intfocus.hdk.vo.Users" >
-    <id column="id" property="id" jdbcType="INTEGER" />
-    <result column="weixin_id" property="weixinId" jdbcType="VARCHAR" />
-    <result column="weixin_name" property="weixinName" jdbcType="VARCHAR" />
-    <result column="store_uuid" property="storeUuid" jdbcType="VARCHAR" />
-    <result column="store_key_id" property="storeKeyId" jdbcType="VARCHAR" />
-    <result column="store_name" property="storeName" jdbcType="VARCHAR" />
-    <result column="remark" property="remark" jdbcType="VARCHAR" />
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.intfocus.hdk.dao.UsersMapper">
+  <resultMap id="BaseResultMap" type="com.intfocus.hdk.vo.Users">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="weixin_id" jdbcType="VARCHAR" property="weixinId" />
+    <result column="weixin_name" jdbcType="VARCHAR" property="weixinName" />
+    <result column="store_uuid" jdbcType="VARCHAR" property="storeUuid" />
+    <result column="store_key_id" jdbcType="VARCHAR" property="storeKeyId" />
+    <result column="store_name" jdbcType="VARCHAR" property="storeName" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+    <result column="created_at" jdbcType="TIMESTAMP" property="createdAt" />
+    <result column="updated_at" jdbcType="TIMESTAMP" property="updatedAt" />
   </resultMap>
-  <sql id="Base_Column_List" >
-    id, weixin_id, weixin_name, store_uuid, store_key_id, store_name, remark
+  <sql id="Base_Column_List">
+    id, weixin_id, weixin_name, store_uuid, store_key_id, store_name, remark, created_at, 
+    updated_at
   </sql>
-  
-  <select id="selectByWhere" resultMap="BaseResultMap" parameterType="java.util.Map" >
+    <select id="selectByWhere" resultMap="BaseResultMap" parameterType="java.util.Map" >
     select 
     <include refid="Base_Column_List" />
     from users
@@ -37,105 +39,127 @@
 	    </if>
     </if>
   </select>
-  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
     from users
     where id = #{id,jdbcType=INTEGER}
   </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from users
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.intfocus.hdk.vo.Users" >
+  <insert id="insert" parameterType="com.intfocus.hdk.vo.Users">
     insert into users (id, weixin_id, weixin_name, 
       store_uuid, store_key_id, store_name, 
-      remark)
+      remark, created_at, updated_at
+      )
     values (#{id,jdbcType=INTEGER}, #{weixinId,jdbcType=VARCHAR}, #{weixinName,jdbcType=VARCHAR}, 
       #{storeUuid,jdbcType=VARCHAR}, #{storeKeyId,jdbcType=VARCHAR}, #{storeName,jdbcType=VARCHAR}, 
-      #{remark,jdbcType=VARCHAR})
+      #{remark,jdbcType=VARCHAR}, #{createdAt,jdbcType=TIMESTAMP}, #{updatedAt,jdbcType=TIMESTAMP}
+      )
   </insert>
-  <insert id="insertSelective" parameterType="com.intfocus.hdk.vo.Users" >
+  <insert id="insertSelective" parameterType="com.intfocus.hdk.vo.Users">
     insert into users
-    <trim prefix="(" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
         id,
       </if>
-      <if test="weixinId != null" >
+      <if test="weixinId != null">
         weixin_id,
       </if>
-      <if test="weixinName != null" >
+      <if test="weixinName != null">
         weixin_name,
       </if>
-      <if test="storeUuid != null" >
+      <if test="storeUuid != null">
         store_uuid,
       </if>
-      <if test="storeKeyId != null" >
+      <if test="storeKeyId != null">
         store_key_id,
       </if>
-      <if test="storeName != null" >
+      <if test="storeName != null">
         store_name,
       </if>
-      <if test="remark != null" >
+      <if test="remark != null">
         remark,
       </if>
+      <if test="createdAt != null">
+        created_at,
+      </if>
+      <if test="updatedAt != null">
+        updated_at,
+      </if>
     </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
         #{id,jdbcType=INTEGER},
       </if>
-      <if test="weixinId != null" >
+      <if test="weixinId != null">
         #{weixinId,jdbcType=VARCHAR},
       </if>
-      <if test="weixinName != null" >
+      <if test="weixinName != null">
         #{weixinName,jdbcType=VARCHAR},
       </if>
-      <if test="storeUuid != null" >
+      <if test="storeUuid != null">
         #{storeUuid,jdbcType=VARCHAR},
       </if>
-      <if test="storeKeyId != null" >
+      <if test="storeKeyId != null">
         #{storeKeyId,jdbcType=VARCHAR},
       </if>
-      <if test="storeName != null" >
+      <if test="storeName != null">
         #{storeName,jdbcType=VARCHAR},
       </if>
-      <if test="remark != null" >
+      <if test="remark != null">
         #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="createdAt != null">
+        #{createdAt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updatedAt != null">
+        #{updatedAt,jdbcType=TIMESTAMP},
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.intfocus.hdk.vo.Users" >
+  <update id="updateByPrimaryKeySelective" parameterType="com.intfocus.hdk.vo.Users">
     update users
-    <set >
-      <if test="weixinId != null" >
+    <set>
+      <if test="weixinId != null">
         weixin_id = #{weixinId,jdbcType=VARCHAR},
       </if>
-      <if test="weixinName != null" >
+      <if test="weixinName != null">
         weixin_name = #{weixinName,jdbcType=VARCHAR},
       </if>
-      <if test="storeUuid != null" >
+      <if test="storeUuid != null">
         store_uuid = #{storeUuid,jdbcType=VARCHAR},
       </if>
-      <if test="storeKeyId != null" >
+      <if test="storeKeyId != null">
         store_key_id = #{storeKeyId,jdbcType=VARCHAR},
       </if>
-      <if test="storeName != null" >
+      <if test="storeName != null">
         store_name = #{storeName,jdbcType=VARCHAR},
       </if>
-      <if test="remark != null" >
+      <if test="remark != null">
         remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="createdAt != null">
+        created_at = #{createdAt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updatedAt != null">
+        updated_at = #{updatedAt,jdbcType=TIMESTAMP},
       </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.intfocus.hdk.vo.Users" >
+  <update id="updateByPrimaryKey" parameterType="com.intfocus.hdk.vo.Users">
     update users
     set weixin_id = #{weixinId,jdbcType=VARCHAR},
       weixin_name = #{weixinName,jdbcType=VARCHAR},
       store_uuid = #{storeUuid,jdbcType=VARCHAR},
       store_key_id = #{storeKeyId,jdbcType=VARCHAR},
       store_name = #{storeName,jdbcType=VARCHAR},
-      remark = #{remark,jdbcType=VARCHAR}
+      remark = #{remark,jdbcType=VARCHAR},
+      created_at = #{createdAt,jdbcType=TIMESTAMP},
+      updated_at = #{updatedAt,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>
