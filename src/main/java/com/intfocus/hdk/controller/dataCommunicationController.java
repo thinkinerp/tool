@@ -282,7 +282,7 @@ public class dataCommunicationController implements ApplicationContextAware {
                 }else{
                 	
                 	if(null != jb.getString("subscribe") && "0".equalsIgnoreCase(jb.getString("subscribe"))){
-                		String ticket = WeiXinUserInfoUtil.getSign(object.getString("access_token"),jtm, jtp);
+                		String ticket = WeiXinUserInfoUtil.getSign(jtm, jtp);
                 		log.info("用户没有关注公众号");
                 		if("error".equalsIgnoreCase(ticket)){
                         	log.info("code request fail:获取 ticket 失败" );
