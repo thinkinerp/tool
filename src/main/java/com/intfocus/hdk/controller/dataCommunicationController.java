@@ -384,7 +384,7 @@ public class dataCommunicationController implements ApplicationContextAware {
 	                    	um.insertSelective(record );
 	                    	session.setAttribute("uuid", uuid);
 	                    	session.setAttribute("userId", object.getString("openid"));
-	                    	req.setAttribute("storeName", rs.get("shop"));
+	                    	session.setAttribute("storeName", rs.get("shop"));
 	                    	
 	                    	return "redirect:/index.jsp";
                 }
