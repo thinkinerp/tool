@@ -23,7 +23,10 @@
 <body>
 <div class="page_query">
   <div class="query_list">
-  <input type="date" value="" class="input_date" id="startTime"><span>至</span><input type="date" value="" class="input_date"  id="endTime"><input type="button" value="查询" id="btn_query" class="btn_default">
+      <span style="font-size:14px">开始:</span><input type="date" value="" class="input_date" id="startTime"><br/>
+<br/>
+    <span style="font-size:14px">结束:</span><input type="date" value="" class="input_date"  id="endTime">
+    <input type="button" value="查询" id="btn_query" class="btn_default">
   </div>
   <div class="clear"></div>
   <table  id="sale_data_table" width="100%" border="0" cellspacing="0" cellpadding="0" class="table_default">
@@ -90,6 +93,17 @@ $(function(){
     	success:function(rs){
     		console.log(rs);		
     		$("#sale_data_table").empty();
+    		$("#sale_data_table").append(
+  			      "<thead>"+
+  			      "<tr>"+
+  			        "<th>上报日期</th>"+
+  			        "<th>金额</th>"+
+  			        "<th>状态</th>"+
+  			        "<th>操作人</th>"+
+  			        "<th>操作时间</th>"+
+  			      "</tr>"+
+  			    "</thead>"		
+  		);
     		$.each(rs , function(index , item){
     			$("#sale_data_table").append(
     					"<tr "+(1 != item.state? 'class="tr_error"':'')+'>' +
@@ -134,6 +148,18 @@ $.ajax({
 	success:function(rs){
 		console.log(rs);		
 		$("#sale_data_table").empty();
+		
+		$("#sale_data_table").append(
+			      "<thead>"+
+			      "<tr>"+
+			        "<th>上报日期</th>"+
+			        "<th>金额</th>"+
+			        "<th>状态</th>"+
+			        "<th>操作人</th>"+
+			        "<th>操作时间</th>"+
+			      "</tr>"+
+			    "</thead>"		
+		);
 		$.each(rs , function(index , item){
 			$("#sale_data_table").append(
 					"<tr "+(1 != item.state? 'class="tr_error"':'')+'>' +

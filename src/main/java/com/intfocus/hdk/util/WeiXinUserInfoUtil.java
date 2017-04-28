@@ -13,55 +13,47 @@ import java.util.UUID;
 import org.apache.log4j.Logger;
 
 import com.alibaba.fastjson.JSONObject;
-import com.intfocus.hdk.controller.dataCommunicationController;
 import com.intfocus.hdk.dao.JsapiTicketMapper;
+import com.intfocus.hdk.dao.JsapiTokenMapper;
 import com.intfocus.hdk.vo.JsapiTicket;
+import com.intfocus.hdk.vo.JsapiToken;
 
 public class WeiXinUserInfoUtil {
 	
-    private final static Logger log =  Logger.getLogger(dataCommunicationController.class);
+    private final static Logger log =  Logger.getLogger(WeiXinUserInfoUtil.class);
     
-	public static  JSONObject getUserInfo(String code , String appId , String secret ){
+	public static  JSONObject getUserInfo(String openid , JsapiTokenMapper jtm ){
         Map<String , String> param = new HashMap<String ,String>();
-        String result = "";
-//        param.put("appid", appId);
-//        param.put("secret", secret);
-//        param.put("code",code);
-//        param.put("grant_type", "authorization_code");
-//		try {
-//			result = JuheDemo.net("https://api.weixin.qq.com/sns/oauth2/access_token", param, "GET",null);
-//		} catch (Exception e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		} 
-//        JSONObject object = JSONObject.parseObject(result);
-//        
-//        if(null !=object.getString("errcode")){
-//        	//返回错误的 JSON 格式为 {"errcode":40029,"errmsg":"invalid code"}
-//        	
-//        	
-//        	return object;
-//        }else{
+    	JSONObject object = getToken(jtm);
+    	String result = "";
+		if(null != object.getString("errcode")){
+			log.info("通过微信接口获取 jsapi_ticket 的时候出现问题：" + object.getString("errmsg"));
+			return object;
+		}
+        if(null !=object.getString("errcode")){
+        	//返回错误的 JSON 格式为 {"errcode":40029,"errmsg":"invalid code"}
+        	return object;
+        }else{
         	
         	JuheDemo.setCharset("UTF-8");
         	// 获取是否关注微信公众号的接口 https://api.weixin.qq.com/cgi-bin/user/info?access_token=ACCESS_TOKEN&openid=OPENID&lang=zh_CN
             try {
             	param.clear();
-            	param.put("access_token", code);
-            	param.put("openid", appId);
+            	param.put("access_token", object.getString("access_token"));
+            	param.put("openid", openid);
             	param.put("lang", "zh_CN");
 				result = JuheDemo.net("https://api.weixin.qq.com/cgi-bin/user/info", param, "GET",null);
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
             JSONObject object1 = JSONObject.parseObject(result);         
+            log.info("cgi-bin userInfo:" + result);
 			return  object1;
-//        }	
+        }	
         
 	}
 	
-	public static String getSign(String token , JsapiTicketMapper jsap){
+	public static String getSign(JsapiTicketMapper jsap , JsapiTokenMapper jtm){
 		
 		Map<String,String> map = new HashMap<String,String>();
         Map<String , String> param = new HashMap<String ,String>();
@@ -70,24 +62,13 @@ public class WeiXinUserInfoUtil {
 		List<JsapiTicket> tickets = jsap.selectByWhere(null);
 		
 		if( 0 == tickets.size() || expired(tickets.get(0))){
-			
-
-
             try {
             	
-            	param.clear();
-            	param.put("appid", "wx1b5cef3e2e36fa21");
-            	param.put("secret", "62eb7eb80215894d51996ab26e00236b");
-            	param.put("grant_type","client_credential");
-            	result = JuheDemo.net("https://api.weixin.qq.com/cgi-bin/token", param, "GET",null);
-            	JSONObject object = JSONObject.parseObject(result);      
-            	
+            	JSONObject object = getToken(jtm);
 				if(null != object.getString("errcode")){
-					log.info("通过微信接口获取 token 的时候出现问题：" + object.getString("errmsg"));
+					log.info("通过微信接口获取 jsapi_ticket 的时候出现问题：" + object.getString("errmsg"));
 					return "error";
 				}
-            	
-            	
             	param.clear();
             	param.put("access_token", object.getString("access_token"));
             	param.put("type","jsapi");
@@ -114,7 +95,7 @@ public class WeiXinUserInfoUtil {
 					jsap.insertSelective(t);
 					
 					result = object1.getString("ticket");
-					
+
 				}
 				
 			} catch (Exception e) {
@@ -139,6 +120,18 @@ public class WeiXinUserInfoUtil {
 	    long diff = (new Date()).getTime() - getTime.getTime();
 	    long secords = diff / (1000);
 		if( ticket.getExpiresIn() > secords ){
+			return false;
+		}
+		return true ;
+	}
+	
+	public static boolean expired(JsapiToken token ){
+		
+		Date getTime = token.getGetTime();
+		
+	    long diff = (new Date()).getTime() - getTime.getTime();
+	    long secords = diff / (1000);
+		if( token.getExpiresIn() > secords ){
 			return false;
 		}
 		return true ;
@@ -201,5 +194,41 @@ public class WeiXinUserInfoUtil {
         return Long.toString(System.currentTimeMillis() / 1000);
     }
 
+    private static JSONObject getToken(JsapiTokenMapper jtm){
+    	Map<String ,String> param = new HashMap<String,String>();
+    	List<JsapiToken> tokens= jtm.selectByWhere(null);
+    	String result = "";
+    	JSONObject object = null ;
+    	if( 0 == tokens.size() || expired(tokens.get(0))){
+            	param.clear();
+            	param.put("appid", "wx1b5cef3e2e36fa21");
+            	param.put("secret", "62eb7eb80215894d51996ab26e00236b");
+            	param.put("grant_type","client_credential");
+            	try {
+					result = JuheDemo.net("https://api.weixin.qq.com/cgi-bin/token", param, "GET",null);
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+            	object = JSONObject.parseObject(result);  
+				if(null != object.getString("errcode")){
+					log.info("通过微信接口获取 token 的时候出现问题：" + object.getString("errmsg"));
+					return object;
+				}else{
+					
+					jtm.deleteAll();
+					
+					JsapiToken record= new JsapiToken();
+					record.setExpiresIn(object.getInteger("expires_in") - 200);
+					record.setJsapiTokenContent(object.getString("access_token"));
+					jtm.insertSelective(record);
+					return object;
+				}
+    	}
+    	
+    	object = new JSONObject();
+    	object.put("access_token", tokens.get(0).getJsapiTokenContent());
+    	return  object;
+    }
 	
 }

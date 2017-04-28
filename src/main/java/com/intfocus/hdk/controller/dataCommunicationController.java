@@ -22,9 +22,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.fastjson.JSONObject;
 import com.intfocus.hdk.dao.JsapiTicketMapper;
+import com.intfocus.hdk.dao.JsapiTokenMapper;
 import com.intfocus.hdk.dao.SalesDataMapper;
 import com.intfocus.hdk.dao.UsersMapper;
 import com.intfocus.hdk.util.JuheDemo;
+import com.intfocus.hdk.util.StaticVariableUtil;
 import com.intfocus.hdk.util.WeiXinUserInfoUtil;
 import com.intfocus.hdk.vo.SalesData;
 import com.intfocus.hdk.vo.Users;
@@ -41,6 +43,8 @@ public class dataCommunicationController implements ApplicationContextAware {
     	@Resource 
     	private         JsapiTicketMapper jtm   ;
 
+    	@Resource 
+    	private          JsapiTokenMapper jtp   ;
     private static ApplicationContext applicationContext;
     @RequestMapping(value = "submit" , method=RequestMethod.POST)
     @ResponseBody
@@ -118,7 +122,7 @@ public class dataCommunicationController implements ApplicationContextAware {
     		   
     		   
     	   }else{
-    		   return "forward:/error.jsp";
+    		   return "redirect:/error.jsp";
     	   }
     		
 //		} catch (UnsupportedEncodingException e) {
@@ -132,7 +136,7 @@ public class dataCommunicationController implements ApplicationContextAware {
     @RequestMapping(value = "checkOnregisteredUser" , method=RequestMethod.GET)
     public String checkOnregisteredUser(HttpServletResponse res , HttpServletRequest req , HttpSession session, String code){
     	
-    	
+    	//getSingature(res , req , session);	
     	JuheDemo.setCharset("GBK");
         Map<String , String> param = new HashMap<String ,String>();
         param.put("appid", "wx1b5cef3e2e36fa21");
@@ -180,7 +184,7 @@ public class dataCommunicationController implements ApplicationContextAware {
                     	
                     	session.setAttribute("uuid",users.get(0).getStoreUuid());
                     	session.setAttribute("userId", users.get(0).getWeixinId());
-                    	req.setAttribute("storeName", users.get(0).getStoreName());
+                    	session.setAttribute("storeName", users.get(0).getStoreName());
                     	return "redirect:/index.jsp";
                     }else{
                     	
@@ -192,7 +196,6 @@ public class dataCommunicationController implements ApplicationContextAware {
                 }
             }
     }
-    
     
     @RequestMapping(value = "gotoSubmit" , method=RequestMethod.GET)
     public String gotoSubmit(HttpServletResponse res , HttpServletRequest req){
@@ -218,6 +221,9 @@ public class dataCommunicationController implements ApplicationContextAware {
 			record.setStoreName(storeName);
 			record.setStoreUuid(uuid);
 			um.updateByPrimaryKey(record);
+			session.setAttribute("uuid", uuid);
+			session.setAttribute("userId", openid);
+			session.setAttribute("storeName", storeName);
 			return "redirect:/index.jsp";
 		}else{
 			session.setAttribute("errorMsg", "无此账号");
@@ -231,12 +237,18 @@ public class dataCommunicationController implements ApplicationContextAware {
     public String checkOnUser(HttpServletResponse res , HttpServletRequest req,HttpSession session,String uuid, String keyid , String code){
     	
     	log.info("can:" +uuid +" " + keyid +" code : " + code);
-    
+    	
     	Map<String , String> where = new HashMap<String,String>();
-
+    	
     	JuheDemo.setCharset("GBK");
         Map<String , String> rs = JuheDemo.check(uuid , keyid);
-
+    	//先判断 uuid（门店id）是否有效，如果无效，则发送给用户提示信息
+    	if("1".equalsIgnoreCase(rs.get("result"))){
+        	log.info("code request fail:" + rs.get("message"));
+        	session.setAttribute("errorMsg", "二维码无效，请联系管理员");
+        	return "redirect:/error.jsp";
+    	}
+    	
         Map<String , String> param = new HashMap<String ,String>();
         param.put("appid", "wx1b5cef3e2e36fa21");
         param.put("secret", "62eb7eb80215894d51996ab26e00236b");
@@ -261,17 +273,16 @@ public class dataCommunicationController implements ApplicationContextAware {
             	
             	log.info("判断是否已经关注公众号");
             	// 在这里判断是否关注微信公众好。
-//            	JSONObject  jb = WeiXinUserInfoUtil.getUserInfo(object.getString("access_token"),object.getString("openid"),null);
-//            	
-//                if(null !=jb.getString("errcode")){
-//                	log.info("userInfo request fail: error msg:" +jb.getString("errmsg"));
-//                	session.setAttribute("errorMsg", "微信服务器出现错误，请重试");
-//                	return "redirect:/error.jsp";
-//                }else{
+            	JSONObject  jb = WeiXinUserInfoUtil.getUserInfo(object.getString("openid"),jtp);
+            	
+                if(null !=jb.getString("errcode")){
+                	log.info("userInfo request fail: error msg:" +jb.getString("errmsg"));
+                	session.setAttribute("errorMsg", "微信服务器出现错误，请重试");
+                	return "redirect:/error.jsp";
+                }else{
                 	
-//                	if(null != jb.getString("subscribe") && "0".equalsIgnoreCase(jb.getString("subscribe"))){
-            	if(true){
-                		String ticket = WeiXinUserInfoUtil.getSign(object.getString("access_token"), jtm);
+                	if(null != jb.getString("subscribe") && "0".equalsIgnoreCase(jb.getString("subscribe"))){
+                		String ticket = WeiXinUserInfoUtil.getSign(object.getString("access_token"),jtm, jtp);
                 		log.info("用户没有关注公众号");
                 		if("error".equalsIgnoreCase(ticket)){
                         	log.info("code request fail:获取 ticket 失败" );
@@ -287,10 +298,9 @@ public class dataCommunicationController implements ApplicationContextAware {
                 		session.setAttribute("signature", sign.get("signature"));
                 		log.info("获取的 signature：" + sign.get("signature"));
                 		return "redirect:http://www.chuanzhen.mobi/hdk/followeWeiXinPublic.jsp";
-            	}
-//                	}
-//                	
-//                }
+                	}
+                	
+                }
 
             	
             	JuheDemo.setCharset("UTF-8");
@@ -321,19 +331,20 @@ public class dataCommunicationController implements ApplicationContextAware {
                 	session.setAttribute("uuid", uuid);
                 	session.setAttribute("storeName", users.get(0).getStoreName());
                 	session.setAttribute("userId", users.get(0).getWeixinId());
-                	return "forward:/index.jsp";
+//                	String ticket1 = WeiXinUserInfoUtil.getSign(null, jtm);
+//            		Map<String,String> sign1 = WeiXinUserInfoUtil.sign(ticket1, "http://www.chuanzhen.mobi/hdk/index.jsp");
+//            		session.setAttribute("appId", "wx1b5cef3e2e36fa21");
+//            		session.setAttribute("timestamp", sign1.get("timestamp"));
+//            		session.setAttribute("nonceStr", sign1.get("nonceStr"));
+//            		session.setAttribute("signature", sign1.get("signature"));
+                	return "redirect:/index.jsp";
                 }else{	
                 	log.info("微信id 与门店未绑定");
                 	// 这里的情况分两种
                 	//一种是重绑定
                 	// 一种是第一次绑定
                 	
-                	//先判断 uuid（门店id）是否有效，如果无效，则发送给用户提示信息
-                	if("1".equalsIgnoreCase(rs.get("result"))){
-                    	log.info("code request fail:" + object.getString("errmsg"));
-                    	session.setAttribute("errorMsg", "二维码无效，请联系管理员");
-                    	return "redirect:/error.jsp";
-                	}
+
                 	//开始判断微信账号是否已经绑定了其他的门店
                 	where.clear();
                 	where.put("weixinid", object.getString("openid"));
@@ -375,13 +386,51 @@ public class dataCommunicationController implements ApplicationContextAware {
 	                    	session.setAttribute("userId", object.getString("openid"));
 	                    	req.setAttribute("storeName", rs.get("shop"));
 	                    	
-	                    	return "forward:/index.jsp";
+	                    	return "redirect:/index.jsp";
                 }
             }
             }
     
     return "";
 }
+    
+    @RequestMapping(value = "getSingature" , method=RequestMethod.GET)
+    @ResponseBody
+    public String getSingature(HttpServletResponse res , HttpServletRequest req,HttpSession session){
+    	String ticket = WeiXinUserInfoUtil.getSign(jtm,jtp);
+		Map<String,String> sign = WeiXinUserInfoUtil.sign(ticket, "http://www.chuanzhen.mobi/hdk/index.jsp");
+		sign.put("appId", StaticVariableUtil.APPID);
+		log.info("info"+JSONObject.toJSONString(sign));
+    	return JSONObject.toJSONString(sign);
+    }
+    
+    @RequestMapping(value = "reBindingStore" , method=RequestMethod.GET)
+    public String reBindingStore(HttpServletResponse res , HttpServletRequest req,HttpSession session , String uuid,String keyid){
+    	
+    	JuheDemo.setCharset("GBK");
+    	log.info("reBinduuid:"+uuid);
+        Map<String , String> rs = JuheDemo.check(uuid , keyid);
+    	//先判断 uuid（门店id）是否有效，如果无效，则发送给用户提示信息
+    	if("1".equalsIgnoreCase(rs.get("result"))){
+        	log.info("code request fail:" + rs.get("message"));
+        	session.setAttribute("errorMsg", "二维码无效，请联系管理员");
+        	return "redirect:/error.jsp";
+    	}
+    	String userId = (String)session.getAttribute("userId");
+    	Map<String, String> where = new HashMap<String ,String>();
+    	where.put("weixinid", userId);
+    	log.info("update weixinid" + userId);
+    	
+		List<Users> users = um.selectByWhere(where );
+    	Users u = users.get(0);
+    	log.info("update weixinid" +JSONObject.toJSONString(u));
+    	u.setStoreUuid(uuid);
+    	u.setStoreName(rs.get("shop"));
+		um.updateByPrimaryKeySelective(users.get(0));
+		session.setAttribute("msg", rs.get("shop"));
+    	return "redirect:/index.jsp" ;
+    }
+    
 	@Override
 	public void setApplicationContext(ApplicationContext ctx)
 			throws BeansException {

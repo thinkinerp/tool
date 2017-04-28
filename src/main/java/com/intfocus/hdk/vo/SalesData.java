@@ -53,12 +53,12 @@ public class SalesData {
     }
 
     public String getCreatedAt() {
-    	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm");
+    	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
         return (null != createdAt ? sdf.format(createdAt):null);
     }
 
     public String getSSCreateAt(){
-    	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+    	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     	return (null != createdAt ? sdf.format(createdAt):null);
     }
     

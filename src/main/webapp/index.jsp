@@ -13,17 +13,18 @@
 </script>
 <title>数据通上报</title>
   <link href="${ctx}/css/jsoneditor.css" rel="stylesheet" type="text/css">
-<script type="text/javascript" src="${ctx}/js/comboboxConfig.js"></script>
-<script type="text/javascript" src="${ctx}/js/jquery.scrollTo.min.js"></script>
-<script type="text/javascript" src="${ctx}/js/formatter.js"></script>
+
 <script src="${ctx}/static/js/style.js"></script>
 <script src="${ctx}/static/js/jquery-ui.min.js"></script>
+<script type="text/javascript" src="${ctx}/js/jweixin-1.0.0.js"></script>
+<script src="${ctx}/js/scanCode.js"></script>
+
 <link rel="stylesheet" href="${ctx}/static/css/style.css">
 </head>
 <body>
 <div class="page_luru">
   <h1>${storeName}</h1>
-  <a href="#" class="a_link1">重新绑定</a>
+  <a href="javascript:void(0)" id = "reBinding" class="a_link1">重新绑定</a>
   <div id="datepicker"></div>
   <div class="query_box">
     <input type="text"  value=""  name="input_num" id="input_num" class="input_txt1" placeholder="请输入上报金额" required/>
@@ -32,6 +33,15 @@
   <div class="clear"></div>
   <h2>上报操作记录</h2>
   <table id="sale_data_table" width="100%" border="0" cellspacing="0" cellpadding="0" class="table_default">
+      <thead>
+      <tr>
+        <th>上报日期</th>
+        <th>金额</th>
+        <th>状态</th>
+        <th>操作人</th>
+        <th>操作时间</th>
+      </tr>
+    </thead>
   <!-- <tr>
     <td>2017/04/12</td>
     <td>10000</td>
@@ -69,6 +79,17 @@ $.ajax({
 	success:function(rs){
 		console.log(rs);		
 		$("#sale_data_table").empty();
+		$("#sale_data_table").html(
+			      "<thead>"+
+			      "<tr>"+
+			        "<th>上报日期</th>"+
+			        "<th>金额</th>"+
+			        "<th>状态</th>"+
+			        "<th>操作人</th>"+
+			        "<th>操作时间</th>"+
+			      "</tr>"+
+			    "</thead>"		
+		);
 		$.each(rs , function(index , item){
 			$("#sale_data_table").append(
 					"<tr "+(1 != item.state? 'class="tr_error"':'')+'>' +
@@ -104,19 +125,24 @@ loadData();
 	function check_input()
 	{var input_txt1=$.trim($("#input_num").val());	
 		if(input_txt1=="")
-		{  showerror("请输入上报金额");
+		{  showMessage("请输入上报金额");
 	     $("#input_num").focus();
 	     $("#input_num").val("");
+		 $('#btn_sbao').attr("disabled",false);
 		   return false;
 		}
-		else if(input_txt1<=0 || isNaN(input_txt1))
+/* 		else if(input_txt1<=0 || isNaN(input_txt1))
 		{
 		   showerror("请输入大于0的数字");
 		   $("#input_num").focus();
 		   $("#input_num").val("");
 		   return false;
-		}		
-		else
+		} */else if(!/^[0-9]*$|^-[0-9]*$/.test(input_txt1)){
+			showMessage("您输入的内容存在非数字");
+		   $("#input_num").focus();
+		   $("#input_num").val("");
+		   $('#btn_sbao').attr("disabled",false);
+		}else
 		  {return true;}
 	}
   $(function() {
@@ -124,7 +150,31 @@ loadData();
      $("#datepicker" ).datepicker({maxDate:dateToDisable,changeMonth:true,changeYear: true,dateFormat:'yy-mm-dd',hideIfNoPrevNext: true});
 	 $(".ui-datepicker-title").append('月');
 	   var form_ok=true;	
+	   
+	   
+    $("#reBinding").bind('click',function(){
+		   
+		   //呼叫后台，获得扫码需要的验证码
+		   $.ajax({
+			   url:ctx + '/data/getSingature',
+			   type:'get',
+			   dataType:'json',
+			   success:function(rs){
+				   /* alert(JSON.stringify(rs); */
+				   scanCode(rs);
+			   },
+			   error:function(rs){
+				   
+			   }
+		   });	   
+		   
+	   }); 
+	   
+	   
+	   
+	   
 	   $("#btn_sbao").bind("click",function(){
+		   $('#btn_sbao').attr("disabled",true);
 		 var get_date=$("#datepicker" ).datepicker("getDate");
 		 var seldate=get_date.Format("yyyy-MM-dd");	
 		 var input_txt1=$.trim($("#input_num").val());
@@ -143,7 +193,7 @@ loadData();
 					console.log(result);
 					if(result > 0){
 		  			showMessage("数据提交成功");
-		  			
+		  			$('#btn_sbao').attr("disabled",false);
 		  			$("#input_num").val('');
 		  		    $("#datepicker" ).datepicker({maxDate:dateToDisable,changeMonth:true,changeYear: true,dateFormat:'yy-mm-dd',hideIfNoPrevNext: true});
 		  		    $("#datepicker" ).datepicker("setDate",new Date());
@@ -163,6 +213,18 @@ loadData();
   		}		
 	 })
   }); 
+  
+  
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
   </script>
 </body>
 </html>
