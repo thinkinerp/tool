@@ -10,7 +10,7 @@ function scanCode( config){
 	  });//end_config  
 
 	  wx.error(function(res) {  
-	      alert("相机调用失败，请使用微信的扫一扫功能进行重新绑定门店。"  );  
+		  showMessage("相机调用失败，请使用微信的扫一扫功能进行重新绑定门店。"  );  
 	  });  
 	  
 	  wx.ready(function() {  

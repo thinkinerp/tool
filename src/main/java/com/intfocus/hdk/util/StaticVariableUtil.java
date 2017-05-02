@@ -1,12 +1,39 @@
 package com.intfocus.hdk.util;
 
-public class StaticVariableUtil {
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.Properties;
 
-	public static String APPID = "wx1b5cef3e2e36fa21";
-	public static String SECRET = "62eb7eb80215894d51996ab26e00236b";
-	public static String WX_REDIRECT_URI = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=APPID&redirect_uri=REDIRECT_URI&response_type=code&scope=SCOPE#wechat_redirect";
-	public static String WX_SNS_ACCESS_TOKEN = "https://api.weixin.qq.com/sns/oauth2/access_token";
-	public static String WX_SNS_USERINFO = "https://api.weixin.qq.com/sns/userinfo";
-	public static String WX_CGI_BIN_TOKEN = "https://api.weixin.qq.com/cgi-bin/token";
-	public static String WX_CGI_BIN_USERINFO = "https://api.weixin.qq.com/cgi-bin/user/info";
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+
+public class StaticVariableUtil {
+	public static  String APPID ;
+	public static  String SECRET ;
+	public static  String SCAN_QRCODE_URL ;
+	public static String CHECK_STORE_URL ;
+	public static String SALE_DATA_UPLOAD_URL ;
+	public static String BASE_URL ;
+	
+   static {
+	   Properties prop =  new  Properties();
+       try  {    
+//           InputStream in = new FileInputStream(new File(System.getProperty("user.dir") + "/src/main/resources/weixinInfo.properties" ));    
+           InputStream in = StaticVariableUtil.class.getResourceAsStream("/weixinInfo.properties");    
+           prop.load(in);    
+           APPID = prop.getProperty( "appid" ).trim();    
+           SECRET = prop.getProperty( "secret" ).trim();  
+           SCAN_QRCODE_URL = prop.getProperty( "scanQRCodeURL" ).trim(); 
+           CHECK_STORE_URL = prop.getProperty( "checkStoreURL" ).trim(); 
+           BASE_URL = prop.getProperty("baseURL" ); 
+           SALE_DATA_UPLOAD_URL = prop.getProperty( "saleDataUploadURL" ).trim(); 
+           
+       }  catch  (IOException e) {    
+           e.printStackTrace();    
+       }    
+   }
 }

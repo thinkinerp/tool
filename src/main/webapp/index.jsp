@@ -27,7 +27,7 @@
   <a href="javascript:void(0)" id = "reBinding" class="a_link1">重新绑定</a>
   <div id="datepicker"></div>
   <div class="query_box">
-    <input type="text"  value=""  name="input_num" id="input_num" class="input_txt1" placeholder="请输入上报金额" required/>
+    <input type="number"  value=""  name="input_num" id="input_num" class="input_txt1" placeholder="请输入上报金额" required/>
     <input type="button" value="上报" id="btn_sbao" class="btn_default">
   </div>
   <div class="clear"></div>
@@ -123,7 +123,8 @@ loadData();
 	{alert(error);}
   //输入框验证 start
 	function check_input()
-	{var input_txt1=$.trim($("#input_num").val());	
+	{var input_txt1=$.trim($("#input_num").val()).replace(/\s/g, "");	
+
 		if(input_txt1=="")
 		{  showMessage("请输入上报金额");
 	     $("#input_num").focus();

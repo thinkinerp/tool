@@ -87,7 +87,7 @@ public class WeiXinUserInfoUtil {
 					
 					JsapiTicket t = new JsapiTicket();
 
-					t.setExpiresIn(Integer.parseInt(object1.getString("expires_in")));
+					t.setExpiresIn(Integer.parseInt(object1.getString("expires_in")) - 200);
 					t.setJsapiTicketContent(object1.getString("ticket"));
 					
 				    log.info("insert ticket:"+JSONObject.toJSONString(t));
@@ -201,8 +201,8 @@ public class WeiXinUserInfoUtil {
     	JSONObject object = null ;
     	if( 0 == tokens.size() || expired(tokens.get(0))){
             	param.clear();
-            	param.put("appid", "wx1b5cef3e2e36fa21");
-            	param.put("secret", "62eb7eb80215894d51996ab26e00236b");
+            	param.put("appid", StaticVariableUtil.APPID);
+            	param.put("secret", StaticVariableUtil.SECRET);
             	param.put("grant_type","client_credential");
             	try {
 					result = JuheDemo.net("https://api.weixin.qq.com/cgi-bin/token", param, "GET",null);

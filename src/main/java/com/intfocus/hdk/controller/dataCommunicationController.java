@@ -13,6 +13,7 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Controller;
@@ -103,9 +104,9 @@ public class dataCommunicationController implements ApplicationContextAware {
     	
     	String uri = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=APPID&redirect_uri=REDIRECT_URI&response_type=code&scope=SCOPE#wechat_redirect";
 
-    	uri = uri.replace("APPID", "wx1b5cef3e2e36fa21");
+    	uri = uri.replace("APPID", StaticVariableUtil.APPID);
     	uri = uri.replace("SCOPE", "snsapi_userinfo");
-    	String url = "http://www.chuanzhen.mobi/hdk/data/checkOnUser?uuid=";
+    	String url = StaticVariableUtil.BASE_URL + "/data/checkOnUser?uuid=";
 //    	try {
 //			uri = uri.replace("REDIRECT_URI", java.net.URLDecoder.decode("http://www.chuanzhen.mobi/hdk/data/checkOnUser?uuid="+uuid+"&keyid="+keyid,   "utf-8"));
     	  
@@ -139,8 +140,8 @@ public class dataCommunicationController implements ApplicationContextAware {
     	//getSingature(res , req , session);	
     	JuheDemo.setCharset("GBK");
         Map<String , String> param = new HashMap<String ,String>();
-        param.put("appid", "wx1b5cef3e2e36fa21");
-        param.put("secret", "62eb7eb80215894d51996ab26e00236b");
+        param.put("appid", StaticVariableUtil.APPID);
+        param.put("secret", StaticVariableUtil.SECRET);
         param.put("code",code);
         param.put("grant_type", "authorization_code");
         String  result = "";
@@ -159,8 +160,8 @@ public class dataCommunicationController implements ApplicationContextAware {
             }else{
                 Map<String , String> param2 = new HashMap<String ,String>();
                 //?appid=APPID&secret=SECRET&code=CODE&grant_type=authorization_code
-                param2.put("appid", "wx1b5cef3e2e36fa21");
-                param2.put("secret", "62eb7eb80215894d51996ab26e00236b");
+                param2.put("appid", StaticVariableUtil.APPID);
+                param2.put("secret", StaticVariableUtil.SECRET);
                 param2.put("code",code);
                 param2.put("grant_type", "authorization_code");
                 JuheDemo.setCharset("UTF-8");
@@ -188,7 +189,7 @@ public class dataCommunicationController implements ApplicationContextAware {
                     	return "redirect:/index.jsp";
                     }else{
                     	
-                    	req.setAttribute("errorMsg", "您的微信账号没有和门店关联，请联系管理员，发送给你门店二维码进行关联");
+                    	session.setAttribute("errorMsg", "您的微信账号没有和门店关联，请联系管理员，发送给你门店二维码进行绑定");
                     	
                     	return "redirect:/error.jsp";
                     }
@@ -202,9 +203,9 @@ public class dataCommunicationController implements ApplicationContextAware {
 
        	String uri = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=APPID&redirect_uri=REDIRECT_URI&response_type=code&scope=SCOPE#wechat_redirect";
 
-    	uri = uri.replace("APPID", "wx1b5cef3e2e36fa21");
+    	uri = uri.replace("APPID", StaticVariableUtil.APPID);
     	uri = uri.replace("SCOPE", "snsapi_userinfo");
-    	uri = uri.replace("REDIRECT_URI", "http://www.chuanzhen.mobi/hdk/data/checkOnregisteredUser");
+    	uri = uri.replace("REDIRECT_URI", StaticVariableUtil.BASE_URL + "/data/checkOnregisteredUser");
     	
     	return "redirect:"+uri;
     }
@@ -250,8 +251,8 @@ public class dataCommunicationController implements ApplicationContextAware {
     	}
     	
         Map<String , String> param = new HashMap<String ,String>();
-        param.put("appid", "wx1b5cef3e2e36fa21");
-        param.put("secret", "62eb7eb80215894d51996ab26e00236b");
+        param.put("appid", StaticVariableUtil.APPID);
+        param.put("secret", StaticVariableUtil.SECRET);
         param.put("code",code);
         param.put("grant_type", "authorization_code");
         String  result = "";
@@ -292,7 +293,7 @@ public class dataCommunicationController implements ApplicationContextAware {
                 		
                 		Map<String,String> sign = WeiXinUserInfoUtil.sign(ticket, "http://www.chuanzhen.mobi/hdk/followeWeiXinPublic.jsp");
                 		
-                		session.setAttribute("appId", "wx1b5cef3e2e36fa21");
+                		session.setAttribute("appId", StaticVariableUtil.APPID);
                 		session.setAttribute("timestamp", sign.get("timestamp"));
                 		session.setAttribute("nonceStr", sign.get("nonceStr"));
                 		session.setAttribute("signature", sign.get("signature"));
@@ -364,13 +365,11 @@ public class dataCommunicationController implements ApplicationContextAware {
                 	
 	                Map<String , String> param2 = new HashMap<String ,String>();
 	                //?appid=APPID&secret=SECRET&code=CODE&grant_type=authorization_code
-	                param2.put("appid", "wx1b5cef3e2e36fa21");
-	                param2.put("secret", "62eb7eb80215894d51996ab26e00236b");
+	                param2.put("appid", StaticVariableUtil.APPID);
+	                param2.put("secret", StaticVariableUtil.SECRET);
 	                param2.put("code",code);
 	                param2.put("grant_type", "authorization_code");
 	                JuheDemo.setCharset("UTF-8");
-
-
 
 	                	log.info("userInfo request success: nickname"  + object1.getString("nickname") + "    openid:" + object.getString("openid"));
 	                    if("成功".equalsIgnoreCase(rs.get("message"))){
@@ -398,7 +397,7 @@ public class dataCommunicationController implements ApplicationContextAware {
     @ResponseBody
     public String getSingature(HttpServletResponse res , HttpServletRequest req,HttpSession session){
     	String ticket = WeiXinUserInfoUtil.getSign(jtm,jtp);
-		Map<String,String> sign = WeiXinUserInfoUtil.sign(ticket, "http://www.chuanzhen.mobi/hdk/index.jsp");
+		Map<String,String> sign = WeiXinUserInfoUtil.sign(ticket, StaticVariableUtil.BASE_URL +"/index.jsp");
 		sign.put("appId", StaticVariableUtil.APPID);
 		log.info("info"+JSONObject.toJSONString(sign));
     	return JSONObject.toJSONString(sign);
@@ -436,4 +435,5 @@ public class dataCommunicationController implements ApplicationContextAware {
 			throws BeansException {
 		applicationContext = ctx;
 	}   
+
 }

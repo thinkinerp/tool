@@ -50,6 +50,6 @@ input[placeholder], [placeholder], *[placeholder] {color:#bababa;}
 .page_luru h2{clear:both;font-size:1.2rem;margin:1rem 0 1rem 2.5%;}
 .page_luru .a_more{color:#224da6;text-decoration:none;font-weight:bold;text-align:center;padding:1rem 0;display:inline-block;width:100%;}
 .page_query .query_list{padding:1rem;}
-.page_query .query_list .input_date{background:none;border:none;font-size:1rem;text-align:center;text-align:center;padding-left:0.1rem;line-height:1rem;border:1px solid #ccc;margin-top:0.8rem;}
+.page_query .query_list .input_date{background:none;border:none;font-size:19px;text-align:center;text-align:center;padding-left:0.1rem;line-height:1rem;border:1px solid #ccc;margin-top:0.8rem;border-style: solid;border-color: blue;}
 .page_query .query_list span{margin:0 1rem;}
 .page_query .btn_default{width:15%;float:right;}
