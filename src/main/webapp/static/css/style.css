@@ -42,14 +42,16 @@ background:#fff;border:2px solid #5677bb;border-radius:5px; text-align:center;fo
 .page_luru h1{text-align:center;margin:1.6rem auto 1.1rem auto;font-size:1.4rem;}
 .page_luru .a_link1{float:right;margin-right:3.3rem;margin-bottom:0.2rem;color:#224da6;text-decoration:none;font-weight:bold;font-size:1.2rem;}
 .page_luru .query_box{width:95%;margin:0px auto;padding:0.6rem 0 1rem 0;}
-.input_txt1{line-height:3rem;padding-left:1rem;border:1px solid #ebebeb;border-radius:5px;    border-style: solid;border-color: blue;font-size: 22px;}
+.input_txt1{line-height:3rem;padding-left:1rem;border:1px solid #ebebeb;border-radius:5px;    border-style: solid;border-color: blue;font-size:1.5rem;}
 .page_luru .input_txt1{width:65%;float:left;color:#000;}
 .page_luru .btn_default{width:27%;float:right;}
 ::-webkit-input-placeholder{color:#bababa; }
 input[placeholder], [placeholder], *[placeholder] {color:#bababa;}
 .page_luru h2{clear:both;font-size:1.2rem;margin:1rem 0 1rem 2.5%;}
 .page_luru .a_more{color:#224da6;text-decoration:none;font-weight:bold;text-align:center;padding:1rem 0;display:inline-block;width:100%;}
-.page_query .query_list{padding:1rem;}
-.page_query .query_list .input_date{background:none;border:none;font-size:19px;text-align:center;text-align:center;padding-left:0.1rem;line-height:1rem;border:1px solid #ccc;margin-top:0.8rem;border-style: solid;border-color: blue;}
-.page_query .query_list span{margin:0 1rem;}
+.page_query .query_list{padding:1rem 0.5rem;}
+.page_query .query_list .input_date{font-size:1.2rem;text-align:center;text-align:center;padding-left:0.1rem;line-height:2.8rem;border:1px solid blue;
+background:url(../img/icon-calender.jpg) right center no-repeat;border-radius:5px;
+background-size:auto 2.2rem;width:38%;}
+.page_query .query_list span{margin:0 0.3rem;}
 .page_query .btn_default{width:15%;float:right;}

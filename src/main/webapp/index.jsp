@@ -149,7 +149,7 @@ loadData();
   $(function() {
   	var dateToDisable = new Date();
      $("#datepicker" ).datepicker({maxDate:dateToDisable,changeMonth:true,changeYear: true,dateFormat:'yy-mm-dd',hideIfNoPrevNext: true});
-	 $(".ui-datepicker-title").append('月');
+	/*  $(".ui-datepicker-title").append('月'); */
 	   var form_ok=true;	
 	   
 	   

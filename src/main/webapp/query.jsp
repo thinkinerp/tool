@@ -22,12 +22,10 @@
 </head>
 <body>
 <div class="page_query">
-  <div class="query_list">
-      <span style="font-size:14px">开始:</span><input type="date" value="" class="input_date" id="startTime"><br/>
-<br/>
-    <span style="font-size:14px">结束:</span><input type="date" value="" class="input_date"  id="endTime">
-    <input type="button" value="查询" id="btn_query" class="btn_default">
+   <div class="query_list">
+  <input type="date" value="" class="input_date" id="startTime"><span>至</span><input type="date" value="" class="input_date"  id="endTime"><input type="button" value="查询" id="btn_query" class="btn_default">
   </div>
+  
   <div class="clear"></div>
   <table  id="sale_data_table" width="100%" border="0" cellspacing="0" cellpadding="0" class="table_default">
     <thead>
