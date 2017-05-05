@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.intfocus.hdk.dao.CashMapper" >
+  <resultMap id="BaseResultMap" type="com.intfocus.hdk.vo.Cash" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="cash_id" property="cashId" jdbcType="VARCHAR" />
+    <result column="cash_brand" property="cashBrand" jdbcType="VARCHAR" />
+    <result column="cash_register" property="cashRegister" jdbcType="VARCHAR" />
+    <result column="cash_system" property="cashSystem" jdbcType="VARCHAR" />
+    <result column="cash_port" property="cashPort" jdbcType="VARCHAR" />
+    <result column="printer_driver" property="printerDriver" jdbcType="VARCHAR" />
+    <result column="sur_id" property="surId" jdbcType="VARCHAR" />
+    <result column="install_id" property="installId" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, cash_id, cash_brand, cash_register, cash_system, cash_port, printer_driver, sur_id, 
+    install_id
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from cash
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from cash
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.intfocus.hdk.vo.Cash" >
+    insert into cash (id, cash_id, cash_brand, 
+      cash_register, cash_system, cash_port, 
+      printer_driver, sur_id, install_id
+      )
+    values (#{id,jdbcType=INTEGER}, #{cashId,jdbcType=VARCHAR}, #{cashBrand,jdbcType=VARCHAR}, 
+      #{cashRegister,jdbcType=VARCHAR}, #{cashSystem,jdbcType=VARCHAR}, #{cashPort,jdbcType=VARCHAR}, 
+      #{printerDriver,jdbcType=VARCHAR}, #{surId,jdbcType=VARCHAR}, #{installId,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.intfocus.hdk.vo.Cash" >
+    insert into cash
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="cashId != null" >
+        cash_id,
+      </if>
+      <if test="cashBrand != null" >
+        cash_brand,
+      </if>
+      <if test="cashRegister != null" >
+        cash_register,
+      </if>
+      <if test="cashSystem != null" >
+        cash_system,
+      </if>
+      <if test="cashPort != null" >
+        cash_port,
+      </if>
+      <if test="printerDriver != null" >
+        printer_driver,
+      </if>
+      <if test="surId != null" >
+        sur_id,
+      </if>
+      <if test="installId != null" >
+        install_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="cashId != null" >
+        #{cashId,jdbcType=VARCHAR},
+      </if>
+      <if test="cashBrand != null" >
+        #{cashBrand,jdbcType=VARCHAR},
+      </if>
+      <if test="cashRegister != null" >
+        #{cashRegister,jdbcType=VARCHAR},
+      </if>
+      <if test="cashSystem != null" >
+        #{cashSystem,jdbcType=VARCHAR},
+      </if>
+      <if test="cashPort != null" >
+        #{cashPort,jdbcType=VARCHAR},
+      </if>
+      <if test="printerDriver != null" >
+        #{printerDriver,jdbcType=VARCHAR},
+      </if>
+      <if test="surId != null" >
+        #{surId,jdbcType=VARCHAR},
+      </if>
+      <if test="installId != null" >
+        #{installId,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.intfocus.hdk.vo.Cash" >
+    update cash
+    <set >
+      <if test="cashId != null" >
+        cash_id = #{cashId,jdbcType=VARCHAR},
+      </if>
+      <if test="cashBrand != null" >
+        cash_brand = #{cashBrand,jdbcType=VARCHAR},
+      </if>
+      <if test="cashRegister != null" >
+        cash_register = #{cashRegister,jdbcType=VARCHAR},
+      </if>
+      <if test="cashSystem != null" >
+        cash_system = #{cashSystem,jdbcType=VARCHAR},
+      </if>
+      <if test="cashPort != null" >
+        cash_port = #{cashPort,jdbcType=VARCHAR},
+      </if>
+      <if test="printerDriver != null" >
+        printer_driver = #{printerDriver,jdbcType=VARCHAR},
+      </if>
+      <if test="surId != null" >
+        sur_id = #{surId,jdbcType=VARCHAR},
+      </if>
+      <if test="installId != null" >
+        install_id = #{installId,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.intfocus.hdk.vo.Cash" >
+    update cash
+    set cash_id = #{cashId,jdbcType=VARCHAR},
+      cash_brand = #{cashBrand,jdbcType=VARCHAR},
+      cash_register = #{cashRegister,jdbcType=VARCHAR},
+      cash_system = #{cashSystem,jdbcType=VARCHAR},
+      cash_port = #{cashPort,jdbcType=VARCHAR},
+      printer_driver = #{printerDriver,jdbcType=VARCHAR},
+      sur_id = #{surId,jdbcType=VARCHAR},
+      install_id = #{installId,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

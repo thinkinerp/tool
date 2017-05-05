@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.intfocus.hdk.dao.EquipmentMapper" >
+  <resultMap id="BaseResultMap" type="com.intfocus.hdk.vo.Equipment" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="eq_id" property="eqId" jdbcType="VARCHAR" />
+    <result column="eq_type" property="eqType" jdbcType="VARCHAR" />
+    <result column="eq_style" property="eqStyle" jdbcType="VARCHAR" />
+    <result column="hardware_id" property="hardwareId" jdbcType="VARCHAR" />
+    <result column="software_version" property="softwareVersion" jdbcType="VARCHAR" />
+    <result column="pro_id" property="proId" jdbcType="VARCHAR" />
+    <result column="shop_id" property="shopId" jdbcType="VARCHAR" />
+    <result column="remark1" property="remark1" jdbcType="VARCHAR" />
+    <result column="remark2" property="remark2" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, eq_id, eq_type, eq_style, hardware_id, software_version, pro_id, shop_id, remark1, 
+    remark2
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from equipment
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from equipment
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.intfocus.hdk.vo.Equipment" >
+    insert into equipment (id, eq_id, eq_type, 
+      eq_style, hardware_id, software_version, 
+      pro_id, shop_id, remark1, 
+      remark2)
+    values (#{id,jdbcType=INTEGER}, #{eqId,jdbcType=VARCHAR}, #{eqType,jdbcType=VARCHAR}, 
+      #{eqStyle,jdbcType=VARCHAR}, #{hardwareId,jdbcType=VARCHAR}, #{softwareVersion,jdbcType=VARCHAR}, 
+      #{proId,jdbcType=VARCHAR}, #{shopId,jdbcType=VARCHAR}, #{remark1,jdbcType=VARCHAR}, 
+      #{remark2,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.intfocus.hdk.vo.Equipment" >
+    insert into equipment
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="eqId != null" >
+        eq_id,
+      </if>
+      <if test="eqType != null" >
+        eq_type,
+      </if>
+      <if test="eqStyle != null" >
+        eq_style,
+      </if>
+      <if test="hardwareId != null" >
+        hardware_id,
+      </if>
+      <if test="softwareVersion != null" >
+        software_version,
+      </if>
+      <if test="proId != null" >
+        pro_id,
+      </if>
+      <if test="shopId != null" >
+        shop_id,
+      </if>
+      <if test="remark1 != null" >
+        remark1,
+      </if>
+      <if test="remark2 != null" >
+        remark2,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="eqId != null" >
+        #{eqId,jdbcType=VARCHAR},
+      </if>
+      <if test="eqType != null" >
+        #{eqType,jdbcType=VARCHAR},
+      </if>
+      <if test="eqStyle != null" >
+        #{eqStyle,jdbcType=VARCHAR},
+      </if>
+      <if test="hardwareId != null" >
+        #{hardwareId,jdbcType=VARCHAR},
+      </if>
+      <if test="softwareVersion != null" >
+        #{softwareVersion,jdbcType=VARCHAR},
+      </if>
+      <if test="proId != null" >
+        #{proId,jdbcType=VARCHAR},
+      </if>
+      <if test="shopId != null" >
+        #{shopId,jdbcType=VARCHAR},
+      </if>
+      <if test="remark1 != null" >
+        #{remark1,jdbcType=VARCHAR},
+      </if>
+      <if test="remark2 != null" >
+        #{remark2,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.intfocus.hdk.vo.Equipment" >
+    update equipment
+    <set >
+      <if test="eqId != null" >
+        eq_id = #{eqId,jdbcType=VARCHAR},
+      </if>
+      <if test="eqType != null" >
+        eq_type = #{eqType,jdbcType=VARCHAR},
+      </if>
+      <if test="eqStyle != null" >
+        eq_style = #{eqStyle,jdbcType=VARCHAR},
+      </if>
+      <if test="hardwareId != null" >
+        hardware_id = #{hardwareId,jdbcType=VARCHAR},
+      </if>
+      <if test="softwareVersion != null" >
+        software_version = #{softwareVersion,jdbcType=VARCHAR},
+      </if>
+      <if test="proId != null" >
+        pro_id = #{proId,jdbcType=VARCHAR},
+      </if>
+      <if test="shopId != null" >
+        shop_id = #{shopId,jdbcType=VARCHAR},
+      </if>
+      <if test="remark1 != null" >
+        remark1 = #{remark1,jdbcType=VARCHAR},
+      </if>
+      <if test="remark2 != null" >
+        remark2 = #{remark2,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.intfocus.hdk.vo.Equipment" >
+    update equipment
+    set eq_id = #{eqId,jdbcType=VARCHAR},
+      eq_type = #{eqType,jdbcType=VARCHAR},
+      eq_style = #{eqStyle,jdbcType=VARCHAR},
+      hardware_id = #{hardwareId,jdbcType=VARCHAR},
+      software_version = #{softwareVersion,jdbcType=VARCHAR},
+      pro_id = #{proId,jdbcType=VARCHAR},
+      shop_id = #{shopId,jdbcType=VARCHAR},
+      remark1 = #{remark1,jdbcType=VARCHAR},
+      remark2 = #{remark2,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

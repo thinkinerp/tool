@@ -1,0 +1,299 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.intfocus.hdk.dao.ProblemMapper" >
+  <resultMap id="BaseResultMap" type="com.intfocus.hdk.vo.Problem" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="problem_id" property="problemId" jdbcType="VARCHAR" />
+    <result column="state" property="state" jdbcType="VARCHAR" />
+    <result column="pro_id" property="proId" jdbcType="VARCHAR" />
+    <result column="shop_id" property="shopId" jdbcType="VARCHAR" />
+    <result column="eq_id" property="eqId" jdbcType="VARCHAR" />
+    <result column="mes_id" property="mesId" jdbcType="VARCHAR" />
+    <result column="problem_type" property="problemType" jdbcType="VARCHAR" />
+    <result column="problem_object" property="problemObject" jdbcType="VARCHAR" />
+    <result column="problem_department" property="problemDepartment" jdbcType="VARCHAR" />
+    <result column="problem_user" property="problemUser" jdbcType="VARCHAR" />
+    <result column="problem_happen" property="problemHappen" jdbcType="TIMESTAMP" />
+    <result column="problem_put" property="problemPut" jdbcType="TIMESTAMP" />
+    <result column="problem_estimate" property="problemEstimate" jdbcType="TIMESTAMP" />
+    <result column="problem_reslove_time" property="problemResloveTime" jdbcType="TIMESTAMP" />
+    <result column="problem_resolve_user" property="problemResolveUser" jdbcType="VARCHAR" />
+    <result column="problem_details" property="problemDetails" jdbcType="VARCHAR" />
+    <result column="problem_enclosure" property="problemEnclosure" jdbcType="VARCHAR" />
+    <result column="problem_table" property="problemTable" jdbcType="VARCHAR" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.intfocus.hdk.vo.Problem" extends="BaseResultMap" >
+    <result column="problem_plan" property="problemPlan" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, problem_id, state, pro_id, shop_id, eq_id, mes_id, problem_type, problem_object, 
+    problem_department, problem_user, problem_happen, problem_put, problem_estimate, 
+    problem_reslove_time, problem_resolve_user, problem_details, problem_enclosure, problem_table
+  </sql>
+  <sql id="Blob_Column_List" >
+    problem_plan
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from problem
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from problem
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.intfocus.hdk.vo.Problem" >
+    insert into problem (id, problem_id, state, 
+      pro_id, shop_id, eq_id, 
+      mes_id, problem_type, problem_object, 
+      problem_department, problem_user, problem_happen, 
+      problem_put, problem_estimate, problem_reslove_time, 
+      problem_resolve_user, problem_details, problem_enclosure, 
+      problem_table, problem_plan)
+    values (#{id,jdbcType=INTEGER}, #{problemId,jdbcType=VARCHAR}, #{state,jdbcType=VARCHAR}, 
+      #{proId,jdbcType=VARCHAR}, #{shopId,jdbcType=VARCHAR}, #{eqId,jdbcType=VARCHAR}, 
+      #{mesId,jdbcType=VARCHAR}, #{problemType,jdbcType=VARCHAR}, #{problemObject,jdbcType=VARCHAR}, 
+      #{problemDepartment,jdbcType=VARCHAR}, #{problemUser,jdbcType=VARCHAR}, #{problemHappen,jdbcType=TIMESTAMP}, 
+      #{problemPut,jdbcType=TIMESTAMP}, #{problemEstimate,jdbcType=TIMESTAMP}, #{problemResloveTime,jdbcType=TIMESTAMP}, 
+      #{problemResolveUser,jdbcType=VARCHAR}, #{problemDetails,jdbcType=VARCHAR}, #{problemEnclosure,jdbcType=VARCHAR}, 
+      #{problemTable,jdbcType=VARCHAR}, #{problemPlan,jdbcType=LONGVARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.intfocus.hdk.vo.Problem" >
+    insert into problem
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="problemId != null" >
+        problem_id,
+      </if>
+      <if test="state != null" >
+        state,
+      </if>
+      <if test="proId != null" >
+        pro_id,
+      </if>
+      <if test="shopId != null" >
+        shop_id,
+      </if>
+      <if test="eqId != null" >
+        eq_id,
+      </if>
+      <if test="mesId != null" >
+        mes_id,
+      </if>
+      <if test="problemType != null" >
+        problem_type,
+      </if>
+      <if test="problemObject != null" >
+        problem_object,
+      </if>
+      <if test="problemDepartment != null" >
+        problem_department,
+      </if>
+      <if test="problemUser != null" >
+        problem_user,
+      </if>
+      <if test="problemHappen != null" >
+        problem_happen,
+      </if>
+      <if test="problemPut != null" >
+        problem_put,
+      </if>
+      <if test="problemEstimate != null" >
+        problem_estimate,
+      </if>
+      <if test="problemResloveTime != null" >
+        problem_reslove_time,
+      </if>
+      <if test="problemResolveUser != null" >
+        problem_resolve_user,
+      </if>
+      <if test="problemDetails != null" >
+        problem_details,
+      </if>
+      <if test="problemEnclosure != null" >
+        problem_enclosure,
+      </if>
+      <if test="problemTable != null" >
+        problem_table,
+      </if>
+      <if test="problemPlan != null" >
+        problem_plan,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="problemId != null" >
+        #{problemId,jdbcType=VARCHAR},
+      </if>
+      <if test="state != null" >
+        #{state,jdbcType=VARCHAR},
+      </if>
+      <if test="proId != null" >
+        #{proId,jdbcType=VARCHAR},
+      </if>
+      <if test="shopId != null" >
+        #{shopId,jdbcType=VARCHAR},
+      </if>
+      <if test="eqId != null" >
+        #{eqId,jdbcType=VARCHAR},
+      </if>
+      <if test="mesId != null" >
+        #{mesId,jdbcType=VARCHAR},
+      </if>
+      <if test="problemType != null" >
+        #{problemType,jdbcType=VARCHAR},
+      </if>
+      <if test="problemObject != null" >
+        #{problemObject,jdbcType=VARCHAR},
+      </if>
+      <if test="problemDepartment != null" >
+        #{problemDepartment,jdbcType=VARCHAR},
+      </if>
+      <if test="problemUser != null" >
+        #{problemUser,jdbcType=VARCHAR},
+      </if>
+      <if test="problemHappen != null" >
+        #{problemHappen,jdbcType=TIMESTAMP},
+      </if>
+      <if test="problemPut != null" >
+        #{problemPut,jdbcType=TIMESTAMP},
+      </if>
+      <if test="problemEstimate != null" >
+        #{problemEstimate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="problemResloveTime != null" >
+        #{problemResloveTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="problemResolveUser != null" >
+        #{problemResolveUser,jdbcType=VARCHAR},
+      </if>
+      <if test="problemDetails != null" >
+        #{problemDetails,jdbcType=VARCHAR},
+      </if>
+      <if test="problemEnclosure != null" >
+        #{problemEnclosure,jdbcType=VARCHAR},
+      </if>
+      <if test="problemTable != null" >
+        #{problemTable,jdbcType=VARCHAR},
+      </if>
+      <if test="problemPlan != null" >
+        #{problemPlan,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.intfocus.hdk.vo.Problem" >
+    update problem
+    <set >
+      <if test="problemId != null" >
+        problem_id = #{problemId,jdbcType=VARCHAR},
+      </if>
+      <if test="state != null" >
+        state = #{state,jdbcType=VARCHAR},
+      </if>
+      <if test="proId != null" >
+        pro_id = #{proId,jdbcType=VARCHAR},
+      </if>
+      <if test="shopId != null" >
+        shop_id = #{shopId,jdbcType=VARCHAR},
+      </if>
+      <if test="eqId != null" >
+        eq_id = #{eqId,jdbcType=VARCHAR},
+      </if>
+      <if test="mesId != null" >
+        mes_id = #{mesId,jdbcType=VARCHAR},
+      </if>
+      <if test="problemType != null" >
+        problem_type = #{problemType,jdbcType=VARCHAR},
+      </if>
+      <if test="problemObject != null" >
+        problem_object = #{problemObject,jdbcType=VARCHAR},
+      </if>
+      <if test="problemDepartment != null" >
+        problem_department = #{problemDepartment,jdbcType=VARCHAR},
+      </if>
+      <if test="problemUser != null" >
+        problem_user = #{problemUser,jdbcType=VARCHAR},
+      </if>
+      <if test="problemHappen != null" >
+        problem_happen = #{problemHappen,jdbcType=TIMESTAMP},
+      </if>
+      <if test="problemPut != null" >
+        problem_put = #{problemPut,jdbcType=TIMESTAMP},
+      </if>
+      <if test="problemEstimate != null" >
+        problem_estimate = #{problemEstimate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="problemResloveTime != null" >
+        problem_reslove_time = #{problemResloveTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="problemResolveUser != null" >
+        problem_resolve_user = #{problemResolveUser,jdbcType=VARCHAR},
+      </if>
+      <if test="problemDetails != null" >
+        problem_details = #{problemDetails,jdbcType=VARCHAR},
+      </if>
+      <if test="problemEnclosure != null" >
+        problem_enclosure = #{problemEnclosure,jdbcType=VARCHAR},
+      </if>
+      <if test="problemTable != null" >
+        problem_table = #{problemTable,jdbcType=VARCHAR},
+      </if>
+      <if test="problemPlan != null" >
+        problem_plan = #{problemPlan,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.intfocus.hdk.vo.Problem" >
+    update problem
+    set problem_id = #{problemId,jdbcType=VARCHAR},
+      state = #{state,jdbcType=VARCHAR},
+      pro_id = #{proId,jdbcType=VARCHAR},
+      shop_id = #{shopId,jdbcType=VARCHAR},
+      eq_id = #{eqId,jdbcType=VARCHAR},
+      mes_id = #{mesId,jdbcType=VARCHAR},
+      problem_type = #{problemType,jdbcType=VARCHAR},
+      problem_object = #{problemObject,jdbcType=VARCHAR},
+      problem_department = #{problemDepartment,jdbcType=VARCHAR},
+      problem_user = #{problemUser,jdbcType=VARCHAR},
+      problem_happen = #{problemHappen,jdbcType=TIMESTAMP},
+      problem_put = #{problemPut,jdbcType=TIMESTAMP},
+      problem_estimate = #{problemEstimate,jdbcType=TIMESTAMP},
+      problem_reslove_time = #{problemResloveTime,jdbcType=TIMESTAMP},
+      problem_resolve_user = #{problemResolveUser,jdbcType=VARCHAR},
+      problem_details = #{problemDetails,jdbcType=VARCHAR},
+      problem_enclosure = #{problemEnclosure,jdbcType=VARCHAR},
+      problem_table = #{problemTable,jdbcType=VARCHAR},
+      problem_plan = #{problemPlan,jdbcType=LONGVARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.intfocus.hdk.vo.Problem" >
+    update problem
+    set problem_id = #{problemId,jdbcType=VARCHAR},
+      state = #{state,jdbcType=VARCHAR},
+      pro_id = #{proId,jdbcType=VARCHAR},
+      shop_id = #{shopId,jdbcType=VARCHAR},
+      eq_id = #{eqId,jdbcType=VARCHAR},
+      mes_id = #{mesId,jdbcType=VARCHAR},
+      problem_type = #{problemType,jdbcType=VARCHAR},
+      problem_object = #{problemObject,jdbcType=VARCHAR},
+      problem_department = #{problemDepartment,jdbcType=VARCHAR},
+      problem_user = #{problemUser,jdbcType=VARCHAR},
+      problem_happen = #{problemHappen,jdbcType=TIMESTAMP},
+      problem_put = #{problemPut,jdbcType=TIMESTAMP},
+      problem_estimate = #{problemEstimate,jdbcType=TIMESTAMP},
+      problem_reslove_time = #{problemResloveTime,jdbcType=TIMESTAMP},
+      problem_resolve_user = #{problemResolveUser,jdbcType=VARCHAR},
+      problem_details = #{problemDetails,jdbcType=VARCHAR},
+      problem_enclosure = #{problemEnclosure,jdbcType=VARCHAR},
+      problem_table = #{problemTable,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

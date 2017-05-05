@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.intfocus.hdk.dao.SurveyMapper" >
+  <resultMap id="BaseResultMap" type="com.intfocus.hdk.vo.Survey" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="pro_id" property="proId" jdbcType="VARCHAR" />
+    <result column="shop_id" property="shopId" jdbcType="VARCHAR" />
+    <result column="sur_network" property="surNetwork" jdbcType="VARCHAR" />
+    <result column="sur_power" property="surPower" jdbcType="VARCHAR" />
+    <result column="sur_vip" property="surVip" jdbcType="VARCHAR" />
+    <result column="sur_vip_data" property="surVipData" jdbcType="VARCHAR" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.intfocus.hdk.vo.Survey" extends="BaseResultMap" >
+    <result column="sur_remarks" property="surRemarks" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, pro_id, shop_id, sur_network, sur_power, sur_vip, sur_vip_data
+  </sql>
+  <sql id="Blob_Column_List" >
+    sur_remarks
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from survey
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from survey
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.intfocus.hdk.vo.Survey" >
+    insert into survey (id, pro_id, shop_id, 
+      sur_network, sur_power, sur_vip, 
+      sur_vip_data, sur_remarks)
+    values (#{id,jdbcType=INTEGER}, #{proId,jdbcType=VARCHAR}, #{shopId,jdbcType=VARCHAR}, 
+      #{surNetwork,jdbcType=VARCHAR}, #{surPower,jdbcType=VARCHAR}, #{surVip,jdbcType=VARCHAR}, 
+      #{surVipData,jdbcType=VARCHAR}, #{surRemarks,jdbcType=LONGVARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.intfocus.hdk.vo.Survey" >
+    insert into survey
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="proId != null" >
+        pro_id,
+      </if>
+      <if test="shopId != null" >
+        shop_id,
+      </if>
+      <if test="surNetwork != null" >
+        sur_network,
+      </if>
+      <if test="surPower != null" >
+        sur_power,
+      </if>
+      <if test="surVip != null" >
+        sur_vip,
+      </if>
+      <if test="surVipData != null" >
+        sur_vip_data,
+      </if>
+      <if test="surRemarks != null" >
+        sur_remarks,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="proId != null" >
+        #{proId,jdbcType=VARCHAR},
+      </if>
+      <if test="shopId != null" >
+        #{shopId,jdbcType=VARCHAR},
+      </if>
+      <if test="surNetwork != null" >
+        #{surNetwork,jdbcType=VARCHAR},
+      </if>
+      <if test="surPower != null" >
+        #{surPower,jdbcType=VARCHAR},
+      </if>
+      <if test="surVip != null" >
+        #{surVip,jdbcType=VARCHAR},
+      </if>
+      <if test="surVipData != null" >
+        #{surVipData,jdbcType=VARCHAR},
+      </if>
+      <if test="surRemarks != null" >
+        #{surRemarks,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.intfocus.hdk.vo.Survey" >
+    update survey
+    <set >
+      <if test="proId != null" >
+        pro_id = #{proId,jdbcType=VARCHAR},
+      </if>
+      <if test="shopId != null" >
+        shop_id = #{shopId,jdbcType=VARCHAR},
+      </if>
+      <if test="surNetwork != null" >
+        sur_network = #{surNetwork,jdbcType=VARCHAR},
+      </if>
+      <if test="surPower != null" >
+        sur_power = #{surPower,jdbcType=VARCHAR},
+      </if>
+      <if test="surVip != null" >
+        sur_vip = #{surVip,jdbcType=VARCHAR},
+      </if>
+      <if test="surVipData != null" >
+        sur_vip_data = #{surVipData,jdbcType=VARCHAR},
+      </if>
+      <if test="surRemarks != null" >
+        sur_remarks = #{surRemarks,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.intfocus.hdk.vo.Survey" >
+    update survey
+    set pro_id = #{proId,jdbcType=VARCHAR},
+      shop_id = #{shopId,jdbcType=VARCHAR},
+      sur_network = #{surNetwork,jdbcType=VARCHAR},
+      sur_power = #{surPower,jdbcType=VARCHAR},
+      sur_vip = #{surVip,jdbcType=VARCHAR},
+      sur_vip_data = #{surVipData,jdbcType=VARCHAR},
+      sur_remarks = #{surRemarks,jdbcType=LONGVARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.intfocus.hdk.vo.Survey" >
+    update survey
+    set pro_id = #{proId,jdbcType=VARCHAR},
+      shop_id = #{shopId,jdbcType=VARCHAR},
+      sur_network = #{surNetwork,jdbcType=VARCHAR},
+      sur_power = #{surPower,jdbcType=VARCHAR},
+      sur_vip = #{surVip,jdbcType=VARCHAR},
+      sur_vip_data = #{surVipData,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

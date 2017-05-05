@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.intfocus.hdk.dao.PrinterMapper" >
+  <resultMap id="BaseResultMap" type="com.intfocus.hdk.vo.Printer" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="printer_id" property="printerId" jdbcType="VARCHAR" />
+    <result column="printer_brand" property="printerBrand" jdbcType="VARCHAR" />
+    <result column="printer_model" property="printerModel" jdbcType="VARCHAR" />
+    <result column="printer_port" property="printerPort" jdbcType="VARCHAR" />
+    <result column="sur_id" property="surId" jdbcType="VARCHAR" />
+    <result column="install_id" property="installId" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, printer_id, printer_brand, printer_model, printer_port, sur_id, install_id
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from printer
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from printer
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.intfocus.hdk.vo.Printer" >
+    insert into printer (id, printer_id, printer_brand, 
+      printer_model, printer_port, sur_id, 
+      install_id)
+    values (#{id,jdbcType=INTEGER}, #{printerId,jdbcType=VARCHAR}, #{printerBrand,jdbcType=VARCHAR}, 
+      #{printerModel,jdbcType=VARCHAR}, #{printerPort,jdbcType=VARCHAR}, #{surId,jdbcType=VARCHAR}, 
+      #{installId,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.intfocus.hdk.vo.Printer" >
+    insert into printer
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="printerId != null" >
+        printer_id,
+      </if>
+      <if test="printerBrand != null" >
+        printer_brand,
+      </if>
+      <if test="printerModel != null" >
+        printer_model,
+      </if>
+      <if test="printerPort != null" >
+        printer_port,
+      </if>
+      <if test="surId != null" >
+        sur_id,
+      </if>
+      <if test="installId != null" >
+        install_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="printerId != null" >
+        #{printerId,jdbcType=VARCHAR},
+      </if>
+      <if test="printerBrand != null" >
+        #{printerBrand,jdbcType=VARCHAR},
+      </if>
+      <if test="printerModel != null" >
+        #{printerModel,jdbcType=VARCHAR},
+      </if>
+      <if test="printerPort != null" >
+        #{printerPort,jdbcType=VARCHAR},
+      </if>
+      <if test="surId != null" >
+        #{surId,jdbcType=VARCHAR},
+      </if>
+      <if test="installId != null" >
+        #{installId,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.intfocus.hdk.vo.Printer" >
+    update printer
+    <set >
+      <if test="printerId != null" >
+        printer_id = #{printerId,jdbcType=VARCHAR},
+      </if>
+      <if test="printerBrand != null" >
+        printer_brand = #{printerBrand,jdbcType=VARCHAR},
+      </if>
+      <if test="printerModel != null" >
+        printer_model = #{printerModel,jdbcType=VARCHAR},
+      </if>
+      <if test="printerPort != null" >
+        printer_port = #{printerPort,jdbcType=VARCHAR},
+      </if>
+      <if test="surId != null" >
+        sur_id = #{surId,jdbcType=VARCHAR},
+      </if>
+      <if test="installId != null" >
+        install_id = #{installId,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.intfocus.hdk.vo.Printer" >
+    update printer
+    set printer_id = #{printerId,jdbcType=VARCHAR},
+      printer_brand = #{printerBrand,jdbcType=VARCHAR},
+      printer_model = #{printerModel,jdbcType=VARCHAR},
+      printer_port = #{printerPort,jdbcType=VARCHAR},
+      sur_id = #{surId,jdbcType=VARCHAR},
+      install_id = #{installId,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

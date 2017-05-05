@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.intfocus.hdk.dao.ProjectMapper" >
+  <resultMap id="BaseResultMap" type="com.intfocus.hdk.vo.Project" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="pro_id" property="proId" jdbcType="VARCHAR" />
+    <result column="pro_name" property="proName" jdbcType="VARCHAR" />
+    <result column="pro_edition" property="proEdition" jdbcType="VARCHAR" />
+    <result column="pro_station" property="proStation" jdbcType="VARCHAR" />
+    <result column="pro_manager_pro" property="proManagerPro" jdbcType="VARCHAR" />
+    <result column="pro_manager_acc" property="proManagerAcc" jdbcType="VARCHAR" />
+    <result column="pro_engineer" property="proEngineer" jdbcType="VARCHAR" />
+    <result column="pro_coordination" property="proCoordination" jdbcType="VARCHAR" />
+    <result column="pro_coordination_phone" property="proCoordinationPhone" jdbcType="VARCHAR" />
+    <result column="pro_updata_time" property="proUpdataTime" jdbcType="TIMESTAMP" />
+    <result column="pro_todal" property="proTodal" jdbcType="INTEGER" />
+    <result column="pro_need" property="proNeed" jdbcType="INTEGER" />
+    <result column="pro_already" property="proAlready" jdbcType="INTEGER" />
+    <result column="pro_check" property="proCheck" jdbcType="INTEGER" />
+    <result column="pro_not" property="proNot" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, pro_id, pro_name, pro_edition, pro_station, pro_manager_pro, pro_manager_acc, 
+    pro_engineer, pro_coordination, pro_coordination_phone, pro_updata_time, pro_todal, 
+    pro_need, pro_already, pro_check, pro_not
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from project
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from project
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.intfocus.hdk.vo.Project" >
+    insert into project (id, pro_id, pro_name, 
+      pro_edition, pro_station, pro_manager_pro, 
+      pro_manager_acc, pro_engineer, pro_coordination, 
+      pro_coordination_phone, pro_updata_time, 
+      pro_todal, pro_need, pro_already, 
+      pro_check, pro_not)
+    values (#{id,jdbcType=INTEGER}, #{proId,jdbcType=VARCHAR}, #{proName,jdbcType=VARCHAR}, 
+      #{proEdition,jdbcType=VARCHAR}, #{proStation,jdbcType=VARCHAR}, #{proManagerPro,jdbcType=VARCHAR}, 
+      #{proManagerAcc,jdbcType=VARCHAR}, #{proEngineer,jdbcType=VARCHAR}, #{proCoordination,jdbcType=VARCHAR}, 
+      #{proCoordinationPhone,jdbcType=VARCHAR}, #{proUpdataTime,jdbcType=TIMESTAMP}, 
+      #{proTodal,jdbcType=INTEGER}, #{proNeed,jdbcType=INTEGER}, #{proAlready,jdbcType=INTEGER}, 
+      #{proCheck,jdbcType=INTEGER}, #{proNot,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.intfocus.hdk.vo.Project" >
+    insert into project
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="proId != null" >
+        pro_id,
+      </if>
+      <if test="proName != null" >
+        pro_name,
+      </if>
+      <if test="proEdition != null" >
+        pro_edition,
+      </if>
+      <if test="proStation != null" >
+        pro_station,
+      </if>
+      <if test="proManagerPro != null" >
+        pro_manager_pro,
+      </if>
+      <if test="proManagerAcc != null" >
+        pro_manager_acc,
+      </if>
+      <if test="proEngineer != null" >
+        pro_engineer,
+      </if>
+      <if test="proCoordination != null" >
+        pro_coordination,
+      </if>
+      <if test="proCoordinationPhone != null" >
+        pro_coordination_phone,
+      </if>
+      <if test="proUpdataTime != null" >
+        pro_updata_time,
+      </if>
+      <if test="proTodal != null" >
+        pro_todal,
+      </if>
+      <if test="proNeed != null" >
+        pro_need,
+      </if>
+      <if test="proAlready != null" >
+        pro_already,
+      </if>
+      <if test="proCheck != null" >
+        pro_check,
+      </if>
+      <if test="proNot != null" >
+        pro_not,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="proId != null" >
+        #{proId,jdbcType=VARCHAR},
+      </if>
+      <if test="proName != null" >
+        #{proName,jdbcType=VARCHAR},
+      </if>
+      <if test="proEdition != null" >
+        #{proEdition,jdbcType=VARCHAR},
+      </if>
+      <if test="proStation != null" >
+        #{proStation,jdbcType=VARCHAR},
+      </if>
+      <if test="proManagerPro != null" >
+        #{proManagerPro,jdbcType=VARCHAR},
+      </if>
+      <if test="proManagerAcc != null" >
+        #{proManagerAcc,jdbcType=VARCHAR},
+      </if>
+      <if test="proEngineer != null" >
+        #{proEngineer,jdbcType=VARCHAR},
+      </if>
+      <if test="proCoordination != null" >
+        #{proCoordination,jdbcType=VARCHAR},
+      </if>
+      <if test="proCoordinationPhone != null" >
+        #{proCoordinationPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="proUpdataTime != null" >
+        #{proUpdataTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="proTodal != null" >
+        #{proTodal,jdbcType=INTEGER},
+      </if>
+      <if test="proNeed != null" >
+        #{proNeed,jdbcType=INTEGER},
+      </if>
+      <if test="proAlready != null" >
+        #{proAlready,jdbcType=INTEGER},
+      </if>
+      <if test="proCheck != null" >
+        #{proCheck,jdbcType=INTEGER},
+      </if>
+      <if test="proNot != null" >
+        #{proNot,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.intfocus.hdk.vo.Project" >
+    update project
+    <set >
+      <if test="proId != null" >
+        pro_id = #{proId,jdbcType=VARCHAR},
+      </if>
+      <if test="proName != null" >
+        pro_name = #{proName,jdbcType=VARCHAR},
+      </if>
+      <if test="proEdition != null" >
+        pro_edition = #{proEdition,jdbcType=VARCHAR},
+      </if>
+      <if test="proStation != null" >
+        pro_station = #{proStation,jdbcType=VARCHAR},
+      </if>
+      <if test="proManagerPro != null" >
+        pro_manager_pro = #{proManagerPro,jdbcType=VARCHAR},
+      </if>
+      <if test="proManagerAcc != null" >
+        pro_manager_acc = #{proManagerAcc,jdbcType=VARCHAR},
+      </if>
+      <if test="proEngineer != null" >
+        pro_engineer = #{proEngineer,jdbcType=VARCHAR},
+      </if>
+      <if test="proCoordination != null" >
+        pro_coordination = #{proCoordination,jdbcType=VARCHAR},
+      </if>
+      <if test="proCoordinationPhone != null" >
+        pro_coordination_phone = #{proCoordinationPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="proUpdataTime != null" >
+        pro_updata_time = #{proUpdataTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="proTodal != null" >
+        pro_todal = #{proTodal,jdbcType=INTEGER},
+      </if>
+      <if test="proNeed != null" >
+        pro_need = #{proNeed,jdbcType=INTEGER},
+      </if>
+      <if test="proAlready != null" >
+        pro_already = #{proAlready,jdbcType=INTEGER},
+      </if>
+      <if test="proCheck != null" >
+        pro_check = #{proCheck,jdbcType=INTEGER},
+      </if>
+      <if test="proNot != null" >
+        pro_not = #{proNot,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.intfocus.hdk.vo.Project" >
+    update project
+    set pro_id = #{proId,jdbcType=VARCHAR},
+      pro_name = #{proName,jdbcType=VARCHAR},
+      pro_edition = #{proEdition,jdbcType=VARCHAR},
+      pro_station = #{proStation,jdbcType=VARCHAR},
+      pro_manager_pro = #{proManagerPro,jdbcType=VARCHAR},
+      pro_manager_acc = #{proManagerAcc,jdbcType=VARCHAR},
+      pro_engineer = #{proEngineer,jdbcType=VARCHAR},
+      pro_coordination = #{proCoordination,jdbcType=VARCHAR},
+      pro_coordination_phone = #{proCoordinationPhone,jdbcType=VARCHAR},
+      pro_updata_time = #{proUpdataTime,jdbcType=TIMESTAMP},
+      pro_todal = #{proTodal,jdbcType=INTEGER},
+      pro_need = #{proNeed,jdbcType=INTEGER},
+      pro_already = #{proAlready,jdbcType=INTEGER},
+      pro_check = #{proCheck,jdbcType=INTEGER},
+      pro_not = #{proNot,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.intfocus.hdk.dao.ShopsMapper" >
+  <resultMap id="BaseResultMap" type="com.intfocus.hdk.vo.Shops" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="shop_id" property="shopId" jdbcType="VARCHAR" />
+    <result column="shop_position" property="shopPosition" jdbcType="VARCHAR" />
+    <result column="shop_floor" property="shopFloor" jdbcType="VARCHAR" />
+    <result column="shop_mer_name" property="shopMerName" jdbcType="VARCHAR" />
+    <result column="shop_mer_station" property="shopMerStation" jdbcType="VARCHAR" />
+    <result column="shop_type" property="shopType" jdbcType="VARCHAR" />
+    <result column="shop_sec_type" property="shopSecType" jdbcType="VARCHAR" />
+    <result column="shop_name" property="shopName" jdbcType="VARCHAR" />
+    <result column="pro_id" property="proId" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, shop_id, shop_position, shop_floor, shop_mer_name, shop_mer_station, shop_type, 
+    shop_sec_type, shop_name, pro_id
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from shops
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from shops
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.intfocus.hdk.vo.Shops" >
+    insert into shops (id, shop_id, shop_position, 
+      shop_floor, shop_mer_name, shop_mer_station, 
+      shop_type, shop_sec_type, shop_name, 
+      pro_id)
+    values (#{id,jdbcType=INTEGER}, #{shopId,jdbcType=VARCHAR}, #{shopPosition,jdbcType=VARCHAR}, 
+      #{shopFloor,jdbcType=VARCHAR}, #{shopMerName,jdbcType=VARCHAR}, #{shopMerStation,jdbcType=VARCHAR}, 
+      #{shopType,jdbcType=VARCHAR}, #{shopSecType,jdbcType=VARCHAR}, #{shopName,jdbcType=VARCHAR}, 
+      #{proId,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.intfocus.hdk.vo.Shops" >
+    insert into shops
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="shopId != null" >
+        shop_id,
+      </if>
+      <if test="shopPosition != null" >
+        shop_position,
+      </if>
+      <if test="shopFloor != null" >
+        shop_floor,
+      </if>
+      <if test="shopMerName != null" >
+        shop_mer_name,
+      </if>
+      <if test="shopMerStation != null" >
+        shop_mer_station,
+      </if>
+      <if test="shopType != null" >
+        shop_type,
+      </if>
+      <if test="shopSecType != null" >
+        shop_sec_type,
+      </if>
+      <if test="shopName != null" >
+        shop_name,
+      </if>
+      <if test="proId != null" >
+        pro_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="shopId != null" >
+        #{shopId,jdbcType=VARCHAR},
+      </if>
+      <if test="shopPosition != null" >
+        #{shopPosition,jdbcType=VARCHAR},
+      </if>
+      <if test="shopFloor != null" >
+        #{shopFloor,jdbcType=VARCHAR},
+      </if>
+      <if test="shopMerName != null" >
+        #{shopMerName,jdbcType=VARCHAR},
+      </if>
+      <if test="shopMerStation != null" >
+        #{shopMerStation,jdbcType=VARCHAR},
+      </if>
+      <if test="shopType != null" >
+        #{shopType,jdbcType=VARCHAR},
+      </if>
+      <if test="shopSecType != null" >
+        #{shopSecType,jdbcType=VARCHAR},
+      </if>
+      <if test="shopName != null" >
+        #{shopName,jdbcType=VARCHAR},
+      </if>
+      <if test="proId != null" >
+        #{proId,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.intfocus.hdk.vo.Shops" >
+    update shops
+    <set >
+      <if test="shopId != null" >
+        shop_id = #{shopId,jdbcType=VARCHAR},
+      </if>
+      <if test="shopPosition != null" >
+        shop_position = #{shopPosition,jdbcType=VARCHAR},
+      </if>
+      <if test="shopFloor != null" >
+        shop_floor = #{shopFloor,jdbcType=VARCHAR},
+      </if>
+      <if test="shopMerName != null" >
+        shop_mer_name = #{shopMerName,jdbcType=VARCHAR},
+      </if>
+      <if test="shopMerStation != null" >
+        shop_mer_station = #{shopMerStation,jdbcType=VARCHAR},
+      </if>
+      <if test="shopType != null" >
+        shop_type = #{shopType,jdbcType=VARCHAR},
+      </if>
+      <if test="shopSecType != null" >
+        shop_sec_type = #{shopSecType,jdbcType=VARCHAR},
+      </if>
+      <if test="shopName != null" >
+        shop_name = #{shopName,jdbcType=VARCHAR},
+      </if>
+      <if test="proId != null" >
+        pro_id = #{proId,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.intfocus.hdk.vo.Shops" >
+    update shops
+    set shop_id = #{shopId,jdbcType=VARCHAR},
+      shop_position = #{shopPosition,jdbcType=VARCHAR},
+      shop_floor = #{shopFloor,jdbcType=VARCHAR},
+      shop_mer_name = #{shopMerName,jdbcType=VARCHAR},
+      shop_mer_station = #{shopMerStation,jdbcType=VARCHAR},
+      shop_type = #{shopType,jdbcType=VARCHAR},
+      shop_sec_type = #{shopSecType,jdbcType=VARCHAR},
+      shop_name = #{shopName,jdbcType=VARCHAR},
+      pro_id = #{proId,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>
