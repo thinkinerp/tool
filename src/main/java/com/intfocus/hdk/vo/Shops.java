@@ -20,7 +20,17 @@ public class Shops {
     private String shopName;
 
     private String proId;
+    
+    private String eqType;
+    
+    private String cashSystem;
+    
+    private String installId;
+    
+    private String installStation;
 
+    private String eqId ;
+    
     public Integer getId() {
         return id;
     }
@@ -100,4 +110,44 @@ public class Shops {
     public void setProId(String proId) {
         this.proId = proId == null ? null : proId.trim();
     }
+
+	public String getEqType() {
+		return eqType;
+	}
+
+	public void setEqType(String eqType) {
+		this.eqType = eqType;
+	}
+
+	public String getCashSystem() {
+		return cashSystem;
+	}
+
+	public void setCashSystem(String cashSystem) {
+		this.cashSystem = cashSystem;
+	}
+
+	public String getInstallId() {
+		return installId;
+	}
+
+	public void setInstallId(String installId) {
+		this.installId = installId;
+	}
+
+	public String getInstallStation() {
+		return installStation;
+	}
+
+	public void setInstallStation(String installStation) {
+		this.installStation = installStation;
+	}
+
+	public String getEqId() {
+		return eqId;
+	}
+
+	public void setEqId(String eqId) {
+		this.eqId = eqId;
+	}
 }

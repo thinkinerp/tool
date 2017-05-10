@@ -45,7 +45,6 @@
         </constructor-arg>
     </bean>
     
-    
 	<!-- 创建SqlSessionFactory，同时指定数据源 -->
 	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
 		<property name="dataSource" ref="dataSource" />
@@ -80,7 +79,8 @@
           class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
           <property name="defaultEncoding" value="UTF-8" />
           <!-- 指定所上传文件的总大小不能超过200KB。注意maxUploadSize属性的限制不是针对单个文件，而是所有文件的容量之和 -->
-          <property name="maxUploadSize" value="-1" />
+         <property name="maxUploadSize" value="104857600"/>  
+       <property name="maxInMemorySize" value="4096"/>  
       </bean>
  
       <!-- SpringMVC在超出上传文件限制时，会抛出org.springframework.web.multipart.MaxUploadSizeExceededException -->

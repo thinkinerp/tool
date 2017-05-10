@@ -1,5 +1,7 @@
 package com.intfocus.hdk.vo;
 
+import java.util.Date;
+
 public class Message {
     private Integer id;
 
@@ -8,6 +10,10 @@ public class Message {
     private String mesUser;
 
     private String problemId;
+
+    private String createdAt;
+
+    private String updatedAt;
 
     private String mesContent;
 
@@ -41,6 +47,22 @@ public class Message {
 
     public void setProblemId(String problemId) {
         this.problemId = problemId == null ? null : problemId.trim();
+    }
+
+    public String getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(String createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public String getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(String updatedAt) {
+        this.updatedAt = updatedAt;
     }
 
     public String getMesContent() {

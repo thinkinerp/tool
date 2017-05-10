@@ -1,5 +1,8 @@
 package com.intfocus.hdk.dao;
 
+import java.util.List;
+import java.util.Map;
+
 import com.intfocus.hdk.vo.Cash;
 
 public interface CashMapper {
@@ -14,4 +17,6 @@ public interface CashMapper {
     int updateByPrimaryKeySelective(Cash record);
 
     int updateByPrimaryKey(Cash record);
+
+	List<Cash> selectByWhere(Map<String, String> where);
 }

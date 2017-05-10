@@ -12,17 +12,20 @@
     <result column="pro_engineer" property="proEngineer" jdbcType="VARCHAR" />
     <result column="pro_coordination" property="proCoordination" jdbcType="VARCHAR" />
     <result column="pro_coordination_phone" property="proCoordinationPhone" jdbcType="VARCHAR" />
-    <result column="pro_updata_time" property="proUpdataTime" jdbcType="TIMESTAMP" />
+    <result column="pro_updata_time" property="proUpdataTime" jdbcType="VARCHAR" />
     <result column="pro_todal" property="proTodal" jdbcType="INTEGER" />
     <result column="pro_need" property="proNeed" jdbcType="INTEGER" />
     <result column="pro_already" property="proAlready" jdbcType="INTEGER" />
     <result column="pro_check" property="proCheck" jdbcType="INTEGER" />
     <result column="pro_not" property="proNot" jdbcType="INTEGER" />
+    <result column="is_last" property="isLast" jdbcType="INTEGER" />
+    <result column="created_at" property="createdAt" jdbcType="VARCHAR" />
+    <result column="updated_at" property="updatedAt" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
     id, pro_id, pro_name, pro_edition, pro_station, pro_manager_pro, pro_manager_acc, 
     pro_engineer, pro_coordination, pro_coordination_phone, pro_updata_time, pro_todal, 
-    pro_need, pro_already, pro_check, pro_not
+    pro_need, pro_already, pro_check, pro_not, created_at, updated_at,is_last
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
@@ -30,6 +33,30 @@
     from project
     where id = #{id,jdbcType=INTEGER}
   </select>
+  <select id="selectByWhere" resultMap="BaseResultMap" parameterType="java.util.Map" >
+    select 
+    <include refid="Base_Column_List" />
+    from project
+        	<where>
+    	1=1
+    		<if test="null != isLast  and '' != isLast">
+				and is_last = #{isLast,jdbcType=INTEGER}
+			</if>	
+    		<if test="null != proName  and '' != proName">
+				and pro_name = #{proName,jdbcType=VARCHAR}
+			</if>	
+    		<if test="null != proManagerPro  and '' != proManagerPro">
+				and pro_manager_pro = #{proManagerPro,jdbcType=VARCHAR}
+			</if>	
+    </where>    
+    
+    <if test="null != page and ''!= page">
+	    <if test="null != pageSize and ''!= pageSize">
+			limit 	#{page,jdbcType=VARCHAR}, #{pageSize,jdbcType=VARCHAR}		    	
+	    </if>
+    </if>
+  </select>
+  
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from project
     where id = #{id,jdbcType=INTEGER}
@@ -40,13 +67,15 @@
       pro_manager_acc, pro_engineer, pro_coordination, 
       pro_coordination_phone, pro_updata_time, 
       pro_todal, pro_need, pro_already, 
-      pro_check, pro_not)
+      pro_check, pro_not, created_at, 
+      updated_at)
     values (#{id,jdbcType=INTEGER}, #{proId,jdbcType=VARCHAR}, #{proName,jdbcType=VARCHAR}, 
       #{proEdition,jdbcType=VARCHAR}, #{proStation,jdbcType=VARCHAR}, #{proManagerPro,jdbcType=VARCHAR}, 
       #{proManagerAcc,jdbcType=VARCHAR}, #{proEngineer,jdbcType=VARCHAR}, #{proCoordination,jdbcType=VARCHAR}, 
       #{proCoordinationPhone,jdbcType=VARCHAR}, #{proUpdataTime,jdbcType=TIMESTAMP}, 
       #{proTodal,jdbcType=INTEGER}, #{proNeed,jdbcType=INTEGER}, #{proAlready,jdbcType=INTEGER}, 
-      #{proCheck,jdbcType=INTEGER}, #{proNot,jdbcType=INTEGER})
+      #{proCheck,jdbcType=INTEGER}, #{proNot,jdbcType=INTEGER}, #{createdAt,jdbcType=TIMESTAMP}, 
+      #{updatedAt,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="com.intfocus.hdk.vo.Project" >
     insert into project
@@ -99,6 +128,12 @@
       <if test="proNot != null" >
         pro_not,
       </if>
+      <if test="createdAt != null" >
+        created_at,
+      </if>
+      <if test="updatedAt != null" >
+        updated_at,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -148,6 +183,12 @@
       </if>
       <if test="proNot != null" >
         #{proNot,jdbcType=INTEGER},
+      </if>
+      <if test="createdAt != null" >
+        #{createdAt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updatedAt != null" >
+        #{updatedAt,jdbcType=TIMESTAMP},
       </if>
     </trim>
   </insert>
@@ -199,9 +240,24 @@
       <if test="proNot != null" >
         pro_not = #{proNot,jdbcType=INTEGER},
       </if>
+      <if test="createdAt != null" >
+        created_at = #{createdAt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updatedAt != null" >
+        updated_at = #{updatedAt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isLast != null" >
+        is_last = #{isLast,jdbcType=TIMESTAMP},
+      </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
+  
+  <update id ="setAllNotIsLast" >
+  	update project 
+  	    set is_last = 0
+  </update>
+  
   <update id="updateByPrimaryKey" parameterType="com.intfocus.hdk.vo.Project" >
     update project
     set pro_id = #{proId,jdbcType=VARCHAR},
@@ -218,7 +274,9 @@
       pro_need = #{proNeed,jdbcType=INTEGER},
       pro_already = #{proAlready,jdbcType=INTEGER},
       pro_check = #{proCheck,jdbcType=INTEGER},
-      pro_not = #{proNot,jdbcType=INTEGER}
+      pro_not = #{proNot,jdbcType=INTEGER},
+      created_at = #{createdAt,jdbcType=TIMESTAMP},
+      updated_at = #{updatedAt,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

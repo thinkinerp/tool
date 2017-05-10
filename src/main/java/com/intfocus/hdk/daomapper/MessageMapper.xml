@@ -1,22 +1,24 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.intfocus.hdk.dao.MessageMapper" >
-  <resultMap id="BaseResultMap" type="com.intfocus.hdk.vo.Message" >
-    <id column="id" property="id" jdbcType="INTEGER" />
-    <result column="mes_id" property="mesId" jdbcType="VARCHAR" />
-    <result column="mes_user" property="mesUser" jdbcType="VARCHAR" />
-    <result column="problem_id" property="problemId" jdbcType="VARCHAR" />
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.intfocus.hdk.dao.MessageMapper">
+  <resultMap id="BaseResultMap" type="com.intfocus.hdk.vo.Message">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="mes_id" jdbcType="VARCHAR" property="mesId" />
+    <result column="mes_user" jdbcType="VARCHAR" property="mesUser" />
+    <result column="problem_id" jdbcType="VARCHAR" property="problemId" />
+    <result column="created_at" jdbcType="TIMESTAMP" property="createdAt" />
+    <result column="updated_at" jdbcType="TIMESTAMP" property="updatedAt" />
   </resultMap>
-  <resultMap id="ResultMapWithBLOBs" type="com.intfocus.hdk.vo.Message" extends="BaseResultMap" >
-    <result column="mes_content" property="mesContent" jdbcType="LONGVARCHAR" />
+  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.intfocus.hdk.vo.Message">
+    <result column="mes_content" jdbcType="LONGVARCHAR" property="mesContent" />
   </resultMap>
-  <sql id="Base_Column_List" >
-    id, mes_id, mes_user, problem_id
+  <sql id="Base_Column_List">
+    id, mes_id, mes_user, problem_id, created_at, updated_at
   </sql>
-  <sql id="Blob_Column_List" >
+  <sql id="Blob_Column_List">
     mes_content
   </sql>
-  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Integer" >
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="ResultMapWithBLOBs">
     select 
     <include refid="Base_Column_List" />
     ,
@@ -24,84 +26,109 @@
     from message
     where id = #{id,jdbcType=INTEGER}
   </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from message
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.intfocus.hdk.vo.Message" >
+  <insert id="insert" parameterType="com.intfocus.hdk.vo.Message">
     insert into message (id, mes_id, mes_user, 
-      problem_id, mes_content)
+      problem_id, created_at, updated_at, 
+      mes_content)
     values (#{id,jdbcType=INTEGER}, #{mesId,jdbcType=VARCHAR}, #{mesUser,jdbcType=VARCHAR}, 
-      #{problemId,jdbcType=VARCHAR}, #{mesContent,jdbcType=LONGVARCHAR})
+      #{problemId,jdbcType=VARCHAR}, #{createdAt,jdbcType=TIMESTAMP}, #{updatedAt,jdbcType=TIMESTAMP}, 
+      #{mesContent,jdbcType=LONGVARCHAR})
   </insert>
-  <insert id="insertSelective" parameterType="com.intfocus.hdk.vo.Message" >
+  <insert id="insertSelective" parameterType="com.intfocus.hdk.vo.Message">
     insert into message
-    <trim prefix="(" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
         id,
       </if>
-      <if test="mesId != null" >
+      <if test="mesId != null">
         mes_id,
       </if>
-      <if test="mesUser != null" >
+      <if test="mesUser != null">
         mes_user,
       </if>
-      <if test="problemId != null" >
+      <if test="problemId != null">
         problem_id,
       </if>
-      <if test="mesContent != null" >
+      <if test="createdAt != null">
+        created_at,
+      </if>
+      <if test="updatedAt != null">
+        updated_at,
+      </if>
+      <if test="mesContent != null">
         mes_content,
       </if>
     </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
         #{id,jdbcType=INTEGER},
       </if>
-      <if test="mesId != null" >
+      <if test="mesId != null">
         #{mesId,jdbcType=VARCHAR},
       </if>
-      <if test="mesUser != null" >
+      <if test="mesUser != null">
         #{mesUser,jdbcType=VARCHAR},
       </if>
-      <if test="problemId != null" >
+      <if test="problemId != null">
         #{problemId,jdbcType=VARCHAR},
       </if>
-      <if test="mesContent != null" >
+      <if test="createdAt != null">
+        #{createdAt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updatedAt != null">
+        #{updatedAt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="mesContent != null">
         #{mesContent,jdbcType=LONGVARCHAR},
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.intfocus.hdk.vo.Message" >
+  <update id="updateByPrimaryKeySelective" parameterType="com.intfocus.hdk.vo.Message">
     update message
-    <set >
-      <if test="mesId != null" >
+    <set>
+      <if test="mesId != null">
         mes_id = #{mesId,jdbcType=VARCHAR},
       </if>
-      <if test="mesUser != null" >
+      <if test="mesUser != null">
         mes_user = #{mesUser,jdbcType=VARCHAR},
       </if>
-      <if test="problemId != null" >
+      <if test="problemId != null">
         problem_id = #{problemId,jdbcType=VARCHAR},
       </if>
-      <if test="mesContent != null" >
+      <if test="createdAt != null">
+        created_at = #{createdAt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updatedAt != null">
+        updated_at = #{updatedAt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="mesContent != null">
         mes_content = #{mesContent,jdbcType=LONGVARCHAR},
       </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.intfocus.hdk.vo.Message" >
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.intfocus.hdk.vo.Message">
     update message
     set mes_id = #{mesId,jdbcType=VARCHAR},
       mes_user = #{mesUser,jdbcType=VARCHAR},
       problem_id = #{problemId,jdbcType=VARCHAR},
+      created_at = #{createdAt,jdbcType=TIMESTAMP},
+      updated_at = #{updatedAt,jdbcType=TIMESTAMP},
       mes_content = #{mesContent,jdbcType=LONGVARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.intfocus.hdk.vo.Message" >
+  <update id="updateByPrimaryKey" parameterType="com.intfocus.hdk.vo.Message">
     update message
     set mes_id = #{mesId,jdbcType=VARCHAR},
       mes_user = #{mesUser,jdbcType=VARCHAR},
-      problem_id = #{problemId,jdbcType=VARCHAR}
+      problem_id = #{problemId,jdbcType=VARCHAR},
+      created_at = #{createdAt,jdbcType=TIMESTAMP},
+      updated_at = #{updatedAt,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>
+  
 </mapper>

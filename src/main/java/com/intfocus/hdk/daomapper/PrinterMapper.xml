@@ -9,15 +9,35 @@
     <result column="printer_port" property="printerPort" jdbcType="VARCHAR" />
     <result column="sur_id" property="surId" jdbcType="VARCHAR" />
     <result column="install_id" property="installId" jdbcType="VARCHAR" />
+    <result column="created_at" property="createdAt" jdbcType="TIMESTAMP" />
+    <result column="updated_at" property="updatedAt" jdbcType="TIMESTAMP" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, printer_id, printer_brand, printer_model, printer_port, sur_id, install_id
+    id, printer_id, printer_brand, printer_model, printer_port, sur_id, install_id, created_at, 
+    updated_at
   </sql>
+  
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
     <include refid="Base_Column_List" />
     from printer
     where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectByWhere" resultMap="BaseResultMap" parameterType="java.util.Map" >
+    select 
+    <include refid="Base_Column_List" />
+    from printer
+    <where>
+    		<if test="null != printerId  and '' != printerId">
+				and printer_id = #{printerId,jdbcType=VARCHAR}
+			</if>	
+ 
+    </where>  
+    <if test="null != page and ''!= page">
+	    <if test="null != pageSize and ''!= pageSize">
+			limit 	#{page,jdbcType=VARCHAR}, #{pageSize,jdbcType=VARCHAR}		    	
+	    </if>
+    </if>
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from printer
@@ -26,10 +46,12 @@
   <insert id="insert" parameterType="com.intfocus.hdk.vo.Printer" >
     insert into printer (id, printer_id, printer_brand, 
       printer_model, printer_port, sur_id, 
-      install_id)
+      install_id, created_at, updated_at
+      )
     values (#{id,jdbcType=INTEGER}, #{printerId,jdbcType=VARCHAR}, #{printerBrand,jdbcType=VARCHAR}, 
       #{printerModel,jdbcType=VARCHAR}, #{printerPort,jdbcType=VARCHAR}, #{surId,jdbcType=VARCHAR}, 
-      #{installId,jdbcType=VARCHAR})
+      #{installId,jdbcType=VARCHAR}, #{createdAt,jdbcType=TIMESTAMP}, #{updatedAt,jdbcType=TIMESTAMP}
+      )
   </insert>
   <insert id="insertSelective" parameterType="com.intfocus.hdk.vo.Printer" >
     insert into printer
@@ -55,6 +77,12 @@
       <if test="installId != null" >
         install_id,
       </if>
+      <if test="createdAt != null" >
+        created_at,
+      </if>
+      <if test="updatedAt != null" >
+        updated_at,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -77,6 +105,12 @@
       </if>
       <if test="installId != null" >
         #{installId,jdbcType=VARCHAR},
+      </if>
+      <if test="createdAt != null" >
+        #{createdAt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updatedAt != null" >
+        #{updatedAt,jdbcType=TIMESTAMP},
       </if>
     </trim>
   </insert>
@@ -101,6 +135,12 @@
       <if test="installId != null" >
         install_id = #{installId,jdbcType=VARCHAR},
       </if>
+      <if test="createdAt != null" >
+        created_at = #{createdAt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updatedAt != null" >
+        updated_at = #{updatedAt,jdbcType=TIMESTAMP},
+      </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
@@ -111,7 +151,9 @@
       printer_model = #{printerModel,jdbcType=VARCHAR},
       printer_port = #{printerPort,jdbcType=VARCHAR},
       sur_id = #{surId,jdbcType=VARCHAR},
-      install_id = #{installId,jdbcType=VARCHAR}
+      install_id = #{installId,jdbcType=VARCHAR},
+      created_at = #{createdAt,jdbcType=TIMESTAMP},
+      updated_at = #{updatedAt,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

@@ -7,9 +7,11 @@
     <result column="form_type" property="formType" jdbcType="VARCHAR" />
     <result column="form_id" property="formId" jdbcType="VARCHAR" />
     <result column="action" property="action" jdbcType="VARCHAR" />
+    <result column="created_at" property="createdAt" jdbcType="TIMESTAMP" />
+    <result column="updated_at" property="updatedAt" jdbcType="TIMESTAMP" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, user_id, form_type, form_id, action
+    id, user_id, form_type, form_id, action, created_at, updated_at
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
@@ -23,9 +25,11 @@
   </delete>
   <insert id="insert" parameterType="com.intfocus.hdk.vo.Operation_history" >
     insert into operation_history (id, user_id, form_type, 
-      form_id, action)
+      form_id, action, created_at, 
+      updated_at)
     values (#{id,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, #{formType,jdbcType=VARCHAR}, 
-      #{formId,jdbcType=VARCHAR}, #{action,jdbcType=VARCHAR})
+      #{formId,jdbcType=VARCHAR}, #{action,jdbcType=VARCHAR}, #{createdAt,jdbcType=TIMESTAMP}, 
+      #{updatedAt,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="com.intfocus.hdk.vo.Operation_history" >
     insert into operation_history
@@ -45,6 +49,12 @@
       <if test="action != null" >
         action,
       </if>
+      <if test="createdAt != null" >
+        created_at,
+      </if>
+      <if test="updatedAt != null" >
+        updated_at,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -61,6 +71,12 @@
       </if>
       <if test="action != null" >
         #{action,jdbcType=VARCHAR},
+      </if>
+      <if test="createdAt != null" >
+        #{createdAt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updatedAt != null" >
+        #{updatedAt,jdbcType=TIMESTAMP},
       </if>
     </trim>
   </insert>
@@ -79,6 +95,12 @@
       <if test="action != null" >
         action = #{action,jdbcType=VARCHAR},
       </if>
+      <if test="createdAt != null" >
+        created_at = #{createdAt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updatedAt != null" >
+        updated_at = #{updatedAt,jdbcType=TIMESTAMP},
+      </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
@@ -87,7 +109,9 @@
     set user_id = #{userId,jdbcType=INTEGER},
       form_type = #{formType,jdbcType=VARCHAR},
       form_id = #{formId,jdbcType=VARCHAR},
-      action = #{action,jdbcType=VARCHAR}
+      action = #{action,jdbcType=VARCHAR},
+      created_at = #{createdAt,jdbcType=TIMESTAMP},
+      updated_at = #{updatedAt,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

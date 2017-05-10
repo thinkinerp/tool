@@ -1,5 +1,8 @@
 package com.intfocus.hdk.dao;
 
+import java.util.List;
+import java.util.Map;
+
 import com.intfocus.hdk.vo.Printer;
 
 public interface PrinterMapper {
@@ -14,4 +17,6 @@ public interface PrinterMapper {
     int updateByPrimaryKeySelective(Printer record);
 
     int updateByPrimaryKey(Printer record);
+
+	List<Printer> selectByWhere(Map<String, String> where);
 }

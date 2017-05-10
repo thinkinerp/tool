@@ -21,6 +21,8 @@
     <result column="problem_details" property="problemDetails" jdbcType="VARCHAR" />
     <result column="problem_enclosure" property="problemEnclosure" jdbcType="VARCHAR" />
     <result column="problem_table" property="problemTable" jdbcType="VARCHAR" />
+    <result column="created_at" property="createdAt" jdbcType="TIMESTAMP" />
+    <result column="updated_at" property="updatedAt" jdbcType="TIMESTAMP" />
   </resultMap>
   <resultMap id="ResultMapWithBLOBs" type="com.intfocus.hdk.vo.Problem" extends="BaseResultMap" >
     <result column="problem_plan" property="problemPlan" jdbcType="LONGVARCHAR" />
@@ -28,7 +30,8 @@
   <sql id="Base_Column_List" >
     id, problem_id, state, pro_id, shop_id, eq_id, mes_id, problem_type, problem_object, 
     problem_department, problem_user, problem_happen, problem_put, problem_estimate, 
-    problem_reslove_time, problem_resolve_user, problem_details, problem_enclosure, problem_table
+    problem_reslove_time, problem_resolve_user, problem_details, problem_enclosure, problem_table, 
+    created_at, updated_at
   </sql>
   <sql id="Blob_Column_List" >
     problem_plan
@@ -52,14 +55,16 @@
       problem_department, problem_user, problem_happen, 
       problem_put, problem_estimate, problem_reslove_time, 
       problem_resolve_user, problem_details, problem_enclosure, 
-      problem_table, problem_plan)
+      problem_table, created_at, updated_at, 
+      problem_plan)
     values (#{id,jdbcType=INTEGER}, #{problemId,jdbcType=VARCHAR}, #{state,jdbcType=VARCHAR}, 
       #{proId,jdbcType=VARCHAR}, #{shopId,jdbcType=VARCHAR}, #{eqId,jdbcType=VARCHAR}, 
       #{mesId,jdbcType=VARCHAR}, #{problemType,jdbcType=VARCHAR}, #{problemObject,jdbcType=VARCHAR}, 
       #{problemDepartment,jdbcType=VARCHAR}, #{problemUser,jdbcType=VARCHAR}, #{problemHappen,jdbcType=TIMESTAMP}, 
       #{problemPut,jdbcType=TIMESTAMP}, #{problemEstimate,jdbcType=TIMESTAMP}, #{problemResloveTime,jdbcType=TIMESTAMP}, 
       #{problemResolveUser,jdbcType=VARCHAR}, #{problemDetails,jdbcType=VARCHAR}, #{problemEnclosure,jdbcType=VARCHAR}, 
-      #{problemTable,jdbcType=VARCHAR}, #{problemPlan,jdbcType=LONGVARCHAR})
+      #{problemTable,jdbcType=VARCHAR}, #{createdAt,jdbcType=TIMESTAMP}, #{updatedAt,jdbcType=TIMESTAMP}, 
+      #{problemPlan,jdbcType=LONGVARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.intfocus.hdk.vo.Problem" >
     insert into problem
@@ -120,6 +125,12 @@
       </if>
       <if test="problemTable != null" >
         problem_table,
+      </if>
+      <if test="createdAt != null" >
+        created_at,
+      </if>
+      <if test="updatedAt != null" >
+        updated_at,
       </if>
       <if test="problemPlan != null" >
         problem_plan,
@@ -183,6 +194,12 @@
       <if test="problemTable != null" >
         #{problemTable,jdbcType=VARCHAR},
       </if>
+      <if test="createdAt != null" >
+        #{createdAt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updatedAt != null" >
+        #{updatedAt,jdbcType=TIMESTAMP},
+      </if>
       <if test="problemPlan != null" >
         #{problemPlan,jdbcType=LONGVARCHAR},
       </if>
@@ -245,11 +262,17 @@
       <if test="problemTable != null" >
         problem_table = #{problemTable,jdbcType=VARCHAR},
       </if>
+      <if test="createdAt != null" >
+        created_at = #{createdAt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updatedAt != null" >
+        updated_at = #{updatedAt,jdbcType=TIMESTAMP},
+      </if>
       <if test="problemPlan != null" >
         problem_plan = #{problemPlan,jdbcType=LONGVARCHAR},
       </if>
     </set>
-    where id = #{id,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}}
   </update>
   <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.intfocus.hdk.vo.Problem" >
     update problem
@@ -271,6 +294,8 @@
       problem_details = #{problemDetails,jdbcType=VARCHAR},
       problem_enclosure = #{problemEnclosure,jdbcType=VARCHAR},
       problem_table = #{problemTable,jdbcType=VARCHAR},
+      created_at = #{createdAt,jdbcType=TIMESTAMP},
+      updated_at = #{updatedAt,jdbcType=TIMESTAMP},
       problem_plan = #{problemPlan,jdbcType=LONGVARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
@@ -293,7 +318,9 @@
       problem_resolve_user = #{problemResolveUser,jdbcType=VARCHAR},
       problem_details = #{problemDetails,jdbcType=VARCHAR},
       problem_enclosure = #{problemEnclosure,jdbcType=VARCHAR},
-      problem_table = #{problemTable,jdbcType=VARCHAR}
+      problem_table = #{problemTable,jdbcType=VARCHAR},
+      created_at = #{createdAt,jdbcType=TIMESTAMP},
+      updated_at = #{updatedAt,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

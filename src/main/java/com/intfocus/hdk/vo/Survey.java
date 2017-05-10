@@ -1,9 +1,12 @@
 package com.intfocus.hdk.vo;
 
+import java.util.Date;
+
 public class Survey {
     private Integer id;
 
     private String proId;
+    private String surId;
 
     private String shopId;
 
@@ -14,6 +17,10 @@ public class Survey {
     private String surVip;
 
     private String surVipData;
+
+    private Date createdAt;
+
+    private Date updatedAt;
 
     private String surRemarks;
 
@@ -73,6 +80,22 @@ public class Survey {
         this.surVipData = surVipData == null ? null : surVipData.trim();
     }
 
+    public Date getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public Date getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(Date updatedAt) {
+        this.updatedAt = updatedAt;
+    }
+
     public String getSurRemarks() {
         return surRemarks;
     }
@@ -80,4 +103,12 @@ public class Survey {
     public void setSurRemarks(String surRemarks) {
         this.surRemarks = surRemarks == null ? null : surRemarks.trim();
     }
+
+	public String getSurId() {
+		return surId;
+	}
+
+	public void setSurId(String surId) {
+		this.surId = surId;
+	}
 }

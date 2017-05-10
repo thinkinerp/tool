@@ -1,5 +1,8 @@
 package com.intfocus.hdk.dao;
 
+import java.util.List;
+import java.util.Map;
+
 import com.intfocus.hdk.vo.Survey;
 
 public interface SurveyMapper {
@@ -16,4 +19,7 @@ public interface SurveyMapper {
     int updateByPrimaryKeyWithBLOBs(Survey record);
 
     int updateByPrimaryKey(Survey record);
+
+	List<Survey> selectByWhere(Map<String, String> where);
+
 }

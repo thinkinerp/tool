@@ -33,7 +33,7 @@ import com.intfocus.hdk.vo.SalesData;
 import com.intfocus.hdk.vo.Users;
 
 @Controller
-@RequestMapping("/project")
+@RequestMapping("/problem")
 public class ProblemController implements ApplicationContextAware {
     private final static Logger log =  Logger.getLogger(ProblemController.class);
     private static ApplicationContext applicationContext; 

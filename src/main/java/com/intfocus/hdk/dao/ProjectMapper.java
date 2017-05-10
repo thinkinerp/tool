@@ -1,5 +1,8 @@
 package com.intfocus.hdk.dao;
 
+import java.util.List;
+import java.util.Map;
+
 import com.intfocus.hdk.vo.Project;
 
 public interface ProjectMapper {
@@ -14,4 +17,8 @@ public interface ProjectMapper {
     int updateByPrimaryKeySelective(Project record);
 
     int updateByPrimaryKey(Project record);
+
+	List<Project> selectByWhere(Map<String ,String> where);
+	
+	int setAllNotIsLast();
 }

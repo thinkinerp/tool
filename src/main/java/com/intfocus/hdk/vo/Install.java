@@ -6,7 +6,8 @@ public class Install {
     private Integer id;
 
     private String installId;
-
+    private String attachmentUrl;
+    
     private String installStation;
 
     private String proId;
@@ -21,7 +22,7 @@ public class Install {
 
     private String installData;
 
-    private Date installTime;
+    private String installTime;
 
     private String installUser;
 
@@ -29,7 +30,11 @@ public class Install {
 
     private String installRemote;
 
-    private Date installEndtime;
+    private String installEndtime;
+
+    private String createdAt;
+
+    private String updatedAt;
 
     private String installRemarks;
 
@@ -105,11 +110,11 @@ public class Install {
         this.installData = installData == null ? null : installData.trim();
     }
 
-    public Date getInstallTime() {
+    public String getInstallTime() {
         return installTime;
     }
 
-    public void setInstallTime(Date installTime) {
+    public void setInstallTime(String installTime) {
         this.installTime = installTime;
     }
 
@@ -137,12 +142,28 @@ public class Install {
         this.installRemote = installRemote == null ? null : installRemote.trim();
     }
 
-    public Date getInstallEndtime() {
+    public String getInstallEndtime() {
         return installEndtime;
     }
 
-    public void setInstallEndtime(Date installEndtime) {
+    public void setInstallEndtime(String installEndtime) {
         this.installEndtime = installEndtime;
+    }
+
+    public String getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(String createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public String getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(String updatedAt) {
+        this.updatedAt = updatedAt;
     }
 
     public String getInstallRemarks() {
@@ -152,4 +173,12 @@ public class Install {
     public void setInstallRemarks(String installRemarks) {
         this.installRemarks = installRemarks == null ? null : installRemarks.trim();
     }
+
+	public String getAttachmentUrl() {
+		return attachmentUrl;
+	}
+
+	public void setAttachment_url(String attachmentUrl) {
+		this.attachmentUrl = attachmentUrl;
+	}
 }

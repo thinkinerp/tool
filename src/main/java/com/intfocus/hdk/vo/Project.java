@@ -1,6 +1,5 @@
 package com.intfocus.hdk.vo;
 
-import java.util.Date;
 
 public class Project {
     private Integer id;
@@ -23,7 +22,7 @@ public class Project {
 
     private String proCoordinationPhone;
 
-    private Date proUpdataTime;
+    private String proUpdataTime;
 
     private Integer proTodal;
 
@@ -34,6 +33,12 @@ public class Project {
     private Integer proCheck;
 
     private Integer proNot;
+
+    private String createdAt;
+
+    private String updatedAt;
+    
+    private Integer isLast;
 
     public Integer getId() {
         return id;
@@ -115,11 +120,11 @@ public class Project {
         this.proCoordinationPhone = proCoordinationPhone == null ? null : proCoordinationPhone.trim();
     }
 
-    public Date getProUpdataTime() {
+    public String getProUpdataTime() {
         return proUpdataTime;
     }
 
-    public void setProUpdataTime(Date proUpdataTime) {
+    public void setProUpdataTime(String proUpdataTime) {
         this.proUpdataTime = proUpdataTime;
     }
 
@@ -162,4 +167,28 @@ public class Project {
     public void setProNot(Integer proNot) {
         this.proNot = proNot;
     }
+
+    public String getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(String createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public String getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(String updatedAt) {
+        this.updatedAt = updatedAt;
+    }
+
+	public Integer getIsLast() {
+		return isLast;
+	}
+
+	public void setIsLast(Integer isLast) {
+		this.isLast = isLast;
+	}
 }

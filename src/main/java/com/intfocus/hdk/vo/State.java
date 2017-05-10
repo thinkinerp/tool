@@ -1,5 +1,6 @@
 package com.intfocus.hdk.vo;
 
+
 public class State {
     private Integer id;
 
@@ -8,6 +9,11 @@ public class State {
     private String staName;
 
     private String ownerTable;
+
+    private String createdAt;
+
+    private String updatedAt;
+    private String isDefault;
 
     public Integer getId() {
         return id;
@@ -40,4 +46,28 @@ public class State {
     public void setOwnerTable(String ownerTable) {
         this.ownerTable = ownerTable == null ? null : ownerTable.trim();
     }
+
+    public String getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(String createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public String getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(String updatedAt) {
+        this.updatedAt = updatedAt;
+    }
+
+	public String getIsDefault() {
+		return isDefault;
+	}
+
+	public void setIsDefault(String isDefault) {
+		this.isDefault = isDefault;
+	}
 }

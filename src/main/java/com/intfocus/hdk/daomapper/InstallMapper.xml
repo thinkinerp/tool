@@ -14,19 +14,45 @@
     <result column="install_time" property="installTime" jdbcType="TIMESTAMP" />
     <result column="install_user" property="installUser" jdbcType="VARCHAR" />
     <result column="install_network" property="installNetwork" jdbcType="VARCHAR" />
+    <result column="attachment_url" property="attachmentUrl" jdbcType="VARCHAR" />
     <result column="install_remote" property="installRemote" jdbcType="VARCHAR" />
-    <result column="install_endtime" property="installEndtime" jdbcType="TIMESTAMP" />
+    <result column="install_endtime" property="installEndtime" jdbcType="VARCHAR" />
+    <result column="created_at" property="createdAt" jdbcType="VARCHAR" />
+    <result column="updated_at" property="updatedAt" jdbcType="VARCHAR" />
   </resultMap>
   <resultMap id="ResultMapWithBLOBs" type="com.intfocus.hdk.vo.Install" extends="BaseResultMap" >
     <result column="install_remarks" property="installRemarks" jdbcType="LONGVARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
     id, install_id, install_station, pro_id, shop_id, cash_id, printer_id, eq_id, install_data, 
-    install_time, install_user, install_network, install_remote, install_endtime
+    install_time, install_user, install_network, install_remote, install_endtime, created_at, 
+    updated_at,attachment_url
   </sql>
   <sql id="Blob_Column_List" >
     install_remarks
   </sql>
+  
+  
+  
+  <select id="selectByWhere" resultMap="ResultMapWithBLOBs" parameterType="java.util.Map" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from install
+    <where>
+    	1=1
+			  <if test="null != installId  and '' != installId">
+				and install_id  = #{installId,jdbcType=VARCHAR}
+			</if>	
+
+    </where>
+    <if test="null != page and ''!= page">
+	    <if test="null != pageSize and ''!= pageSize">
+			limit 	#{page,jdbcType=VARCHAR}, #{pageSize,jdbcType=VARCHAR}		    
+		</if>
+	</if>
+  </select>
   <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Integer" >
     select 
     <include refid="Base_Column_List" />
@@ -44,14 +70,14 @@
       pro_id, shop_id, cash_id, 
       printer_id, eq_id, install_data, 
       install_time, install_user, install_network, 
-      install_remote, install_endtime, install_remarks
-      )
+      install_remote, install_endtime, created_at, 
+      updated_at, install_remarks)
     values (#{id,jdbcType=INTEGER}, #{installId,jdbcType=VARCHAR}, #{installStation,jdbcType=VARCHAR}, 
       #{proId,jdbcType=VARCHAR}, #{shopId,jdbcType=VARCHAR}, #{cashId,jdbcType=VARCHAR}, 
       #{printerId,jdbcType=VARCHAR}, #{eqId,jdbcType=VARCHAR}, #{installData,jdbcType=VARCHAR}, 
       #{installTime,jdbcType=TIMESTAMP}, #{installUser,jdbcType=VARCHAR}, #{installNetwork,jdbcType=VARCHAR}, 
-      #{installRemote,jdbcType=VARCHAR}, #{installEndtime,jdbcType=TIMESTAMP}, #{installRemarks,jdbcType=LONGVARCHAR}
-      )
+      #{installRemote,jdbcType=VARCHAR}, #{installEndtime,jdbcType=TIMESTAMP}, #{createdAt,jdbcType=TIMESTAMP}, 
+      #{updatedAt,jdbcType=TIMESTAMP}, #{installRemarks,jdbcType=LONGVARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.intfocus.hdk.vo.Install" >
     insert into install
@@ -83,7 +109,7 @@
       <if test="installData != null" >
         install_data,
       </if>
-      <if test="installTime != null" >
+      <if test="installTime != null and '' != installTime" >
         install_time,
       </if>
       <if test="installUser != null" >
@@ -98,8 +124,17 @@
       <if test="installEndtime != null" >
         install_endtime,
       </if>
+      <if test="createdAt != null" >
+        created_at,
+      </if>
+      <if test="updatedAt != null" >
+        updated_at,
+      </if>
       <if test="installRemarks != null" >
         install_remarks,
+      </if>
+      <if test="attachmentUrl != null" >
+        attachment_url,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
@@ -130,7 +165,7 @@
       <if test="installData != null" >
         #{installData,jdbcType=VARCHAR},
       </if>
-      <if test="installTime != null" >
+      <if test="installTime != null and '' != installTime"  >
         #{installTime,jdbcType=TIMESTAMP},
       </if>
       <if test="installUser != null" >
@@ -143,10 +178,19 @@
         #{installRemote,jdbcType=VARCHAR},
       </if>
       <if test="installEndtime != null" >
-        #{installEndtime,jdbcType=TIMESTAMP},
+        #{installEndtime,jdbcType=VARCHAR},
+      </if>
+      <if test="createdAt != null" >
+        #{createdAt,jdbcType=VARCHAR},
+      </if>
+      <if test="updatedAt != null" >
+        #{updatedAt,jdbcType=VARCHAR},
       </if>
       <if test="installRemarks != null" >
         #{installRemarks,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="attachmentUrl != null" >
+        #{attachmentUrl,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -177,7 +221,7 @@
       <if test="installData != null" >
         install_data = #{installData,jdbcType=VARCHAR},
       </if>
-      <if test="installTime != null" >
+      <if test="installTime != null and '' != installTime"  >
         install_time = #{installTime,jdbcType=TIMESTAMP},
       </if>
       <if test="installUser != null" >
@@ -190,7 +234,16 @@
         install_remote = #{installRemote,jdbcType=VARCHAR},
       </if>
       <if test="installEndtime != null" >
-        install_endtime = #{installEndtime,jdbcType=TIMESTAMP},
+        install_endtime = #{installEndtime,jdbcType=VARCHAR},
+      </if>
+      <if test="createdAt != null" >
+        created_at = #{createdAt,jdbcType=VARCHAR},
+      </if>
+      <if test="updatedAt != null" >
+        updated_at = #{updatedAt,jdbcType=VARCHAR},
+      </if>
+      <if test="attachmentUrl != null" >
+        attachment_url = #{attachmentUrl,jdbcType=VARCHAR},
       </if>
       <if test="installRemarks != null" >
         install_remarks = #{installRemarks,jdbcType=LONGVARCHAR},
@@ -213,6 +266,8 @@
       install_network = #{installNetwork,jdbcType=VARCHAR},
       install_remote = #{installRemote,jdbcType=VARCHAR},
       install_endtime = #{installEndtime,jdbcType=TIMESTAMP},
+      created_at = #{createdAt,jdbcType=TIMESTAMP},
+      updated_at = #{updatedAt,jdbcType=TIMESTAMP},
       install_remarks = #{installRemarks,jdbcType=LONGVARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
@@ -230,7 +285,9 @@
       install_user = #{installUser,jdbcType=VARCHAR},
       install_network = #{installNetwork,jdbcType=VARCHAR},
       install_remote = #{installRemote,jdbcType=VARCHAR},
-      install_endtime = #{installEndtime,jdbcType=TIMESTAMP}
+      install_endtime = #{installEndtime,jdbcType=TIMESTAMP},
+      created_at = #{createdAt,jdbcType=TIMESTAMP},
+      updated_at = #{updatedAt,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

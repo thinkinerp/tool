@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.alibaba.fastjson.JSONObject;
 import com.intfocus.hdk.dao.JsapiTicketMapper;
 import com.intfocus.hdk.dao.JsapiTokenMapper;
+import com.intfocus.hdk.dao.Operation_historyMapper;
 import com.intfocus.hdk.dao.SalesDataMapper;
 import com.intfocus.hdk.dao.UsersMapper;
 import com.intfocus.hdk.util.JuheDemo;
@@ -33,10 +34,22 @@ import com.intfocus.hdk.vo.SalesData;
 import com.intfocus.hdk.vo.Users;
 
 @Controller
-@RequestMapping("/project")
+@RequestMapping("/operation")
 public class OperationHistoryController implements ApplicationContextAware {
     private final static Logger log =  Logger.getLogger(OperationHistoryController.class);
+    
+    @Resource
+    private Operation_historyMapper ohm ;
+
     private static ApplicationContext applicationContext; 
+    
+    public String getSome(HttpServletRequest req , HttpServletResponse rep , String operationDate  ){
+    	
+    	
+    	
+    	return null;
+    }
+    
 	@Override
 	public void setApplicationContext(ApplicationContext ctx)
 			throws BeansException {

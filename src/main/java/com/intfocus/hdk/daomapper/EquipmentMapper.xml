@@ -12,11 +12,36 @@
     <result column="shop_id" property="shopId" jdbcType="VARCHAR" />
     <result column="remark1" property="remark1" jdbcType="VARCHAR" />
     <result column="remark2" property="remark2" jdbcType="VARCHAR" />
+    <result column="created_at" property="createdAt" jdbcType="TIMESTAMP" />
+    <result column="updated_at" property="updatedAt" jdbcType="TIMESTAMP" />
   </resultMap>
   <sql id="Base_Column_List" >
     id, eq_id, eq_type, eq_style, hardware_id, software_version, pro_id, shop_id, remark1, 
-    remark2
+    remark2, created_at, updated_at
   </sql>
+  <select id="selectByWhere" resultMap="BaseResultMap" parameterType="java.util.Map" >
+    select 
+    <include refid="Base_Column_List" />
+    from equipment
+    	<where>
+    	1=1
+    		<if test="null != proId  and '' != proId">
+				and pro_id = #{proId,jdbcType=VARCHAR}
+			</if>	
+    		<if test="null != proName  and '' != proName">
+				and pro_id in( select pro_id from project where pro_name =  #{proName,jdbcType=VARCHAR}) 
+			</if>	
+    		<if test="null != shopId  and '' != shopId">
+				and shop_id = #{proId,jdbcType=VARCHAR}
+			</if>	
+    </where>    
+    
+    <if test="null != page and ''!= page">
+	    <if test="null != pageSize and ''!= pageSize">
+			limit 	#{page,jdbcType=VARCHAR}, #{pageSize,jdbcType=VARCHAR}		    	
+	    </if>
+    </if>
+  </select>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
     <include refid="Base_Column_List" />
@@ -31,11 +56,13 @@
     insert into equipment (id, eq_id, eq_type, 
       eq_style, hardware_id, software_version, 
       pro_id, shop_id, remark1, 
-      remark2)
+      remark2, created_at, updated_at
+      )
     values (#{id,jdbcType=INTEGER}, #{eqId,jdbcType=VARCHAR}, #{eqType,jdbcType=VARCHAR}, 
       #{eqStyle,jdbcType=VARCHAR}, #{hardwareId,jdbcType=VARCHAR}, #{softwareVersion,jdbcType=VARCHAR}, 
       #{proId,jdbcType=VARCHAR}, #{shopId,jdbcType=VARCHAR}, #{remark1,jdbcType=VARCHAR}, 
-      #{remark2,jdbcType=VARCHAR})
+      #{remark2,jdbcType=VARCHAR}, #{createdAt,jdbcType=TIMESTAMP}, #{updatedAt,jdbcType=TIMESTAMP}
+      )
   </insert>
   <insert id="insertSelective" parameterType="com.intfocus.hdk.vo.Equipment" >
     insert into equipment
@@ -70,6 +97,12 @@
       <if test="remark2 != null" >
         remark2,
       </if>
+      <if test="createdAt != null" >
+        created_at,
+      </if>
+      <if test="updatedAt != null" >
+        updated_at,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -101,6 +134,12 @@
       </if>
       <if test="remark2 != null" >
         #{remark2,jdbcType=VARCHAR},
+      </if>
+      <if test="createdAt != null" >
+        #{createdAt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updatedAt != null" >
+        #{updatedAt,jdbcType=TIMESTAMP},
       </if>
     </trim>
   </insert>
@@ -134,6 +173,12 @@
       <if test="remark2 != null" >
         remark2 = #{remark2,jdbcType=VARCHAR},
       </if>
+      <if test="createdAt != null" >
+        created_at = #{createdAt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updatedAt != null" >
+        updated_at = #{updatedAt,jdbcType=TIMESTAMP},
+      </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
@@ -147,7 +192,9 @@
       pro_id = #{proId,jdbcType=VARCHAR},
       shop_id = #{shopId,jdbcType=VARCHAR},
       remark1 = #{remark1,jdbcType=VARCHAR},
-      remark2 = #{remark2,jdbcType=VARCHAR}
+      remark2 = #{remark2,jdbcType=VARCHAR},
+      created_at = #{createdAt,jdbcType=TIMESTAMP},
+      updated_at = #{updatedAt,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

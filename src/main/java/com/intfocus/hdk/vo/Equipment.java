@@ -1,5 +1,7 @@
 package com.intfocus.hdk.vo;
 
+import java.util.Date;
+
 public class Equipment {
     private Integer id;
 
@@ -20,6 +22,10 @@ public class Equipment {
     private String remark1;
 
     private String remark2;
+
+    private String createdAt;
+
+    private String updatedAt;
 
     public Integer getId() {
         return id;
@@ -99,5 +105,21 @@ public class Equipment {
 
     public void setRemark2(String remark2) {
         this.remark2 = remark2 == null ? null : remark2.trim();
+    }
+
+    public String getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(String createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public String getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(String updatedAt) {
+        this.updatedAt = updatedAt;
     }
 }

@@ -1,5 +1,7 @@
 package com.intfocus.hdk.vo;
 
+import java.util.Date;
+
 public class Operation_history {
     private Integer id;
 
@@ -10,6 +12,10 @@ public class Operation_history {
     private String formId;
 
     private String action;
+
+    private Date createdAt;
+
+    private Date updatedAt;
 
     public Integer getId() {
         return id;
@@ -49,5 +55,21 @@ public class Operation_history {
 
     public void setAction(String action) {
         this.action = action == null ? null : action.trim();
+    }
+
+    public Date getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public Date getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(Date updatedAt) {
+        this.updatedAt = updatedAt;
     }
 }

@@ -1,5 +1,8 @@
 package com.intfocus.hdk.dao;
 
+import java.util.List;
+import java.util.Map;
+
 import com.intfocus.hdk.vo.Install;
 
 public interface InstallMapper {
@@ -16,4 +19,6 @@ public interface InstallMapper {
     int updateByPrimaryKeyWithBLOBs(Install record);
 
     int updateByPrimaryKey(Install record);
+
+	List<Install> selectByWhere(Map<String, String> where);
 }

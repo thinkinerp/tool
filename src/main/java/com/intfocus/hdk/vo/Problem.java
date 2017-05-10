@@ -1,7 +1,5 @@
 package com.intfocus.hdk.vo;
 
-import java.util.Date;
-
 public class Problem {
     private Integer id;
 
@@ -25,13 +23,13 @@ public class Problem {
 
     private String problemUser;
 
-    private Date problemHappen;
+    private String problemHappen;
 
-    private Date problemPut;
+    private String problemPut;
 
-    private Date problemEstimate;
+    private String problemEstimate;
 
-    private Date problemResloveTime;
+    private String problemResloveTime;
 
     private String problemResolveUser;
 
@@ -40,6 +38,10 @@ public class Problem {
     private String problemEnclosure;
 
     private String problemTable;
+
+    private String createdAt;
+
+    private String updatedAt;
 
     private String problemPlan;
 
@@ -131,35 +133,35 @@ public class Problem {
         this.problemUser = problemUser == null ? null : problemUser.trim();
     }
 
-    public Date getProblemHappen() {
+    public String getProblemHappen() {
         return problemHappen;
     }
 
-    public void setProblemHappen(Date problemHappen) {
+    public void setProblemHappen(String problemHappen) {
         this.problemHappen = problemHappen;
     }
 
-    public Date getProblemPut() {
+    public String getProblemPut() {
         return problemPut;
     }
 
-    public void setProblemPut(Date problemPut) {
+    public void setProblemPut(String problemPut) {
         this.problemPut = problemPut;
     }
 
-    public Date getProblemEstimate() {
+    public String getProblemEstimate() {
         return problemEstimate;
     }
 
-    public void setProblemEstimate(Date problemEstimate) {
+    public void setProblemEstimate(String problemEstimate) {
         this.problemEstimate = problemEstimate;
     }
 
-    public Date getProblemResloveTime() {
+    public String getProblemResloveTime() {
         return problemResloveTime;
     }
 
-    public void setProblemResloveTime(Date problemResloveTime) {
+    public void setProblemResloveTime(String problemResloveTime) {
         this.problemResloveTime = problemResloveTime;
     }
 
@@ -193,6 +195,22 @@ public class Problem {
 
     public void setProblemTable(String problemTable) {
         this.problemTable = problemTable == null ? null : problemTable.trim();
+    }
+
+    public String getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(String createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public String getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(String updatedAt) {
+        this.updatedAt = updatedAt;
     }
 
     public String getProblemPlan() {

@@ -12,16 +12,82 @@
     <result column="shop_sec_type" property="shopSecType" jdbcType="VARCHAR" />
     <result column="shop_name" property="shopName" jdbcType="VARCHAR" />
     <result column="pro_id" property="proId" jdbcType="VARCHAR" />
+    <result column="eq_type" property="eqType" jdbcType="VARCHAR" />
+    <result column="install_id" property="installId" jdbcType="VARCHAR" />
+    <result column="install_station" property="installStation" jdbcType="VARCHAR" />
+    <result column="eq_id" property="eqId" jdbcType="VARCHAR" />
+    <result column="cash_system" property="cashSystem" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, shop_id, shop_position, shop_floor, shop_mer_name, shop_mer_station, shop_type, 
-    shop_sec_type, shop_name, pro_id
+    shops.id, shops.shop_id, shops.shop_position, shops.shop_floor
+    , shops.shop_mer_name, shops.shop_mer_station, shops.shop_type, 
+    shops.shop_sec_type, shops.shop_name, shops.pro_id
+    ,equipment.eq_type,cash.cash_system,install.install_id,install.install_station,equipment.eq_id
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
     <include refid="Base_Column_List" />
     from shops
     where id = #{id,jdbcType=INTEGER}
+  </select>
+    <select id="selectByWhere" resultMap="BaseResultMap"  parameterType="java.util.Map">
+    select 
+    <include refid="Base_Column_List" />
+
+        from shops 
+   left join equipment 
+           on shops.shop_id =  equipment.shop_id
+         and shops.pro_id = equipment.pro_id
+   left join install
+            on install.shop_id = shops.shop_id
+          and install.pro_id = shops.pro_id
+   left join cash 
+           on cash.cash_id = install.cash_id 
+    <where>
+    	1=1
+           <if test="null != shopId  and '' != shopId">
+				and shops.shop_id  = #{shopId,jdbcType=VARCHAR}
+			</if>	
+           <if test="null != installStation  and '' != installStation">
+				and install.install_station  = #{installStation,jdbcType=VARCHAR}
+			</if>	
+    		<if test="null != shopPosition  and '' != shopPosition">
+				and shops.shop_position  = #{shopPosition,jdbcType=VARCHAR}
+			</if>	
+    		<if test="null != proName  and '' != proName">
+				and shops.pro_id in (select pro_id from project where pro_name =  #{proName,jdbcType=VARCHAR})
+			</if>	
+    		<if test="null != shopFloor  and '' != shopFloor">
+				and shops.shop_floor  = #{shopFloor,jdbcType=VARCHAR}
+			</if>	
+    		<if test="null != shopMerName  and '' != shopMerName">
+				and shops.shop_mer_name  = #{shopMerName,jdbcType=VARCHAR}
+			</if>	
+    		<if test="null != shopMerStation  and '' != shopMerStation and '全部' != shopMerStation">
+				and shops.shop_mer_station  = #{shopMerStation,jdbcType=VARCHAR}
+			</if>	
+    		<if test="null != eqType  and '' != eqType">
+				and equipment.eq_type  = #{eqType,jdbcType=VARCHAR}
+			</if>	
+    		<if test="null != shopType  and '' != shopType">
+				and shops.shop_type  = #{shopType,jdbcType=VARCHAR}
+			</if>	
+    		<if test="null != shopSecType  and '' != shopSecType">
+				and shops.shop_sec_type  = #{shopSecType,jdbcType=VARCHAR}
+			</if>	
+    		<if test="null != shopName  and '' != shopName">
+				and shops.shop_name  = #{shopName,jdbcType=VARCHAR}
+			</if>	
+    		<if test="null != proId  and '' != proId">
+				and shops.pro_id  = #{proId,jdbcType=VARCHAR}
+			</if>	
+ 
+    </where>  
+    <if test="null != page and ''!= page">
+	    <if test="null != pageSize and ''!= pageSize">
+			limit 	#{page,jdbcType=VARCHAR}, #{pageSize,jdbcType=VARCHAR}		    	
+	    </if>
+    </if>
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from shops

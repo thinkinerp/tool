@@ -1,5 +1,8 @@
 package com.intfocus.hdk.dao;
 
+import java.util.List;
+import java.util.Map;
+
 import com.intfocus.hdk.vo.Shops;
 
 public interface ShopsMapper {
@@ -14,4 +17,6 @@ public interface ShopsMapper {
     int updateByPrimaryKeySelective(Shops record);
 
     int updateByPrimaryKey(Shops record);
+    
+    List<Shops> selectByWhere(Map<String,String> where);
 }

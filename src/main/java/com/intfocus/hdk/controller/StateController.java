@@ -25,17 +25,49 @@ import com.alibaba.fastjson.JSONObject;
 import com.intfocus.hdk.dao.JsapiTicketMapper;
 import com.intfocus.hdk.dao.JsapiTokenMapper;
 import com.intfocus.hdk.dao.SalesDataMapper;
+import com.intfocus.hdk.dao.StateMapper;
 import com.intfocus.hdk.dao.UsersMapper;
 import com.intfocus.hdk.util.JuheDemo;
 import com.intfocus.hdk.util.StaticVariableUtil;
 import com.intfocus.hdk.util.WeiXinUserInfoUtil;
 import com.intfocus.hdk.vo.SalesData;
+import com.intfocus.hdk.vo.State;
 import com.intfocus.hdk.vo.Users;
 
 @Controller
-@RequestMapping("/project")
+@RequestMapping("/state")
 public class StateController implements ApplicationContextAware {
     private final static Logger log =  Logger.getLogger(StateController.class);
+    
+    
+    @Resource
+    private StateMapper statemapper ;
+            @RequestMapping(value = "submit" , method=RequestMethod.POST)
+    @ResponseBody
+    public void submit(HttpServletResponse res , HttpServletRequest req ,HttpSession session
+    		              ,  State state ){
+    	
+    }
+    
+    
+    @RequestMapping(value = "getSome" , method=RequestMethod.GET)
+    @ResponseBody
+    public String getSome(HttpServletResponse res , HttpServletRequest req ,HttpSession session
+    		              , State state ){
+    	Map<String, String> where = new HashMap<String,String>();
+    	
+    	where.put("ownerTable", state.getOwnerTable());
+    	
+		List<State> states = statemapper.selectByWhere(where );
+		
+		return JSONObject.toJSONString(states);
+    }
+    @RequestMapping(value = "modify" , method=RequestMethod.POST)
+    @ResponseBody
+    public void modify(HttpServletResponse res , HttpServletRequest req ,HttpSession session
+    		, State state){
+    	
+    }
     private static ApplicationContext applicationContext; 
 	@Override
 	public void setApplicationContext(ApplicationContext ctx)

@@ -1,5 +1,7 @@
 package com.intfocus.hdk.vo;
 
+import java.util.Date;
+
 public class Printer {
     private Integer id;
 
@@ -14,6 +16,10 @@ public class Printer {
     private String surId;
 
     private String installId;
+
+    private String createdAt;
+
+    private String updatedAt;
 
     public Integer getId() {
         return id;
@@ -69,5 +75,21 @@ public class Printer {
 
     public void setInstallId(String installId) {
         this.installId = installId == null ? null : installId.trim();
+    }
+
+    public String getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(String createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public String getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(String updatedAt) {
+        this.updatedAt = updatedAt;
     }
 }
