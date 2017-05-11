@@ -62,7 +62,7 @@
  Window.selected = function(){
 
 		 $.ajax({ 
-	 		url:ctx + '/shops/getSome',
+	 		url:ctx + '/shops/selectForCombobox',
 	 		type:'get',
 			data:{
 					'proId':$('#proName').html()
@@ -92,7 +92,7 @@
  }
 Window.shopSelected = function(){
 	 $.ajax({ 
-	 		url:ctx + '/shops/getSome',
+	 		url:ctx + '/shops/selectForCombobox',
 	 		type:'get',
 			data:{
 					'shopName':$('#shopName').html()
@@ -262,7 +262,7 @@ var submit = function(){
 					,'equipment.eqStyle':$("#eqStyle").html()
 //					,'hardwareId':
 					,'equipment.softwareVersion':$('#softwareVersion').val()
-					,'equipment.proId':$('#proName').html()
+					,'equipment.proId':allObjs.project.proId
 					,'equipment.shopId':$('#shopCode').html()
 //					,'remark1':''
 //					,'remark2':''
@@ -287,11 +287,11 @@ var submit = function(){
                 url: ctx + '/install/submit', //用于文件上传的服务器端请求地址
                 secureuri: false, //是否需要安全协议，一般设置为false
                 fileElementId: 'fileImg', //文件上传域的ID
-                dataType: 'json', //返回值类型 一般设置为json
+                dataType: 'text', //返回值类型 一般设置为json
         		data:{'install.installId':$("#installCode").val()
 //					,'install.id':allObjs.install.id
 				     ,'install.installStation':$('#installStation').html()
-//					,'install.proId':allObjs.install.proId
+					,'install.proId':$('#proName').html()
 					,'install.shopId':$('#shopCode').html()
 					,'install.cashId':$('#cashCode').html()
 					,'install.printerId':$('#printCode').html()
@@ -341,73 +341,19 @@ var submit = function(){
    				},
                 success: function (data, status)  //服务器成功响应处理函数
                 {
+                	console.log(data);
                 	location.href = ctx + "/installList.jsp";
                 },
                 error: function (data, status, e)//服务器响应失败处理函数
                 {
-                    //alert(e);
+                    alert(e);
+                    console.log(data);
+                    console.log(status);
+              
                 }
             }
         );
-//	$.ajax({
-//		url:ctx + '/install/submit',
-//        contentType:false, //必须false才会避开jQuery对 formdata 的默认处理 , XMLHttpRequest会对 formdata 进行正确的处理
-//        processData: false, //必须false才会自动加上正确的Content-Type 
-//		type:'post',
-//		data:{'install.installId':$("#installCode").val()
-//		     ,'install.installStation':$('#installStation').html()
-//			,'install.proId':$('#proName').html()
-//			,'install.shopId':$('#shopCode').html()
-//			,'install.cashId':$('#cashCode').html()
-//			,'install.printerId':$('#printCode').html()
-//			,'install.eqId':$('#equipmentCode').html()
-//			,'install.installData':$('#installData').html()
-//			,'install.installTime':$('#installTime').val()
-//			//,'install.installUser':''
-//			,'install.installNetwork':$('#installNetworkHard').attr('class') == 'on'?"硬件":"软件"
-//			,'install.installRemote':$('#installRemote').val()
-//			//,'install.installEndtime':
-//			//,'install.install.createdAt':''
-//			//,'install.updatedAt':''
-//			//,'install.installRemarks':''
-//			,"pictures":$("#fileImg").get(0).files[0]
-//				//收银机
-//			,'cash.cashId':$("#cashId").val()
-//			,'cash.cashBrand':$("#cashBrand").html()
-//			//,'cashRegister':''
-//			,'cash.cashSystem':$("#cashSystem").html()
-//			,'cash.cashPort':$("#cashPort").html()
-//			,'cash.printerDriver':$("#t").attr("class") == "on"?"是":"否"
-//			,'cash.surId':surId
-//			,'cash.installId':$("#installCode").val()
-//				//打印机
-//			,'printer.printerId':$('#priId').val()
-//			,'printer.printerBrand':$('#priBrand').val()
-////			,'printerModel':''
-//			,'printer.printerPort':$('#prinPort').html()
-//			,'printer.surId':surId
-//			,'printer.installId':$("#installCode").val()
-////			,'createdAt':''
-////			,'updatedAt':''
-//			//采集点
-//			,'equipment.eqId':$("#eqId").val()
-//			,'equipment.eqType':$('#eqTypeHard').attr('class') == "on"?"硬件":"软件"
-//			,'equipment.eqStyle':$("#eqStyle").html()
-////			,'hardwareId':
-//			,'equipment.softwareVersion':$('#softwareVersion').val()
-//			,'equipment.proId':$('#proName').html()
-//			,'equipment.shopId':$('#shopCode').html()
-////			,'remark1':''
-////			,'remark2':''
-////			,'createdAt':''
-////			,'updatedAt':''
-//				},
-//		success:function(result){
-//		},
-//		error:function(result){
-//			console.log(result)
-//		}
-//	})	;
+
 	}
 	
 }

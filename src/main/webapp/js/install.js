@@ -2,7 +2,7 @@
  * 
  */
  loadCombobox("installState","install");			
- loadCombobox("eqType","equipment");					
+ loadCombobox("eqType","equipment_type");					
 
 $('#middle').bind('click',function(){
 	shopStateSeach();
@@ -41,8 +41,8 @@ var shopStateSeach = function(){
 
 	 				$('.i-itemDetail-area').append(
 	 						"				<div class='i-itemDetail-area-title'>" +
-	 						"					<div>"+item.shopName+"("+item.shopId+")</div>" +
-	 						(undefined == item.installId ? "" : "					<p><a style='font-color:blue!important' href = 'javascript:void(0)' onClick='gotoModify("+item.installId+")' target='_self'>详情</a></p>")
+	 						"					<div>"+item.shopName+"("+item.shopPosition+")</div>" +
+	 						(undefined == item.installId ? "" : "					<p><a href = 'javascript:void(0)' onClick='gotoModify("+item.installId+")' target='_self'>详情</a></p>")
 	 						 +
 	 						"				</div>" +
 	 						"				<div class='i-itemDetail-area-content'>" +

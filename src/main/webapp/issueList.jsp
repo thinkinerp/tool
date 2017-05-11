@@ -19,13 +19,14 @@
 		<script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
 		<script src="${ctx}/casher/js/global.js" type="text/javascript" charset="utf-8"></script>
 <script type="text/javascript" src="${ctx}/js/comUtil.js"></script>  
+<script type="text/javascript" src="${ctx}/js/itemList.js"></script>  
 </head>
 	<body>
 		<!-- 选择项目名称 -->
 		<div  class="i-itemName">
 			<div class="i-itemName-name">项目名称</div>
 			<div class="i-itemName-list">
-				<div id="itemName" data-select="项目1,项目2,项目3,项目4,项目5,3项目,3个" onclick="app.select(this,3)">上海新天地时尚</div>
+				<div id="itemName" data-select="" onclick="app.select(this,3)"></div>
 			</div>
 		</div>
 		<!-- 项目状态 -->

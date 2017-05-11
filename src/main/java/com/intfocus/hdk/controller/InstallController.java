@@ -61,10 +61,10 @@ public class InstallController implements ApplicationContextAware {
     
    @RequestMapping(value = "submit" , method=RequestMethod.POST)
     @ResponseBody
-    public void submit(HttpServletResponse res , HttpServletRequest req ,HttpSession session
+    public String submit(HttpServletResponse res , HttpServletRequest req ,HttpSession session
     		              ,  Install install,Printer printer,Cash cash,Equipment equipmengt ,
     		              @RequestParam(value = "fileImg", required = false) MultipartFile[] files,HttpServletRequest request) throws Exception {
-		       
+	  try{ 
 	   String path = request.getSession().getServletContext().getRealPath("upload");
 	   String fileName =null;
 	   List<String> filePaths = new ArrayList<String>(); 
@@ -91,12 +91,19 @@ public class InstallController implements ApplicationContextAware {
 		List<Project> projects = projectMapper.selectByWhere(where );
 		Project i = projects.get(0);
 		install.setProId(i.getProId());	
+		equipmengt.setProId(i.getProId());
+		
 		install.setAttachment_url(org.apache.commons.lang.StringUtils.join(filePaths.toArray(),","));
     	installmapper.insertSelective(install);
     	printerMapper.insertSelective(printer);
     	cashMapper.insertSelective(cash);
     	equipmentMapper.insertSelective(equipmengt);
-    	
+    	return "{'message':success}";
+	  }catch(Exception e){
+		  e.printStackTrace();
+		  return "{'message':fail}";
+	  }
+	  
     }
    @InitBinder("install")    
    public void initBinder1(WebDataBinder binder) {    

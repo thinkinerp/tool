@@ -51,6 +51,20 @@ public class ProjectController implements ApplicationContextAware {
     	
     }
     
+    @RequestMapping(value = "gotoModify" , method=RequestMethod.GET)
+    public String gotoModify(HttpServletResponse res , HttpServletRequest req ,HttpSession session,Project project){
+        	JSONObject json = new JSONObject();
+        	
+    	return "redirect:/itemDetails.jsp?allThing="+json;
+    }
+     
+    @RequestMapping(value = "getCount" , method=RequestMethod.GET)
+    @ResponseBody
+    public String getCount(){
+        	
+    	return JSONObject.toJSONString(projectmapper.selectProjectCount());
+    }
+     
     @RequestMapping(value = "setLast" , method=RequestMethod.GET)
     @ResponseBody
     public Integer setLast(HttpServletResponse res , HttpServletRequest req ,HttpSession session

@@ -19,4 +19,6 @@ public interface ShopsMapper {
     int updateByPrimaryKey(Shops record);
     
     List<Shops> selectByWhere(Map<String,String> where);
+    
+    List<Shops> selectForCombobox(Map<String,String>where);
 }

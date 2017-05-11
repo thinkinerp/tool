@@ -41,11 +41,11 @@
 					<ul class="iz-list">
 						<li>
 							<div class="iz-list-title">项目名称：</div>
-							<div class="iz-list-content">上海迪士尼</div>
+							<div id="proName" class="iz-list-content">上海迪士尼</div>
 						</li>
 						<li>
 							<div class="iz-list-title">项目版本：</div>
-							<div class="iz-list-content">2.2.2</div>
+							<div id="" class="iz-list-content">2.2.2</div>
 						</li>
 						<li>
 							<div class="iz-list-title">项目经理：</div>

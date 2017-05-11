@@ -2,6 +2,12 @@ document.getElementsByTagName("html")[0].style.fontSize=Math.floor(document.docu
 var imgs = [];	//2个图片都会在这个数组里
 var swiper1 = '';
 var swiper2 = '';
+var cancel = function(){
+	
+}
+var ok = function(){
+	
+}
 var app ={
 	listdata:'', //选择列表数据
 	put:'', 	//选择后要显示的位置
@@ -9,33 +15,35 @@ var app ={
 	selectOverFun:'',  //选择后要执行的方法
 	alert:function(msg,style,fun){ //消息内容    状态(1为只有确定按钮 2为是否按钮)  fun点确定后要执行的方法
 		var html = [];
+		
 		if(undefined != $('#g-popup').attr("id")){
 			return;
 		}	
-		html.push('<div class="g-popup" id="g-popup">');
-		html.push('<div class="g-popup-main">');
-		html.push('<div class="g-popup-main-title">提示</div>');
-		html.push('<div class="g-popup-main-msg">'+msg+'</div>');
-		html.push('<div class="g-popup-main-but">');
-		if(style == 1 || style == undefined){
-			html.push('<div class="on3" id="g-popupOk">确认</div>');	
-		}else if(style == 2){
-			html.push('<div class="on1" id="g-popupNo">否</div>');
-			html.push('<div class="on2" id="g-popupOk">是</div>');
-		}
-		html.push('</div>');
-		html.push('</div>');
-		html.push('</div>');
-		$("body").append(html.join(''));
-		$("#g-popupOk").click(function(){
-			if(fun != undefined){
-				fun();
-			}
-			$("#g-popup").remove();		
-		})
-		$("#g-popupNo").click(function(){
-			$("#g-popup").remove();
-		})
+		
+        html.push('<div class="g-popup" id="g-popup">');
+        html.push('<div class="g-popup-main">');
+        html.push('<div class="g-popup-main-title">提示</div>');
+        html.push('<div class="g-popup-main-msg">'+msg+'</div>');
+        html.push('<div class="g-popup-main-but">');
+        if(style == 1 || style == undefined){
+            html.push('<div class="on3" id="g-popupOk">确认</div>');
+        }else if(style == 2){
+            html.push('<div class="on1" id="g-popupNo">否</div>');
+            html.push('<div class="on2" id="g-popupOk">是</div>');
+        }
+        html.push('</div>');
+        html.push('</div>');
+        html.push('</div>');
+        $("body").append(html.join(''));
+        $("#g-popupOk").click(function(){
+            if(fun != undefined){
+                fun();
+            }
+            $("#g-popup").remove();
+        })
+        $("#g-popupNo").click(function(){
+            $("#g-popup").remove();
+        }) 
 	},
 	select:function(obj,type,fun){ //obj(有data-select的那个标签,传this 例如 app.select(this))    type: 1只能选择   2可以选择也可以输入 输入匹配   3可以选择可以输入 输入匹配 并可选择没匹配项
 		app.put = obj;
@@ -50,7 +58,7 @@ var app ={
         dom.push('<div class="g-select">');
         if(app.selecttype != 1){	//如果类型不等于1  显示搜索框
 	        dom.push('<div class="g-select-seek">');
-	        dom.push('<input placeholder="请输入" type="text" oninput="app.selectSeek(this)"/>');
+	        dom.push('<input type="text" oninput="app.selectSeek(this)"/>');
 	        dom.push('<div></div>');//搜索按钮
 	        dom.push('</div>');
         }
@@ -63,7 +71,6 @@ var app ={
        		}
         }
         dom.push('</ul>');
-        dom.push('<div class="g-select-back" onclick="app.selectBack()">退出</div>');
         dom.push('</div>');
         $("body").append(dom.join(''));
         app.selectClick();     
@@ -87,9 +94,6 @@ var app ={
     	}
     	$("#g-select-list").html(dom.join(''));
     	app.selectClick();
-    },
-    selectBack:function(){
-    	$(".g-select").remove();
     },
     selectClick:function(){
     	$("#g-select-list li").click(function(){
@@ -177,48 +181,7 @@ var app ={
 		// if ajax.result = success{
 		//		
 		// }
-	},
-	indexSeek:function(){
-		alert('搜索')
-	},
-	selectItems:function(obj){
-		var dom = [];
-		if(obj.disabled){
-			dom.push('<section><input disabled type="text" placeholder="'+obj.placeholder+'" value="'+obj.value+'" />');
-		}else{
-			dom.push('<section><input type="text" placeholder="'+obj.placeholder+'"  value="'+obj.value+'"/>');
-		}
-		dom.push('<p></p>');
-		dom.push('</section>');
-		dom.push('<ul class="i-itemName-list-drop">');
-		for(var i = 0; i<obj.list.length; i++){
-			dom.push('<li>'+obj.list[i]+'</li>');
-		}
-		dom.push('</ul>');
-		$('#'+obj.id).append(dom.join(''));
-		$('#'+obj.id).find('section').click(function(){
-			event.stopPropagation();
-			$('#'+obj.id).find('input').focus();
-			$('#'+obj.id).find('ul').show();
-			$('html,body').css('height','100%');
-			$('html,body').css('overflow','hidden');
-			app.dropHide();
-		})
-		$('#'+obj.id).find('li').click(function(){
-			$('#'+obj.id).find('input').val($(this).html());
-			$('#'+obj.id).find('ul').hide();
-			$('html,body').css('height','auto');
-			$('html,body').css('overflow','visible');
-		})
-	},
-	dropHide:function(){
-		$('body').click(function(){
-			$('.i-itemName-list-drop').hide();
-			$('html,body').css('height','auto');
-			$('html,body').css('overflow','visible');
-		})
 	}
-	
 }
 
 $(function(){

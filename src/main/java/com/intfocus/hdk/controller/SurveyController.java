@@ -35,7 +35,12 @@ public class SurveyController implements ApplicationContextAware {
     		              ,  Survey survey ){
     	
     }
-    
+     @RequestMapping(value = "getList" , method=RequestMethod.GET)
+    @ResponseBody
+    public void getList(HttpServletResponse res , HttpServletRequest req ,HttpSession session
+    		              ,  Survey survey ){
+    	
+    }   
     
     @RequestMapping(value = "getSome" , method=RequestMethod.GET)
     @ResponseBody
@@ -51,8 +56,17 @@ public class SurveyController implements ApplicationContextAware {
 		return JSONObject.toJSONString(surveys) ;	
     }
 
+    
+    @RequestMapping(value = "gotoModify" , method=RequestMethod.GET)
+    @ResponseBody
+    public String gotoModify(HttpServletResponse res , HttpServletRequest req ,HttpSession session
+    		              , Survey survey ){
+    	
 
-
+    	// 取出相关的东东
+    	
+		return null ;	
+    }
 	@RequestMapping(value = "modify" , method=RequestMethod.POST)
     @ResponseBody
     public void modify(HttpServletResponse res , HttpServletRequest req ,HttpSession session

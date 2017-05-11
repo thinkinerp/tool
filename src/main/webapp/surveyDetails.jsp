@@ -16,12 +16,13 @@
 </script>
 		<link rel="stylesheet" type="text/css" href="${ctx}/casher/css/global.css"/>
 		<script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
-		<script src="${ctx}/casher/js/global.js" type="text/javascript" charset="utf-8"></script>
+
 <script type="text/javascript" src="${ctx}/js/ajaxfileupload.js"></script>  
 <script type="text/javascript" src="${ctx}/js/comUtil.js"></script>  
 <title>数据通上报</title>
 		<link rel="stylesheet" type="text/css" href="${ctx}/casher/css/global.css"/>
 
+		<script src="${ctx}/js/surveyDetails.js" type="text/javascript" charset="utf-8"></script>
 		<script src="${ctx}/casher/js/global.js" type="text/javascript" charset="utf-8"></script>
 		<script src="${ctx}/js/surveyList.js" type="text/javascript" charset="utf-8"></script>
 		<link rel="stylesheet" href="${ctx}/casher/css/swiper.css"></link>
@@ -45,19 +46,19 @@
 					<ul class="iz-list">
 						<li>
 							<div class="iz-list-title">调研编号：</div>
-							<div class="iz-list-content">TD201774</div>
+							<div class="iz-list-content"></div>
 						</li>
 						<li>
 							<div class="iz-list-title">商铺编号：</div>
-							<div class="iz-list-content">TD201774</div>
+							<div class="iz-list-content"></div>
 						</li>
 						<li>
 							<div class="iz-list-title">收银机编号：</div>
-							<div class="iz-list-content">TD201774</div>
+							<div class="iz-list-content"></div>
 						</li>
 						<li>
 							<div class="iz-list-title">打印机编号：</div>
-							<div class="iz-list-content">TD201774</div>
+							<div class="iz-list-content"></div>
 						</li>
 					</ul>
 				</div>
@@ -67,7 +68,7 @@
 							<div class="g-importList-title">项目名称</div>
 							<div class="g-importList-content">
 								<div class="i-xiala-list">
-									<div data-select="项目1,项目2,项目3,项目4,项目5,3项目,3个" onclick="app.select(this,2)" class="on">未选择</div>
+									<div data-select="" onclick="app.select(this,2,onSelectedProject)" class="on"></div>
 								</div>
 							</div>
 						</li>
@@ -75,7 +76,7 @@
 							<div class="g-importList-title">商铺名称</div>
 							<div class="g-importList-content">
 								<div class="i-xiala-list">
-									<div data-select="项目1,项目2,项目3,项目4,项目5,3项目,3个" onclick="app.select(this,3)" class="on">未选择</div>
+									<div id ="shopName" data-select=""  onclick="app.select(this,3,onSelectedProject)" class="on"></div>
 								</div>
 							</div>
 						</li>
@@ -83,21 +84,21 @@
 							<div class="g-importList-title">商铺状态</div>
 							<div class="g-importList-content">
 								<div class="i-xiala-list">
-									<div class="on">未选择</div>
+									<div id = "shopStation" class="on"></div>
 								</div>
 							</div>
 						</li>
 						<li>
 							<div class="g-importList-title">商铺位置</div>
 							<div class="g-importList-content">
-								<div class="i-text">L1-001</div>
+								<div id ="shopPostion" class="i-text">L1-001</div>
 							</div>
 						</li>
 						<li>
 							<div class="g-importList-title">经营分类</div>
 							<div class="g-importList-content">
 								<div class="i-xiala-list">
-									<div class="on">未选择</div>
+									<div id ="" class="on">未选择</div>
 								</div>
 							</div>
 						</li>

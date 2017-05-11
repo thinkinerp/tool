@@ -35,7 +35,20 @@ public class ShopController implements ApplicationContextAware {
     		              ,  Shops shops ){
     	
     }
-    
+            
+            
+            @RequestMapping(value = "selectForCombobox" , method=RequestMethod.GET)
+            @ResponseBody
+            public String selectForCombobox(HttpServletResponse res , HttpServletRequest req ,HttpSession session
+            		, Shops shops ){
+            	Map<String, String> where = new HashMap<String,String>();
+            	where.put("shopName", shops.getShopName());
+            	where.put("installStation", shops.getInstallStation());
+            	where.put("eqType", shops.getEqType());
+            	where.put("proName", shops.getProId());
+        		List<Shops> shopss = shopsmapper.selectForCombobox(where );
+            	return JSONObject.toJSONString(shopss);
+            }
     
     @RequestMapping(value = "getSome" , method=RequestMethod.GET)
     @ResponseBody

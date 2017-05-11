@@ -7,11 +7,18 @@ import java.io.InputStream;
 import java.text.ParseException;
 import java.util.Properties;
 
-import org.junit.Test;
+import javax.annotation.Resource;
 
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+
+import com.alibaba.fastjson.JSONObject;
+import com.intfocus.hdk.dao.ProjectMapper;
 import com.intfocus.hdk.util.StaticVariableUtil;
-//@RunWith(SpringJUnit4ClassRunner.class)
-//@ContextConfiguration("/applicationContext.xml")
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration("/applicationContext.xml")
 public class CheckTest {
 
 //	@Test
@@ -20,13 +27,18 @@ public class CheckTest {
 //	}
     private   static  String param1;    
     private   static  String param2;    
+    @Resource
+    private ProjectMapper pm ;
     
     @Test
     public void testStatic(){
     	System.out.println(StaticVariableUtil.APPID);
     	System.out.println(StaticVariableUtil.BASE_URL);
     }
-    
+     @Test
+     public void testProject(){
+    	System.out.println( "dsfasdf" +JSONObject.toJSONString(pm.selectProjectCount()));
+     }
 	@Test
 	public void test() throws ParseException{
 

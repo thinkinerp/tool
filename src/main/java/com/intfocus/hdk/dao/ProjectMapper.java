@@ -21,4 +21,6 @@ public interface ProjectMapper {
 	List<Project> selectByWhere(Map<String ,String> where);
 	
 	int setAllNotIsLast();
+	
+	List<Map<String, String>> selectProjectCount();
 }

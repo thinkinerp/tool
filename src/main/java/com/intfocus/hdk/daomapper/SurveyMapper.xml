@@ -20,8 +20,14 @@
     id, pro_id, shop_id, sur_network, sur_power, sur_vip, sur_vip_data, created_at, updated_at,sur_id
   </sql>
   <sql id="Blob_Column_List" >
+      survey.id, survey.pro_id, survey.shop_id, survey.sur_network, survey.sur_power, survey.sur_vip, survey.sur_vip_data
+      , survey.created_at, survey.updated_at,survey.sur_id,shops.shop_name
+  </sql>
+  
+  <sql id="extra_Column_List" >
     sur_remarks
   </sql>
+  
   <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Integer" >
     select 
     <include refid="Base_Column_List" />
@@ -36,7 +42,6 @@
     ,
     <include refid="Blob_Column_List" />
     from survey
-  
     <where>
     	1=1
             <if test="null != proId  and '' != proId">
@@ -80,6 +85,60 @@
       	   	 </if> 
 	  </if> 
   </select>
+  
+  
+  <select  id="selectForList" resultMap="BaseResultMap"  parameterType="java.util.Map">
+  	select 
+  	    <include refid="extra_Column_List" />
+    	from survey 
+   left join shops 
+	  on survey.shop_id = shops.shop_id and survey.pro_id = shops.pro_id 
+   left join project 
+	  on project.pro_id = survey.pro_id
+  	    <where>
+    	1=1
+            <if test="null != proId  and '' != proId">
+				and pro_id  = #{proId,jdbcType=VARCHAR}
+			</if>	
+             <if test="null != proName  and '' != proName">
+				and pro_id  in (select pro_id from project where pro_name = #{proName,jdbcType=VARCHAR})
+			</if>	
+    		<if test="null != shopId  and '' != shopId">
+				and shop_id  = #{shopId,jdbcType=VARCHAR}
+			</if>	
+    		<if test="null != shopName  and '' != shopName">
+				and shop_id in (  select shop_id from shops where shop_mer_name = #{shopName,jdbcType=VARCHAR})
+			</if>	
+    		<if test="null != surNetwork  and '' != surNetwork">
+				and sur_network  = #{surNetwork,jdbcType=VARCHAR}
+			</if>	
+    		<if test="null != surPower  and '' != surPower">
+				and sur_power  = #{surPower,jdbcType=VARCHAR}
+			</if>	
+    		<if test="null != surVip  and '' != surVip">
+				and sur_vip  = #{surVip,jdbcType=VARCHAR}
+			</if>	
+    		<if test="null != surVipData  and '' != surVipData">
+				and sur_vip_data  = #{surVipData,jdbcType=VARCHAR}
+			</if>	
+    		<if test="null != createdAt  and '' != createdAt">
+				and created_at  = #{createdAt,jdbcType=VARCHAR}
+			</if>	
+    		<if test="null != updatedAt  and '' != updatedAt">
+				and updated_at  = #{updatedAt,jdbcType=VARCHAR}
+			</if>	
+    		<if test="null != surRemarks  and '' != surRemarks">
+				and sur_remarks  = #{surRemarks,jdbcType=VARCHAR}
+			</if>	
+ 
+    </where>  
+      <if test="null != page and ''!= page">	 
+      	   <if test="null != pageSize and ''!= pageSize">			
+      	   	limit 	#{page,jdbcType=VARCHAR}, #{pageSize,jdbcType=VARCHAR}		    		   
+      	   	 </if> 
+	  </if> 
+  </select>
+  
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from survey
     where id = #{id,jdbcType=INTEGER}

@@ -57,6 +57,31 @@
     </if>
   </select>
   
+ <select id="selectProjectCount" resultType="java.util.Map" >
+select count_type , pro_count
+  from 
+	(
+		select 'all' as count_type , count(distinct pro_name) as pro_count
+		  from project 
+		union
+		select '实施' as count_type,count(distinct pro_name) as pro_count
+		  from project 
+		 where pro_station = '实施'
+		UNION
+		select '待启动' as count_type,count(distinct pro_name) as pro_count
+		  from project 
+		 where pro_station = '待启动'  
+		union 
+		select '维护' as count_type,count(distinct pro_name) as pro_count
+		  from project 
+		 where pro_station = '维护'  
+		union 
+		select '停止' as count_type,count(distinct pro_name) as pro_count
+		  from project 
+		 where pro_station = '停止'  
+	) as a
+  </select>
+  
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from project
     where id = #{id,jdbcType=INTEGER}

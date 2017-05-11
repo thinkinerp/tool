@@ -19,6 +19,7 @@
 		<script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
 		<script src="${ctx}/casher/js/global.js" type="text/javascript" charset="utf-8"></script>
 <script type="text/javascript" src="${ctx}/js/comUtil.js"></script>  
+<script type="text/javascript" src="${ctx}/js/itemList.js"></script>
 </head>
 <body>
 	<body>
@@ -26,54 +27,18 @@
 		<!-- 项目状态 -->
 		<div class="i-itemStyle">
 			<div class="i-itemStyle-list">
-				<div>
-					<p>合计项目</p>
-					<p>66</p>
-				</div>
-				<div>
-					<p>项目经理</p>
-					<p>张三</p>
-					<p>项目版本</p>
-					<p>1.3</p>
-				</div>
-				<div>
-					<p>项目状态</p>
-					<p>维护</p>
-					<p>更新时间</p>
-					<p>2017.2.27</p>
-				</div>
+
 			</div>
 		</div>
 		<!-- 搜索 -->
 		<div class="i-itemSeek">
-			<input type="text" />
+			<input id ="proName" type="text" onclick="search()" />
 			<div></div>
 		</div>
 
 		<!-- 项目详情 -->
 		<div class="i-itemDetail">
-			<div class="i-itemDetail-area">
-				<div class="i-itemDetail-area-title">
-					<div>必胜客</div>
-					<p>详情</p>
-				</div>
-				<div class="i-itemDetail-area-content">
-					<div class="content-row">
-						<p>铺位号</p>
-						<p>101</p>
-						<!-- i标签 on1无需安装   on2已安装   on3安装失败  on4未安装   on5未开业  on6已拆除 -->
-						<p><i class="on1"></i>无需安装</p>
-					</div>
-					<div class="content-row">
-						<p>铺位号</p>
-						<p>101</p>
-					</div>
-					<div class="content-row">
-						<p>铺位号</p>
-						<p>win7/64</p>
-					</div>
-				</div>
-			</div>
+
 			<div class="i-itemDetail-area">
 				<div class="i-itemDetail-area-title">
 					<div>必胜客</div>
@@ -98,10 +63,10 @@
 			</div>
 		</div>
 		<!-- 新建抄表 -->
-		<div class="i-addTable">
+<!-- 		<div class="i-addTable">
 			<div class="icon"></div>
-			<div class="text">新建抄表</div>
-		</div>
+			<div class="text" href="javascript:void(0)" onClick="create()" >新建抄表</div>
+		</div> -->
 		
 		<script type="text/javascript">
 

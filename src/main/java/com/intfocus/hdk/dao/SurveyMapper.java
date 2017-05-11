@@ -22,4 +22,5 @@ public interface SurveyMapper {
 
 	List<Survey> selectByWhere(Map<String, String> where);
 
+	List<Survey> selectForList(Map<String,String> where);
 }

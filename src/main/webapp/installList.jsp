@@ -48,7 +48,7 @@
 		</div>
 		<!-- 搜索 -->
 		<div class="i-itemSeek">
-			<input type="text" id="middle" />
+			<input placeholder="请输入门店名称" type="text" id="middle" />
 			<div></div>
 		</div>
 		<!-- 2个下拉 -->
