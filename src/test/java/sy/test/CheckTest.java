@@ -5,6 +5,8 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.ParseException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 
 import javax.annotation.Resource;
@@ -15,7 +17,9 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.alibaba.fastjson.JSONObject;
+import com.intfocus.hdk.dao.ProblemMapper;
 import com.intfocus.hdk.dao.ProjectMapper;
+import com.intfocus.hdk.dao.UserMapper;
 import com.intfocus.hdk.util.StaticVariableUtil;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("/applicationContext.xml")
@@ -29,6 +33,41 @@ public class CheckTest {
     private   static  String param2;    
     @Resource
     private ProjectMapper pm ;
+    @Resource
+    private ProblemMapper pblm ;
+    @Resource
+    private UserMapper userMapper;
+    
+    @Test
+    public void testUserMapperSelectByWhere(){
+    	System.out.println(userMapper.selectByWhere(null));
+    }
+    @Test
+    public void testUserMapperGetDepartMent(){
+    	System.out.println(userMapper.getDepartment());
+    }
+
+    
+    @Test
+    public void testProblemMapperGetCount(){
+    	
+    	Map<String,String> where = new HashMap<String,String>();
+    	where.put("proName", "pro_001");
+    	String str  = JSONObject.toJSONString(pblm.getCount(where));
+    	System.out.println("json:" +str);
+    }
+    @Test
+    public void testProblemMapperSelectByWhere(){
+    	
+    	Map<String,String> where = new HashMap<String,String>();
+    	where.put("proName", "pro_001");
+    	where.put("problemObject", "海鼎");
+    	where.put("state", "未完成");
+    	String str  = JSONObject.toJSONString(pblm.selectByWhere(where));
+    	System.out.println("json:" +str);
+    }
+    
+    
     
     @Test
     public void testStatic(){

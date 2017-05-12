@@ -42,11 +42,17 @@ public class StateController implements ApplicationContextAware {
     
     @Resource
     private StateMapper statemapper ;
-            @RequestMapping(value = "submit" , method=RequestMethod.POST)
+	@RequestMapping(value = "submit" , method=RequestMethod.POST)
     @ResponseBody
-    public void submit(HttpServletResponse res , HttpServletRequest req ,HttpSession session
+    public Integer submit(HttpServletResponse res , HttpServletRequest req ,HttpSession session
     		              ,  State state ){
-    	
+            	try{
+            	statemapper.insertSelective(state);
+            	}catch(Exception e){
+            		e.printStackTrace();
+            		return 0;
+            	}
+            	return 1;
     }
     
     

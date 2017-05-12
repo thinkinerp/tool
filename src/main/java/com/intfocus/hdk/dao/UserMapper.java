@@ -1,5 +1,8 @@
 package com.intfocus.hdk.dao;
 
+import java.util.List;
+import java.util.Map;
+
 import com.intfocus.hdk.vo.User;
 
 public interface UserMapper {
@@ -14,4 +17,8 @@ public interface UserMapper {
     int updateByPrimaryKeySelective(User record);
 
     int updateByPrimaryKey(User record);
+    
+    List<User>  getDepartment();
+    
+    List<User> selectByWhere(Map<String,String>where);
 }

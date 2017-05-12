@@ -18,11 +18,36 @@
     id, user_id, user_name, Email, user_station, name, password, phone, department, created_at, 
     updated_at
   </sql>
+  
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
     <include refid="Base_Column_List" />
     from user
     where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectByWhere" resultMap="BaseResultMap" parameterType="java.util.Map" >
+    select 
+    <include refid="Base_Column_List" />
+    from user
+    	<where>
+		1=1
+		<if test="null != name and ''!= name">
+			and name = #{name}
+		</if>
+	</where>    
+	    <if test="null != page and ''!= page">
+	    <if test="null != pageSize and ''!= pageSize">
+			limit 	#{page,jdbcType=VARCHAR}, #{pageSize,jdbcType=VARCHAR}		    	
+	    </if>
+	    </if>
+  </select>
+  
+
+
+  <select id="getDepartment" resultMap="BaseResultMap"  >
+    select 
+    distinct department
+    from user
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from user

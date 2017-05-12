@@ -6,7 +6,10 @@
     <result column="problem_id" property="problemId" jdbcType="VARCHAR" />
     <result column="state" property="state" jdbcType="VARCHAR" />
     <result column="pro_id" property="proId" jdbcType="VARCHAR" />
+    <result column="pro_name" property="proName" jdbcType="VARCHAR" />
     <result column="shop_id" property="shopId" jdbcType="VARCHAR" />
+    <result column="shop_name" property="shopName" jdbcType="VARCHAR" />
+    <result column="shop_postion" property="shopPostion" jdbcType="VARCHAR" />
     <result column="eq_id" property="eqId" jdbcType="VARCHAR" />
     <result column="mes_id" property="mesId" jdbcType="VARCHAR" />
     <result column="problem_type" property="problemType" jdbcType="VARCHAR" />
@@ -21,6 +24,8 @@
     <result column="problem_details" property="problemDetails" jdbcType="VARCHAR" />
     <result column="problem_enclosure" property="problemEnclosure" jdbcType="VARCHAR" />
     <result column="problem_table" property="problemTable" jdbcType="VARCHAR" />
+    <result column="count" property="Count" jdbcType="INTEGER" />
+    
     <result column="created_at" property="createdAt" jdbcType="TIMESTAMP" />
     <result column="updated_at" property="updatedAt" jdbcType="TIMESTAMP" />
   </resultMap>
@@ -28,10 +33,10 @@
     <result column="problem_plan" property="problemPlan" jdbcType="LONGVARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, problem_id, state, pro_id, shop_id, eq_id, mes_id, problem_type, problem_object, 
+    problem.id, problem_id, state, problem.pro_id, shops.shop_id, eq_id, mes_id, problem_type, problem_object, 
     problem_department, problem_user, problem_happen, problem_put, problem_estimate, 
     problem_reslove_time, problem_resolve_user, problem_details, problem_enclosure, problem_table, 
-    created_at, updated_at
+    problem.created_at, problem.updated_at,project.pro_name , shops.shop_position,shops.shop_name
   </sql>
   <sql id="Blob_Column_List" >
     problem_plan
@@ -43,6 +48,45 @@
     <include refid="Blob_Column_List" />
     from problem
     where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectByWhere" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    	from problem
+    inner join project on project.pro_id = problem.pro_id
+    inner join shops on shops.shop_id = problem.shop_id
+	<where>
+		1=1
+		<if test="null != state and ''!= state">
+			and problem.state = #{state}
+		</if>
+		<if test="null != proName and ''!= proName">
+			and project.pro_name = #{proName}
+		</if>
+		<if test="null != problemObject and ''!= problemObject">
+			and problem.problem_object = #{problemObject}
+		</if>
+		
+	</where>    
+	    <if test="null != page and ''!= page">
+	    <if test="null != pageSize and ''!= pageSize">
+			limit 	#{page,jdbcType=VARCHAR}, #{pageSize,jdbcType=VARCHAR}		    	
+	    </if>
+    </if>
+  </select>
+  <select id="getCount" resultMap="ResultMapWithBLOBs" parameterType="java.util.Map">
+    select problem_object ,problem_type,count(problem_id) as count
+    from problem  
+    <where>
+    	1=1
+    	<if test="null != proName and '' != proName">
+    		  pro_id in (select pro_id from project where pro_name =#{proName} )
+ 	   </if>
+    </where>
+     order by problem_object ,problem_type
+
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from problem

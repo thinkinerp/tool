@@ -1,5 +1,8 @@
 package com.intfocus.hdk.dao;
 
+import java.util.List;
+import java.util.Map;
+
 import com.intfocus.hdk.vo.Problem;
 
 public interface ProblemMapper {
@@ -16,4 +19,8 @@ public interface ProblemMapper {
     int updateByPrimaryKeyWithBLOBs(Problem record);
 
     int updateByPrimaryKey(Problem record);
+    
+    List<Problem> getCount( Map<String,String>where);
+    
+    List<Problem> selectByWhere(Map<String,String>where);
 }

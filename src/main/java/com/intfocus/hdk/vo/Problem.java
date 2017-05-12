@@ -8,7 +8,13 @@ public class Problem {
     private String state;
 
     private String proId;
+    
+    private String proName;
 
+    private String shopName;
+    
+    private String shopPostion;
+    
     private String shopId;
 
     private String eqId;
@@ -44,6 +50,8 @@ public class Problem {
     private String updatedAt;
 
     private String problemPlan;
+    
+    private Integer Count;
 
     public Integer getId() {
         return id;
@@ -220,4 +228,36 @@ public class Problem {
     public void setProblemPlan(String problemPlan) {
         this.problemPlan = problemPlan == null ? null : problemPlan.trim();
     }
+
+	public Integer getCount() {
+		return Count;
+	}
+
+	public void setCount(Integer count) {
+		Count = count;
+	}
+
+	public String getProName() {
+		return proName;
+	}
+
+	public void setProName(String proName) {
+		this.proName = proName;
+	}
+
+	public String getShopName() {
+		return shopName;
+	}
+
+	public void setShopName(String shopName) {
+		this.shopName = shopName;
+	}
+
+	public String getShopPostion() {
+		return shopPostion;
+	}
+
+	public void setShopPostion(String shopPostion) {
+		this.shopPostion = shopPostion;
+	}
 }

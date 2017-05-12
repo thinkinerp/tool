@@ -63,9 +63,9 @@ public class InstallController implements ApplicationContextAware {
     @ResponseBody
     public String submit(HttpServletResponse res , HttpServletRequest req ,HttpSession session
     		              ,  Install install,Printer printer,Cash cash,Equipment equipmengt ,
-    		              @RequestParam(value = "fileImg", required = false) MultipartFile[] files,HttpServletRequest request) throws Exception {
+    		              @RequestParam(value = "fileImg", required = false) MultipartFile[] files) throws Exception {
 	  try{ 
-	   String path = request.getSession().getServletContext().getRealPath("upload");
+	   String path = req.getSession().getServletContext().getRealPath("upload");
 	   String fileName =null;
 	   List<String> filePaths = new ArrayList<String>(); 
 	   String fileNameStr =null;
