@@ -6,6 +6,7 @@
     <result column="pro_id" property="proId" jdbcType="VARCHAR" />
     <result column="shop_id" property="shopId" jdbcType="VARCHAR" />
     <result column="sur_network" property="surNetwork" jdbcType="VARCHAR" />
+    <result column="shop_mer_station" property="shopMerStation" jdbcType="VARCHAR" />
     <result column="sur_power" property="surPower" jdbcType="VARCHAR" />
     <result column="sur_vip" property="surVip" jdbcType="VARCHAR" />
     <result column="sur_vip_data" property="surVipData" jdbcType="VARCHAR" />
@@ -16,12 +17,10 @@
   <resultMap id="ResultMapWithBLOBs" type="com.intfocus.hdk.vo.Survey" extends="BaseResultMap" >
     <result column="sur_remarks" property="surRemarks" jdbcType="LONGVARCHAR" />
   </resultMap>
+
   <sql id="Base_Column_List" >
-    id, pro_id, shop_id, sur_network, sur_power, sur_vip, sur_vip_data, created_at, updated_at,sur_id
-  </sql>
-  <sql id="Blob_Column_List" >
       survey.id, survey.pro_id, survey.shop_id, survey.sur_network, survey.sur_power, survey.sur_vip, survey.sur_vip_data
-      , survey.created_at, survey.updated_at,survey.sur_id,shops.shop_name
+      , survey.created_at, survey.updated_at,survey.sur_id,shops.shop_name,shops.shop_mer_station
   </sql>
   
   <sql id="extra_Column_List" >
@@ -31,30 +30,29 @@
   <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Integer" >
     select 
     <include refid="Base_Column_List" />
-    ,
-    <include refid="Blob_Column_List" />
+
     from survey
     where id = #{id,jdbcType=INTEGER}
   </select>
     <select id="selectByWhere" resultMap="BaseResultMap"  parameterType="java.util.Map">
     select 
     <include refid="Base_Column_List" />
-    ,
-    <include refid="Blob_Column_List" />
+
     from survey
+        inner join shops on shops.shop_id = survey.shop_id
     <where>
     	1=1
             <if test="null != proId  and '' != proId">
 				and pro_id  = #{proId,jdbcType=VARCHAR}
 			</if>	
              <if test="null != proName  and '' != proName">
-				and pro_id  in (select pro_id from project where pro_name = #{proName,jdbcType=VARCHAR})
+				and survey.pro_id  in (select pro_id from project where pro_name = #{proName,jdbcType=VARCHAR})
 			</if>	
     		<if test="null != shopId  and '' != shopId">
 				and shop_id  = #{shopId,jdbcType=VARCHAR}
 			</if>	
     		<if test="null != shopName  and '' != shopName">
-				and shop_id in (  select shop_id from shops where shop_mer_name = #{shopName,jdbcType=VARCHAR})
+				and shops.shop_id in (  select shop_id from shops where shop_mer_name = #{shopName,jdbcType=VARCHAR})
 			</if>	
     		<if test="null != surNetwork  and '' != surNetwork">
 				and sur_network  = #{surNetwork,jdbcType=VARCHAR}
@@ -79,6 +77,11 @@
 			</if>	
  
     </where>  
+    
+    <if test="null != order and '' != order ">
+			order by survey.updated_at ${order}
+    </if>
+    
       <if test="null != page and ''!= page">	 
       	   <if test="null != pageSize and ''!= pageSize">			
       	   	limit 	#{page,jdbcType=VARCHAR}, #{pageSize,jdbcType=VARCHAR}		    		   

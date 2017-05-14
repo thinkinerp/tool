@@ -1,4 +1,6 @@
 package com.intfocus.hdk.controller;
+import java.io.IOException;
+import java.io.Writer;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -39,7 +41,7 @@ public class ShopController implements ApplicationContextAware {
             
             @RequestMapping(value = "selectForCombobox" , method=RequestMethod.GET)
             @ResponseBody
-            public String selectForCombobox(HttpServletResponse res , HttpServletRequest req ,HttpSession session
+            public void selectForCombobox(HttpServletResponse res , HttpServletRequest req ,HttpSession session
             		, Shops shops ){
             	Map<String, String> where = new HashMap<String,String>();
             	where.put("shopName", shops.getShopName());
@@ -47,12 +49,19 @@ public class ShopController implements ApplicationContextAware {
             	where.put("eqType", shops.getEqType());
             	where.put("proName", shops.getProId());
         		List<Shops> shopss = shopsmapper.selectForCombobox(where );
-            	return JSONObject.toJSONString(shopss);
+        		Writer w;
+        		try {
+        			w = res.getWriter();
+        			w.write("shops_selectForCombobox("+JSONObject.toJSONString(shopss)+")");
+        		} catch (IOException e) {
+        			e.printStackTrace();
+        		}
+
             }
     
     @RequestMapping(value = "getSome" , method=RequestMethod.GET)
     @ResponseBody
-    public String getSome(HttpServletResponse res , HttpServletRequest req ,HttpSession session
+    public void getSome(HttpServletResponse res , HttpServletRequest req ,HttpSession session
     		              , Shops shops ){
 		
     	Map<String, String> where = new HashMap<String,String>();
@@ -61,7 +70,13 @@ public class ShopController implements ApplicationContextAware {
     	where.put("eqType", shops.getEqType());
     	where.put("proName", shops.getProId());
 		List<Shops> shopss = shopsmapper.selectByWhere(where );
-    	return JSONObject.toJSONString(shopss);
+		Writer w;
+		try {
+			w = res.getWriter();
+			w.write("shops_getSome("+JSONObject.toJSONString(shopss)+")");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
     }
     
     @RequestMapping(value = "modify" , method=RequestMethod.POST)

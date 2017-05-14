@@ -7,8 +7,10 @@ public class Survey {
 
     private String proId;
     private String surId;
+    private String order;
 
     private String shopId;
+    private String shopMerStation;
 
     private String surNetwork;
 
@@ -110,5 +112,21 @@ public class Survey {
 
 	public void setSurId(String surId) {
 		this.surId = surId;
+	}
+
+	public String getOrder() {
+		return order;
+	}
+
+	public void setOrder(String order) {
+		this.order = order;
+	}
+
+	public String getShopMerStation() {
+		return shopMerStation;
+	}
+
+	public void setShopMerStation(String shopMerStation) {
+		this.shopMerStation = shopMerStation;
 	}
 }

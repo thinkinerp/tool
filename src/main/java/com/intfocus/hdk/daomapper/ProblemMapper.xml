@@ -11,6 +11,8 @@
     <result column="shop_name" property="shopName" jdbcType="VARCHAR" />
     <result column="shop_postion" property="shopPostion" jdbcType="VARCHAR" />
     <result column="eq_id" property="eqId" jdbcType="VARCHAR" />
+    <result column="eq_style" property="eqStyle" jdbcType="VARCHAR" />
+    <result column="eq_type" property="eqType" jdbcType="VARCHAR" />
     <result column="mes_id" property="mesId" jdbcType="VARCHAR" />
     <result column="problem_type" property="problemType" jdbcType="VARCHAR" />
     <result column="problem_object" property="problemObject" jdbcType="VARCHAR" />
@@ -33,10 +35,11 @@
     <result column="problem_plan" property="problemPlan" jdbcType="LONGVARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
-    problem.id, problem_id, state, problem.pro_id, shops.shop_id, eq_id, mes_id, problem_type, problem_object, 
+    problem.id, problem_id, state, problem.pro_id, shops.shop_id,problem.eq_id, mes_id, problem_type, problem_object, 
     problem_department, problem_user, problem_happen, problem_put, problem_estimate, 
     problem_reslove_time, problem_resolve_user, problem_details, problem_enclosure, problem_table, 
-    problem.created_at, problem.updated_at,project.pro_name , shops.shop_position,shops.shop_name
+    problem.created_at, problem.updated_at,project.pro_name , shops.shop_position,shops.shop_name,
+    equipment.eq_style , equipment.eq_type
   </sql>
   <sql id="Blob_Column_List" >
     problem_plan
@@ -57,6 +60,7 @@
     	from problem
     inner join project on project.pro_id = problem.pro_id
     inner join shops on shops.shop_id = problem.shop_id
+    inner join equipment on equipment.eq_id = problem.eq_id
 	<where>
 		1=1
 		<if test="null != state and ''!= state">

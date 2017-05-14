@@ -50,7 +50,7 @@ public class CashController implements ApplicationContextAware {
     	
     	List<Cash> cashes = cashMapper.selectByWhere(where);
     	
-		return JSONObject.toJSONString(cashes);	
+		return "cash_getSome"+JSONObject.toJSONString(cashes)+")";	
     }
     @RequestMapping(value = "modify" , method=RequestMethod.POST)
     @ResponseBody

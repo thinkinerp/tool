@@ -14,13 +14,15 @@ var shopStateSeach = function(){
 	 $.ajax({ 
 	 		url:ctx + '/shops/getSome',
 	 		type:'get',
+	 		jsonpCallback:"shops_getSome",
+	 		jsonp: "callback",
 			data:{
 				"proId":$('#itemName').html(),
 				'shopName':$('#middle').val(),
 				"installStation":delAll('installState' ),
 				"eqType":delAll('eqType')
 			},
-	 		dataType:'json',
+	 		dataType:'jsonp',
 	 		success:function(rs){
  				$('.i-itemDetail-area').html('');
 	 			$.each(rs,function(index,item){

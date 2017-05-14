@@ -26,9 +26,6 @@ import com.intfocus.hdk.dao.PrinterMapper;
 import com.intfocus.hdk.dao.ProblemMapper;
 import com.intfocus.hdk.dao.ProjectMapper;
 import com.intfocus.hdk.dao.ShopsMapper;
-import com.intfocus.hdk.vo.Cash;
-import com.intfocus.hdk.vo.Equipment;
-import com.intfocus.hdk.vo.Printer;
 import com.intfocus.hdk.vo.Problem;
 
 @Controller
@@ -52,13 +49,24 @@ public class ProblemController implements ApplicationContextAware {
     @Resource
     private ShopsMapper shopsMapper;
     
+    
+    @RequestMapping(value = "getEquipmentList " , method=RequestMethod.GET)
+    @ResponseBody     
+    public String getEquipmentList (HttpServletResponse res , HttpServletRequest req ,HttpSession session
+    		, Problem problem ){
+    		Map<String, String> where = new HashMap<String ,String>();
+    		where.put("proName",problem.getProName());
+    		where.put("shopName",problem.getShopName());
+			;
+    		return "problem_getEquipmentList("+JSONObject.toJSONString(equipmentMapper.selectByWhere(where))+")";
+
+    }
     @RequestMapping(value = "submit" , method=RequestMethod.GET)
     @ResponseBody     
     public String submit(HttpServletResponse res , HttpServletRequest req ,HttpSession session
-            , Problem problem ,Equipment equipment){
+            , Problem problem ){
     	try{
     		problemMapper.insertSelective(problem);
-	    	equipmentMapper.insertSelective(equipment);
 	    	return "{'message':'success'}";
 	  }catch(Exception e){
 		  e.printStackTrace();
@@ -68,24 +76,19 @@ public class ProblemController implements ApplicationContextAware {
     @RequestMapping(value = "modify" , method=RequestMethod.GET)
     @ResponseBody     
     public String modify(HttpServletResponse res , HttpServletRequest req ,HttpSession session
-    		, Problem problem ,Equipment equipment){
+    		, Problem problem ){
     	try{
     		problemMapper.updateByPrimaryKeySelective(problem);
-    		equipmentMapper.updateByPrimaryKeySelective(equipment);
-    		return "{'message':'success'}";
+    		return "modify("+"{'message':'success'}"+")";
     	}catch(Exception e){
     		e.printStackTrace();
-    		return "{'message':'fail'}";
+    		return "modify("+"{'message':'fail'}"+")";
     	}
     }
     @InitBinder("problem")    
     public void initBinder1(WebDataBinder binder) {    
             binder.setFieldDefaultPrefix("problem.");    
    } 
-    @InitBinder("equipment")    
-    public void initBinder4(WebDataBinder binder) {    
- 	   binder.setFieldDefaultPrefix("equipment.");    
-    } 
     @RequestMapping(value = "getCount" , method=RequestMethod.GET)
     @ResponseBody    
     public String getCount(HttpServletResponse res , HttpServletRequest req ,HttpSession session
@@ -96,7 +99,7 @@ public class ProblemController implements ApplicationContextAware {
     	
     	List<Problem> problems = problemMapper.getCount(where);
     	
-		return JSONObject.toJSONString(problems);	
+		return "problem_getCount("+JSONObject.toJSONString(problems)+")";	
     }
     
     @RequestMapping(value = "getSome" , method=RequestMethod.GET)
@@ -112,10 +115,9 @@ public class ProblemController implements ApplicationContextAware {
     	
     	List<Problem> problems = problemMapper.selectByWhere(where);
     	
-		return JSONObject.toJSONString(problems);	
+		return "problem_getSome("+JSONObject.toJSONString(problems)+")";	
     }
-    
-    @RequestMapping(value = "gotoModify" , method=RequestMethod.GET) 
+        @RequestMapping(value = "gotoModify" , method=RequestMethod.GET) 
     public String gotoModify(HttpServletResponse res , HttpServletRequest req ,HttpSession session
             , Problem problem  ){
     	String json= "" ;

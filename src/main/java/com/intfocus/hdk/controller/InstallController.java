@@ -129,14 +129,15 @@ public class InstallController implements ApplicationContextAware {
 		   , Install install ){
 	   
 	   JSONObject json = new JSONObject();
-	   
 	   Map<String, String> where = new HashMap<String,String>();
 	   where.put("installId", install.getInstallId());
-	   
 	   List<Install> installs = installmapper.selectByWhere(where);
-	   
+	   String path = req.getSession().getServletContext().getRealPath("upload");
 	   if(null != installs && installs.size() > 0 ){
-		   json.put("install", installs.get(0));
+		   
+		   Install i = installs.get(0);
+		   i.setAttachment_url(i.getAttachmentUrl().replace(path.substring(0,path.indexOf("upload")), "/hdk/"));
+		   json.put("install", i);
 		   where.clear();
 		   //找到门店
 		   where.put("shopId", installs.get(0).getShopId());
@@ -210,52 +211,5 @@ public class InstallController implements ApplicationContextAware {
 			throws BeansException {
 		applicationContext = ctx;
 	}   
-    public static Map<String, Object> uploadFile(MultipartFile file)
-            throws IOException  {
-        String fail = "fail";//上传失败状态
-        String success = "success";//上传成功状态
-        String errorMsg = "imgErrorMsg";//上传错误信息
-        String filePath = "/Users/wangyifei/";//上传路径，本来是相对路径，但是在发布后路径会创建在tomcat的bin目录下，所以接口上传的路径是一个难题，我用的是绝对路径，等到发布到Linux环境中，通过配置文件修改路径为Linux中的资源地址【防止工程删除而资源文件不会丢失】，然后重新发布工程时再通过Linux的命令把我们需要的资源文件导入到我们发布的工程项目中。
-        String size =  "fileSize";
-        String interfaceService = "interfaceService";
-         
-        long maxFileSize = (Integer.valueOf(size)) * 1024 * 1024;
-        String suffix = file.getOriginalFilename().substring(
-                file.getOriginalFilename().lastIndexOf("."));
-        long fileSize = file.getSize();
-        Map<String, Object> map = new HashMap<String, Object>();
-        if (suffix.equals(".png") || suffix.equals(".jpg")) {
-            if (fileSize < maxFileSize) {
-                // System.out.println("fileSize"+fileSize);
-                String fileName = file.getOriginalFilename();
-                fileName = new String(fileName.getBytes("ISO-8859-1"), "UTF-8");
-                File tempFile = new File(filePath, new Date().getTime()
-                        + fileName);
- 
-                try {
-                    if (!tempFile.getParentFile().exists()) {
-                        tempFile.getParentFile().mkdirs();//如果是多级文件使用mkdirs();如果就一层级的话，可以使用mkdir()
-                    }
-                    if (!tempFile.exists()) { 
-                        tempFile.createNewFile();
-                    }
-                    file.transferTo(tempFile);
-                } catch (IllegalStateException e) {
-                		e.printStackTrace();
-                }
- 
-                map.put("SUCESS", success);
-                map.put("data",interfaceService + filePath + new Date().getTime() + tempFile.getName());
- 
-            } else {
-                map.put("SUCESS", fail);
-                map.put("data", "Image too big");
-            }
- 
-        } else {
-            map.put("SUCESS", fail);
-            map.put("data", "Image format error");
-        }
-        return map;
-    }
+    
 }

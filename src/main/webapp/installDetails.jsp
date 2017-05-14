@@ -400,12 +400,20 @@
 						
 	    	function getImgUrl(){	//本地图片浏览 base64
 				var file = document.getElementById("fileImg").files;
-				file = file[0];
+
+/* 	    	    file = file[0];
 				var reader = new FileReader(); 
     			reader.readAsDataURL(file); 
 				reader.onload = function(e){ 
         			addImg(this.result)
-   				} 
+   				}  */
+   				for(var i = 0 ; i < file.length ; i++){
+   					var reader = new FileReader(); 
+   	    			reader.readAsDataURL(file[i]); 
+   					reader.onload = function(e){ 
+   	        			addImg(this.result);
+   				}
+   				}
 			}
 	    	
 	    	function addImg(base){    //将图片存入imgs数组  如果大于2张那么删除第一张  
@@ -453,12 +461,6 @@
 	    		$(this).addClass('on').parent('div').siblings('.i-choice-row').find('div').removeClass('on');
 	    	})
 	    	
-	    	
-	    	
-    function isUndefined( v ){
-    	   return (undefined == v?"":v);
-    }
-    
     if('{}' != allThing && '' !=allThing){
     	
     	allObjs = JSON.parse(allThing);
@@ -481,6 +483,16 @@
 		$('#equipmentCode').html(isUndefined(allObjs.install["eqId"]));
 		$('#installStation').html(isUndefined(allObjs.install["installStation"]));
 		$('#installData').html(isUndefined(allObjs.install["installData"]));
+		
+		if(!!isUndefined(allObjs.install['attachmentUrl'])){
+			var files = allObjs.install['attachmentUrl'].split(',');
+			
+			for(var i = 0 ; i <files.length ; i ++){
+				imgs.push(files[i])
+			}
+			imgsShow();
+			$('.fullimg').remove();
+		}
 		
 		var i = new Date(isUndefined(allObjs.install["installTime"])).Format("yyyy-MM-dd");
 		

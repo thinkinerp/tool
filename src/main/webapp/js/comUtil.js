@@ -1,14 +1,19 @@
 /**
  * 加载下拉框选项和默认值
  */
+
  function loadCombobox(id , table){
+	 var time = (new Date().getTime());
 	 $.ajax({ 
 		 url:ctx + '/state/getSome',
 		 type:'get',
 		 data:{
-				'ownerTable':table
+				'ownerTable':table,
+				'time':time
 		 },
-		 dataType:'json',
+	 		jsonpCallback:"state_"+time+"_getSome",
+	 		jsonp: "callback",
+		 dataType:'jsonp',
 		 success:function(rs){
 			 var str = '';
 			 var i = 0 ;
@@ -24,20 +29,40 @@
 				 if(undefined!=item.isDefault&& 1==item.isDefault){
 					 if($('#'+id).is('div')){
 						 $('#'+id).html(item.staName);
-					 }else if($('#'+id).is('div')){
+					 }else if($('#'+id).is('input')){
 						 $('#'+id).val(item.staName);
 					 }
 				 }
 				 
 			 });
 			 $('#'+id).attr("data-select",str);
+			 state_getSome = null ;
 		 },
 		 error:function(rs){
 		 }
 	 });	
  }
+
+ function isUndefined( v ){
+	   return (undefined == v?"":v);
+}
  
- 
+function setValue(id,value){
+	 if($('#'+id).is('div')){
+		 $('#'+id).html(value);
+	 }else if($('#'+id).is('input')){
+		 $('#'+id).val(value);
+	 }	
+}
+
+function getValue(id){
+	 if($('#'+id).is('div')){
+		return $('#'+id).html();
+	 }else if($('#'+id).is('input')){
+		 return $('#'+id).val();
+	 }	
+}
+
  function delAll(id){
 	 
 	 var exclude = [];

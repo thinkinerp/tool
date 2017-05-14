@@ -3,6 +3,7 @@
  */
 $(function(){
 	search();
+	var time =  (new Date().getTime());
 	$.ajax({
 		url:ctx+'/project/getCount',
 		type:'get',
@@ -57,13 +58,17 @@ $(function(){
 })
 
 var search = function(){
+	var time =  (new Date().getTime());
 	 $.ajax({ 
 	 		url:ctx + '/project/getSome',
 	 		type:'get',
 			data:{
-					proName:$('#proName').val()
+					proName:$('#proName').val(),
+					time:time
 					},
-	 		dataType:'json',
+	 		dataType:'jsonp',
+	 		jsonpCallback:"project_"+time+"_getSome",
+	 		jsonp: "callback",
 	 		success:function(rs){
 
 				 $('.i-itemDetail').html('');

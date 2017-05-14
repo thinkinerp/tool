@@ -19,7 +19,7 @@ import com.intfocus.hdk.dao.UserMapper;
 import com.intfocus.hdk.vo.User;
 
 @Controller
-@RequestMapping("/cash")
+@RequestMapping("/user")
 public class UserController {
     private final static Logger log =  Logger.getLogger(CashController.class);
 
@@ -38,7 +38,7 @@ public class UserController {
 	@RequestMapping(value = "getDepartment" , method=RequestMethod.POST)
 	@ResponseBody
 	public String getDepartment(){
-		return JSONObject.toJSONString(usermapper.getDepartment());
+		return "getDepartment"+JSONObject.toJSONString(usermapper.getDepartment())+")";
 		
 	}
     @RequestMapping(value = "getSome" , method=RequestMethod.POST)
@@ -48,7 +48,7 @@ public class UserController {
     	
     	Map<String, String> where = new HashMap<String,String>();
     	where.put("name", user.getName());
-		return JSONObject.toJSONString(usermapper.selectByWhere(where ));
+		return "getSome"+JSONObject.toJSONString(usermapper.selectByWhere(where ))+")";
     	
     }
     @RequestMapping(value = "modify" , method=RequestMethod.POST)

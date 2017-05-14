@@ -7,14 +7,16 @@
  loadCombobox("cashPort","cash_port");
  loadCombobox("eqStyle","equipment_type");
  loadCombobox("printerPort","printer_port");
-
+var time = new Date().getTime();
  $.ajax({ 
 				 		url:ctx + '/project/getSome',
 				 		type:'get',
-						data:{
-
-								},
-				 		dataType:'json',
+				 		data:{
+				 			time:time
+				 		},
+				 		jsonpCallback:"project_"+time+"_getSome",
+				 		jsonp: "callback",
+				 		dataType:'jsonp',
 				 		success:function(rs){
 							 var str = '';
 							 var i = 0 ;
@@ -30,6 +32,7 @@
 					  			$('#proName').attr("data-select",str);
 				 		},
 				  		error:function(rs){
+				  			console.log(rs);
 				 		}
 });	
  
@@ -39,7 +42,9 @@
 	 data:{
 			'ownerTable':"install"
 	 },
-	 dataType:'json',
+		jsonpCallback:"state_getSome",
+ 		jsonp: "callback",
+	 dataType:'jsonp',
 	 success:function(rs){
 		 /* 	  			 alert(JSON.stringify(rs)); */
 		 var str = '';
@@ -67,7 +72,9 @@
 			data:{
 					'proId':$('#proName').html()
 			},
-	 		dataType:'json',
+	 		jsonpCallback:"shops_selectForCombobox",
+	 		jsonp: "callback",
+	 		dataType:'jsonp',
 	 		success:function(rs){
 			 var str = '';
 			 var i = 0 ;
@@ -97,7 +104,9 @@ Window.shopSelected = function(){
 			data:{
 					'shopName':$('#shopName').html()
 			},
-	 		dataType:'json',
+	 		jsonpCallback:"shops_selectForCombobox",
+	 		jsonp: "callback",
+	 		dataType:'jsonp',
 	 		success:function(rs){
 			 var str = '';
 			 var i = 0 ;
@@ -144,7 +153,9 @@ function loadPrinterAndCasher(surId){
 		 data:{
 			 'surId':surId,
 		 },
-		 dataType:'json',
+	 		jsonpCallback:"printer_getSome",
+	 		jsonp: "callback",
+		 dataType:'jsonp',
 		 success:function(rs){
 			if(  null != rs  && undefined != rs  && rs.length > 0){
 					$.each(rs,function(index,item){
@@ -163,7 +174,9 @@ function loadPrinterAndCasher(surId){
 		 data:{
 			 'surId':surId,
 		 },
-		 dataType:'json',
+	 		jsonpCallback:"cash_getSome",
+	 		jsonp: "callback",
+		 dataType:'jsonp',
 		 success:function(rs){
 			 if(  null != rs  && undefined != rs  && rs.length > 0){
 				 $.each(rs,function(index,item){

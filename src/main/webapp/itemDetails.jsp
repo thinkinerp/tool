@@ -11,15 +11,19 @@
 		<meta name="browsermode" content="application">
 		<meta name="renderer" content="webkit">
 <%@include file="/common/taglibs.jsp"%>
+
+<link rel="stylesheet" type="text/css" href="${ctx}/casher/css/global.css"/>
+<script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
+<script src="${ctx}/casher/js/global.js" type="text/javascript" charset="utf-8"></script>
+<link rel="stylesheet" href="${ctx}/casher/css/swiper.css"></link>
+<script type="text/javascript" src="${ctx}/js/comUtil.js"></script>  
+
 <script type="text/javascript" >
     var ctx = "${ctx}";	
+    var allThing = '<%= null == request.getParameter("allThing") ? "" : request.getParameter("allThing") %>';
 </script>
 <title>数据通上报</title>
-		<link rel="stylesheet" type="text/css" href="${ctx}/casher/css/global.css"/>
-		<script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
-		<script src="${ctx}/casher/js/global.js" type="text/javascript" charset="utf-8"></script>
-				<link rel="stylesheet" href="${ctx}/casher/css/swiper.css"></link>
-<script type="text/javascript" src="${ctx}/js/comUtil.js"></script>  
+
 </head>
 
 	<body>
@@ -41,55 +45,55 @@
 					<ul class="iz-list">
 						<li>
 							<div class="iz-list-title">项目名称：</div>
-							<div id="proName" class="iz-list-content">上海迪士尼</div>
+							<div id="proName" class="iz-list-content"></div>
 						</li>
 						<li>
 							<div class="iz-list-title">项目版本：</div>
-							<div id="" class="iz-list-content">2.2.2</div>
+							<div id="proEdition" class="iz-list-content"></div>
 						</li>
 						<li>
 							<div class="iz-list-title">项目经理：</div>
-							<div class="iz-list-content">吴佩</div>
+							<div id="proManagerPro" class="iz-list-content"></div>
 						</li>
 						<li>
 							<div class="iz-list-title">项目状态：</div>
-							<div class="iz-list-content">维护</div>
+							<div id="proStation" class="iz-list-content"></div>
 						</li>
 						<li>
 							<div class="iz-list-title">实施/维护人员：</div>
-							<div class="iz-list-content">吴佩</div>
+							<div id="proManagerPro1" class="iz-list-content"></div>
 						</li>
 						<li>
 							<div class="iz-list-title">更新时间：</div>
-							<div class="iz-list-content">2017-02-26</div>
+							<div id="proUpdataTime" class="iz-list-content"></div>
 						</li>
 					</ul>	
 				</div>
 				<div class="swiper-slide">
 					<ul class="iz-list">
 						<li>
-							<div class="iz-list-title">海鼎跟进：</div>
-							<div class="iz-list-content">上海迪士尼</div>
+							<div class="iz-list-title"><a href="javascript:void(0)" onclick="gotoDetail(1)">海鼎跟进：</a></div>
+							<div id="haiding" class="iz-list-content"></div>
 						</li>
 						<li>
 							<div class="iz-list-title">海鼎-商务：</div>
-							<div class="iz-list-content">2.2.2</div>
+							<div id = "haidingSale" class="iz-list-content"></div>
 						</li>
 						<li>
 							<div class="iz-list-title">海鼎-技术：</div>
-							<div class="iz-list-content">吴佩</div>
+							<div id="haidingTec" class="iz-list-content"></div>
 						</li>
 						<li>
-							<div class="iz-list-title">海鼎-跟进：</div>
-							<div class="iz-list-content">维护</div>
+							<div class="iz-list-title">海鼎-运维：</div>
+							<div id="haidingOperation" class="iz-list-content">护</div>
 						</li>
 						<li>
-							<div class="iz-list-title">客户跟进：</div>
-							<div class="iz-list-content">吴佩</div>
+							<div class="iz-list-title"><a href="javascript:void(0)" onclick="gotoDetail(2)">客户跟进：</a></div>
+							<div id="customer" class="iz-list-content"></div>
 						</li>
 						<li>
 							<div class="iz-list-title">其他：</div>
-							<div class="iz-list-content">2017-02-26</div>
+							<div id="customerOther" class="iz-list-content"></div>
 						</li>
 					</ul>	
 				</div>
@@ -97,51 +101,51 @@
 					<ul class="iz-list">
 						<li>
 							<div class="iz-list-title">合同数量：</div>
-							<div class="iz-list-content">上海迪士尼</div>
+							<div id ="contranctCount" class="iz-list-content"></div>
 						</li>
 						<li>
 							<div class="iz-list-title">需安装数量：</div>
-							<div class="iz-list-content">2.2.2</div>
+							<div id ="installToCount" class="iz-list-content"></div>
 						</li>
 						<li>
 							<div class="iz-list-title">已安装数量：</div>
-							<div class="iz-list-content">吴佩</div>
+							<div id="installedCount" class="iz-list-content"></div>
 						</li>
 						<li>
 							<div class="iz-list-title">验收数量：</div>
-							<div class="iz-list-content">维护</div>
+							<div id="checkedCount" class="iz-list-content"></div>
 						</li>
 						<li>
 							<div class="iz-list-title">未上线数量：</div>
-							<div class="iz-list-content">吴佩</div>
+							<div id="offlindCount" class="iz-list-content"></div>
 						</li>
 					</ul>	
 				</div>
 				<div class="swiper-slide">
-					<ul class="iz-list">
-						<li>
+					<ul id ="problemObject" class="iz-list">
+	<!-- 					<li>
 							<div class="iz-list-title">软件数据通：</div>
-							<div class="iz-list-content">上海迪士尼</div>
+							<div id="soft" class="iz-list-content"></div>
 						</li>
 						<li>
 							<div class="iz-list-title">硬件数据通：</div>
-							<div class="iz-list-content">2.2.2</div>
+							<div id="hard" class="iz-list-content"></div>
 						</li>
 						<li>
 							<div class="iz-list-title">其他：</div>
-							<div class="iz-list-content">吴佩</div>
-						</li>
+							<div id="other" class="iz-list-content"></div>
+						</li> -->
 					</ul>	
 				</div>
 				<div class="swiper-slide">
-					<ul class="iz-list">
-						<li>
+					<ul id="cashPort" class="iz-list">
+					<!-- 	<li>
 							<div class="iz-list-title">USB：</div>
-							<div class="iz-list-content">上海迪士尼</div>
+							<div class="iz-list-content"></div>
 						</li>
 						<li>
 							<div class="iz-list-title">串口：</div>
-							<div class="iz-list-content">2.2.2</div>
+							<div class="iz-list-content"></div>
 						</li>
 						<li>
 							<div class="iz-list-title">并口：</div>
@@ -154,22 +158,22 @@
 						<li>
 							<div class="iz-list-title">其他：</div>
 							<div class="iz-list-content">吴佩</div>
-						</li>
+						</li> -->
 					</ul>
 				</div>
 				<div class="swiper-slide">
 					<ul class="iz-list">
 						<li>
 							<div class="iz-list-title">验收率：</div>
-							<div class="iz-list-content">上海迪士尼</div>
+							<div id = "checkPercentage" class="iz-list-content"></div>
 						</li>
 						<li>
 							<div class="iz-list-title">技术准确率：</div>
-							<div class="iz-list-content">2.2.2</div>
+							<div id="certainPercentage"class="iz-list-content"></div>
 						</li>
 						<li>
 							<div class="iz-list-title">安装率：</div>
-							<div class="iz-list-content">吴佩</div>
+							<div id="installPercnetage" class="iz-list-content"></div>
 						</li>
 					</ul>
 				</div>
@@ -198,5 +202,9 @@
 				}
 			});	
 		</script>
+		
+		
+		<script type="text/javascript" src="${ctx}/js/itemDetails.js"></script>
+		
 	</body>
 </html>

@@ -23,4 +23,13 @@ public interface ProjectMapper {
 	int setAllNotIsLast();
 	
 	List<Map<String, String>> selectProjectCount();
+	
+	List<Project> getCheck(Map<String,String> where);
+
+	List<Project> getCashCount(Map<String,String> where);
+
+	List<Project> getEquipment(Map<String,String> where);
+
+	List<Project> getProjectProblem(Map<String,String> where);
+	
 }

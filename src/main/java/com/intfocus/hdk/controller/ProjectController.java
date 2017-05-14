@@ -55,7 +55,18 @@ public class ProjectController implements ApplicationContextAware {
     public String gotoModify(HttpServletResponse res , HttpServletRequest req ,HttpSession session,Project project){
         	JSONObject json = new JSONObject();
         	
-    	return "redirect:/itemDetails.jsp?allThing="+json;
+        	Map<String,String> where =new HashMap<String,String>(); 
+        	where.put("proId", project.getProId());
+        	where.put("proName", project.getProName());
+        	
+        	json.put("check", projectmapper.getCheck( where));
+        	json.put("cashCount", projectmapper.getCashCount( where));
+        	json.put("equipment", projectmapper.getEquipment( where));
+        	json.put("projectProblem", projectmapper.getProjectProblem( where));
+           List<Project> projects = projectmapper.selectByWhere(where);
+        	json.put("project", projects.get(0));
+        	String str = json.toJSONString();
+    	return "forward:/itemDetails.jsp?allThing="+str;
     }
      
     @RequestMapping(value = "getCount" , method=RequestMethod.GET)
@@ -74,6 +85,7 @@ public class ProjectController implements ApplicationContextAware {
     	try{
     	Map<String ,String> where = new HashMap<String,String>();
     	where.put("proName", project.getProName());
+    	where.put("proId", project.getProId());
     	List<Project	> projects = projectmapper.selectByWhere(where);
     	
 		if(null != projects && projects.size()>0){
@@ -91,20 +103,24 @@ public class ProjectController implements ApplicationContextAware {
     
     @RequestMapping(value = "getSome" , method=RequestMethod.GET)
     @ResponseBody
-    public String getSome(HttpServletResponse res , HttpServletRequest req ,HttpSession session
-    		              , Project project ){
+    public void getSome(HttpServletResponse res , HttpServletRequest req ,HttpSession session
+    		              , Project project ,String time){
     	log.info("pro:"+project.getProName());
-
-    	
-    	
     	Map<String ,String> where = new HashMap<String,String>();
     	where.put("proName", project.getProName());
     	if(null != project.getIsLast()){
     		where.put("isLast", project.getIsLast().toString());
     	}
     	List<Project	> projects = projectmapper.selectByWhere(where);
-
-    	return JSONObject.toJSONString(projects);
+		res.setCharacterEncoding("UTF-8");
+		res.setContentType("text/html;charset=UTF-8");
+		Writer w;
+		try {
+			w = res.getWriter();
+			w.write("project_"+time+"_getSome("+JSONObject.toJSONString(projects)+")");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
     }
     @RequestMapping(value = "modify" , method=RequestMethod.POST)
     @ResponseBody

@@ -60,7 +60,7 @@ public class PrinterController implements ApplicationContextAware {
     	Map<String,String> where = new HashMap<String,String>();
     	where.put("surveyId", printer.getSurId());
 		List<Printer> printers = pm.selectByWhere(where);
-		return JSONObject.toJSONString(printers);	
+		return "printer_getSome("+JSONObject.toJSONString(printers)+")";	
     }
     @RequestMapping(value = "modify" , method=RequestMethod.POST)
     @ResponseBody

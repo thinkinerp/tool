@@ -39,6 +39,12 @@ public class Project {
     private String updatedAt;
     
     private Integer isLast;
+    
+    private String problemObject ;
+    
+    private String problemType;
+    
+    private Integer Count;
 
     public Integer getId() {
         return id;
@@ -190,5 +196,29 @@ public class Project {
 
 	public void setIsLast(Integer isLast) {
 		this.isLast = isLast;
+	}
+
+	public String getProblemObject() {
+		return problemObject;
+	}
+
+	public void setProblemObject(String problemObject) {
+		this.problemObject = problemObject;
+	}
+
+	public String getProblemType() {
+		return problemType;
+	}
+
+	public void setProblemType(String problemType) {
+		this.problemType = problemType;
+	}
+
+	public Integer getCount() {
+		return Count;
+	}
+
+	public void setCount(Integer count) {
+		Count = count;
 	}
 }

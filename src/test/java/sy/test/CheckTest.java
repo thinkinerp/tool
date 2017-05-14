@@ -19,8 +19,10 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import com.alibaba.fastjson.JSONObject;
 import com.intfocus.hdk.dao.ProblemMapper;
 import com.intfocus.hdk.dao.ProjectMapper;
+import com.intfocus.hdk.dao.SurveyMapper;
 import com.intfocus.hdk.dao.UserMapper;
 import com.intfocus.hdk.util.StaticVariableUtil;
+import com.intfocus.hdk.vo.Project;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("/applicationContext.xml")
 public class CheckTest {
@@ -37,6 +39,33 @@ public class CheckTest {
     private ProblemMapper pblm ;
     @Resource
     private UserMapper userMapper;
+    @Resource
+    private SurveyMapper surveyMapper;
+    
+    @Test
+    public void testSurveyMapperSelectByWhere(){
+    	Map<String, String> where = new HashMap<String,String>();
+    	where.put("shopName","项目A");
+    	where.put("proName", "d");
+    	where.put("order", "desc");
+    	where.put("shopStation", "dd");
+		System.out.println(surveyMapper.selectByWhere(where));
+    }
+    
+    @Test
+    public void testProjectCount(){
+    	
+    	Map<String,String> where = new HashMap<String,String>();
+    	where.put("proName", "项目A");
+    	
+    	JSONObject.toJSONString(pm.getCheck( where));
+
+    	JSONObject.toJSONString(pm.getCashCount( where));
+
+    	JSONObject.toJSONString(pm.getEquipment(where));
+
+    	JSONObject.toJSONString(pm.getProjectProblem(where));
+    }
     
     @Test
     public void testUserMapperSelectByWhere(){

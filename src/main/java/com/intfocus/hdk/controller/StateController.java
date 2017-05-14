@@ -58,15 +58,20 @@ public class StateController implements ApplicationContextAware {
     
     @RequestMapping(value = "getSome" , method=RequestMethod.GET)
     @ResponseBody
-    public String getSome(HttpServletResponse res , HttpServletRequest req ,HttpSession session
-    		              , State state ){
+    public void getSome(HttpServletResponse res , HttpServletRequest req ,HttpSession session
+    		              , State state ,String time){
     	Map<String, String> where = new HashMap<String,String>();
     	
     	where.put("ownerTable", state.getOwnerTable());
     	
 		List<State> states = statemapper.selectByWhere(where );
-		
-		return JSONObject.toJSONString(states);
+		Writer w;
+		try {
+			w = res.getWriter();
+			w.write("state_"+time+"_getSome("+JSONObject.toJSONString(states)+")");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}	
     }
     @RequestMapping(value = "modify" , method=RequestMethod.POST)
     @ResponseBody

@@ -81,17 +81,16 @@
 			$(function(){
 			//	comboboxForProState();
 				//comboboxForEqType();
-				
-				
-				
-
-				
+				var time =  (new Date().getTime());
 				 $.ajax({ 
 				 		url:ctx + '/project/getSome',
 				 		type:'get',
 						data:{
+							time:time
 								},
-				 		dataType:'json',
+				 		dataType:'jsonp',
+						 jsonpCallback:"project_"+time+"_getSome",
+							jsonp: "callback",
 				 		success:function(rs){
 			/* 	  			 alert(JSON.stringify(rs)); */
 							 var str = '';
@@ -112,13 +111,18 @@
 				  		error:function(rs){
 				 		}
 				  });	
+				 
+				 time = (new Date().getTime());
 				 $.ajax({ 
 				 		url:ctx + '/project/getSome',
 				 		type:'get',
 						data:{
-							isLast:1
+							isLast:1,
+							time:time
 								},
-				 		dataType:'json',
+						 jsonpCallback:"project_"+time+"_getSome",
+						jsonp: "callback",
+				 		dataType:'jsonp',
 				 		success:function(rs){
 								
 				 			//加载最后一次选择的项目信息
@@ -150,7 +154,6 @@
 					 
 					$.ajax({
 						url:ctx+"/project/setLast",
-						type:'get',
 						data:{
 							"proName": $('#itemName').html()
 						},
@@ -161,15 +164,18 @@
 				  		error:function(rs){
 				 		}
 					});
-					
+					time = (new Date().getTime());
 					 $(".i-itemStyle-title").html($('#itemName').html());
 					 $.ajax({ 
 					 		url:ctx + '/project/getSome',
 					 		type:'get',
+					 		jsonpCallback:"project_"+time+"_getSome",
+					 		jsonp: "callback",
 							data:{
-										"proName": $('#itemName').html()
+										"proName": $('#itemName').html(),
+										time:time
 									},
-					 		dataType:'json',
+					 		dataType:'jsonp',
 					 		success:function(rs){
 								 var str = '';
 								 var i = 0 ;

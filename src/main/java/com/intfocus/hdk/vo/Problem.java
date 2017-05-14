@@ -18,6 +18,10 @@ public class Problem {
     private String shopId;
 
     private String eqId;
+    
+    private String eqType;
+    
+    private String eqStyle;
 
     private String mesId;
 
@@ -259,5 +263,21 @@ public class Problem {
 
 	public void setShopPostion(String shopPostion) {
 		this.shopPostion = shopPostion;
+	}
+
+	public String getEqType() {
+		return eqType;
+	}
+
+	public void setEqType(String eqType) {
+		this.eqType = eqType;
+	}
+
+	public String getEqStyle() {
+		return eqStyle;
+	}
+
+	public void setEqStyle(String eqStyle) {
+		this.eqStyle = eqStyle;
 	}
 }
