@@ -59,7 +59,7 @@ public class StateController implements ApplicationContextAware {
     @RequestMapping(value = "getSome" , method=RequestMethod.GET)
     @ResponseBody
     public void getSome(HttpServletResponse res , HttpServletRequest req ,HttpSession session
-    		              , State state ,String time){
+    		              , State state ,String time ,String callbackparam){
     	Map<String, String> where = new HashMap<String,String>();
     	
     	where.put("ownerTable", state.getOwnerTable());
@@ -69,6 +69,8 @@ public class StateController implements ApplicationContextAware {
 		try {
 			w = res.getWriter();
 			w.write("state_"+time+"_getSome("+JSONObject.toJSONString(states)+")");
+//			w.write(callbackparam+"("+JSONObject.toJSONString(states)+")");
+			
 		} catch (IOException e) {
 			e.printStackTrace();
 		}	

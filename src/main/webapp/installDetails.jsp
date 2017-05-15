@@ -353,7 +353,7 @@
 				<div class="swiper-slide">
 					<div class="i-addImg">
 						<div class="img" id="imgShow">
-					<div onclick="fullImg(0)"></div>
+							<div onclick="fullImg(0)"></div>
 							<div onclick="fullImg(1)"></div> 
 						</div>
 						<div class="add"><input name ="fileImg" multiple="multiple" type="file" id="fileImg" onchange="getImgUrl();"/></div>

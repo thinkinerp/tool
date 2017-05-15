@@ -1,4 +1,7 @@
+
 package com.intfocus.hdk.controller;
+import java.io.IOException;
+import java.io.Writer;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -46,10 +49,10 @@ public class SurveyController implements ApplicationContextAware {
     @Resource
     private CashMapper cashMapper ;
     
-    @RequestMapping(value = "submit" , method=RequestMethod.POST)
+    @RequestMapping(value = "modify" , method=RequestMethod.GET)
     @ResponseBody
-    public String submit(HttpServletResponse res , HttpServletRequest req ,HttpSession session
-    		, Survey survey , Printer printer , Cash cash , Shops shops){
+    public String modify(HttpServletResponse res , HttpServletRequest req ,HttpSession session
+    		, Survey survey , Printer printer , Cash cash , Shops shops,String callback){
     	
 		try {
 				surveymapper.updateByPrimaryKeyWithBLOBs(survey);
@@ -58,9 +61,9 @@ public class SurveyController implements ApplicationContextAware {
 				shopsMapper.updateByPrimaryKeySelective(shops);
 		}catch(Exception e){
 			e.printStackTrace();
-			return "fail";
+			return callback+"({'message':'fail'})";
 		}
-		return "success";
+		return callback+"({'message':'success'})";
     	
     	
     	
@@ -93,12 +96,11 @@ public class SurveyController implements ApplicationContextAware {
 
     
     @RequestMapping(value = "gotoModify" , method=RequestMethod.GET)
-    @ResponseBody
-    public String gotoModify(HttpServletResponse res , HttpServletRequest req ,HttpSession session
-    		              , Survey survey ){
+    public void gotoModify(HttpServletResponse res , HttpServletRequest req ,HttpSession session
+    		              , Survey survey , String callback ){
     	
 
-    	// 取出相关的东东
+    	// 取出相关的信息
     	JSONObject json = new JSONObject();
     	Map<String, String> where = new HashMap<String,String>();
     	where.put("surveyId", survey.getSurId());
@@ -114,19 +116,26 @@ public class SurveyController implements ApplicationContextAware {
     	// 打印机
     	List<Cash> cashes = cashMapper.selectByWhere(where ); 
     	Cash cash = cashes.get(0);
-    	json.put("survey", cash);
+    	json.put("cash", cash);
     	
     	//门店
     	List<Shops> shops = shopsMapper.selectByWhere(where ); 
     	Shops shop = shops.get(0);
     	json.put("shops", shop);
     	
-		return "redirect:/surveyDetails.jsp?allThing="+json.toJSONString() ;	
+
+    	Writer w = null;
+		try {
+			w = res.getWriter();
+			w.write( callback + "("+json.toJSONString()+")");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
     }
-	@RequestMapping(value = "modify" , method=RequestMethod.POST)
+	@RequestMapping(value = "submit" , method=RequestMethod.GET)
     @ResponseBody
-    public String modify(HttpServletResponse res , HttpServletRequest req ,HttpSession session
-    		, Survey survey , Printer printer , Cash cash , Shops shops){
+    public String submit(HttpServletResponse res , HttpServletRequest req ,HttpSession session
+    		, Survey survey , Printer printer , Cash cash , Shops shops ,String callback){
     	
 		try {
 				surveymapper.insertSelective(survey);
@@ -135,11 +144,10 @@ public class SurveyController implements ApplicationContextAware {
 				shopsMapper.insertSelective(shops);
 		}catch(Exception e){
 			e.printStackTrace();
-			return "fail";
+			return callback+"({'message':'fail'})";
 		}
-		return "success";
+		return callback+"({'message':'success'})";
     }
-	
 	
 	   @InitBinder("survey")    
 	   public void initBinder1(WebDataBinder binder) {    

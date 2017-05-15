@@ -1,6 +1,5 @@
 package com.intfocus.hdk.controller;
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -12,11 +11,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.Base64Utils;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,6 +26,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.intfocus.hdk.dao.CashMapper;
 import com.intfocus.hdk.dao.EquipmentMapper;
@@ -32,6 +34,7 @@ import com.intfocus.hdk.dao.InstallMapper;
 import com.intfocus.hdk.dao.PrinterMapper;
 import com.intfocus.hdk.dao.ProjectMapper;
 import com.intfocus.hdk.dao.ShopsMapper;
+import com.intfocus.hdk.util.ComUtil;
 import com.intfocus.hdk.vo.Cash;
 import com.intfocus.hdk.vo.Equipment;
 import com.intfocus.hdk.vo.Install;
@@ -59,9 +62,54 @@ public class InstallController implements ApplicationContextAware {
     @Resource
     private ShopsMapper shopsMapper;
     
-   @RequestMapping(value = "submit" , method=RequestMethod.POST)
+    @RequestMapping(value = "test" ,method=RequestMethod.POST)
     @ResponseBody
-    public String submit(HttpServletResponse res , HttpServletRequest req ,HttpSession session
+    public String test(HttpServletResponse res , HttpServletRequest req ,HttpSession session,
+    		              @RequestParam String files)  {
+       String dataPrix = "";
+       String data = "";
+       
+       JSONArray  jsonArray  = JSONArray.parseArray(files);
+       String [] d = null ; 
+	   if(0 != jsonArray.size() ){ 
+		   for(int i =0 ; i < jsonArray.size();i = i +1){
+			    d = jsonArray.getString(i).split("base64,"); 
+			    if(d != null && d.length == 2){
+			    	
+			    	dataPrix =d[0];
+			    	data = d[1];
+			    }else{
+			    	return "{'message':'上传失败，数据不合法'}";
+			    }
+               
+               String suffix = "";
+               if("data:image/jpeg;".equalsIgnoreCase(dataPrix)){//data:image/jpeg,base64编码的jpeg图片数据
+                   suffix = ".jpg";
+               } else if("data:image/x-icon;".equalsIgnoreCase(dataPrix)){//data:image/x-icon,base64编码的icon图片数据
+                   suffix = ".ico";
+               } else if("data:image/gif;".equalsIgnoreCase(dataPrix)){//data:image/gif;base64,base64编码的gif图片数据
+                   suffix = ".gif";
+               } else if("data:image/png;".equalsIgnoreCase(dataPrix)){//data:image/png;base64,base64编码的png图片数据
+                   suffix = ".png";
+               }
+               
+               String tempFileName = ComUtil.getRandomFileName()+ suffix;
+               byte[] bs = Base64Utils.decodeFromString(data);
+               try{
+                   //使用apache提供的工具类操作流
+                   FileUtils.writeByteArrayToFile(new File(req.getSession().getServletContext().getRealPath("upload"), tempFileName), bs);  
+               }catch(Exception ee){
+                  ee.printStackTrace();
+                  return "{'messsage':'fail'}";
+               }
+		   }
+	  }
+	   return  "{'messsage':'success'}";
+   
+   }
+    @RequestMapping(value = "submit" , method=RequestMethod.POST)
+    @ResponseBody
+ public String submit(HttpServletResponse res , HttpServletRequest req ,HttpSession session
     		              ,  Install install,Printer printer,Cash cash,Equipment equipmengt ,
     		              @RequestParam(value = "fileImg", required = false) MultipartFile[] files) throws Exception {
 	  try{ 
@@ -212,4 +260,5 @@ public class InstallController implements ApplicationContextAware {
 		applicationContext = ctx;
 	}   
     
+	
 }

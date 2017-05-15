@@ -1,4 +1,6 @@
 package com.intfocus.hdk.controller;
+import java.io.IOException;
+import java.io.Writer;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -64,25 +66,25 @@ public class ProblemController implements ApplicationContextAware {
     @RequestMapping(value = "submit" , method=RequestMethod.GET)
     @ResponseBody     
     public String submit(HttpServletResponse res , HttpServletRequest req ,HttpSession session
-            , Problem problem ){
+            , Problem problem ,String callback){
     	try{
     		problemMapper.insertSelective(problem);
-	    	return "{'message':'success'}";
+	    	return callback+"({'message':'success'})";
 	  }catch(Exception e){
 		  e.printStackTrace();
-		  return "{'message':'fail'}";
+		  return callback+"({'message':'fail'})";
 	  }
     }
     @RequestMapping(value = "modify" , method=RequestMethod.GET)
     @ResponseBody     
     public String modify(HttpServletResponse res , HttpServletRequest req ,HttpSession session
-    		, Problem problem ){
+    		, Problem problem ,String callback){
     	try{
     		problemMapper.updateByPrimaryKeySelective(problem);
-    		return "modify("+"{'message':'success'}"+")";
+    		return callback+"({'message':'success'}"+")";
     	}catch(Exception e){
     		e.printStackTrace();
-    		return "modify("+"{'message':'fail'}"+")";
+    		return callback+"({'message':'fail'}"+")";
     	}
     }
     @InitBinder("problem")    
@@ -91,20 +93,25 @@ public class ProblemController implements ApplicationContextAware {
    } 
     @RequestMapping(value = "getCount" , method=RequestMethod.GET)
     @ResponseBody    
-    public String getCount(HttpServletResponse res , HttpServletRequest req ,HttpSession session
+    public void getCount(HttpServletResponse res , HttpServletRequest req ,HttpSession session
             , Problem problem  ){
     	Map<String,String> where = new HashMap<String,String>();
     	
     	where.put("proName", problem.getProName());
     	
     	List<Problem> problems = problemMapper.getCount(where);
-    	
-		return "problem_getCount("+JSONObject.toJSONString(problems)+")";	
+    	Writer w = null;
+		try {
+			w = res.getWriter();
+			w.write("problem_getCount("+JSONObject.toJSONString(problems)+")");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
     }
     
     @RequestMapping(value = "getSome" , method=RequestMethod.GET)
     @ResponseBody
-    public String getSome(HttpServletResponse res , HttpServletRequest req ,HttpSession session
+    public void getSome(HttpServletResponse res , HttpServletRequest req ,HttpSession session
     		              , Problem problem  ){
     	
     	Map<String,String> where = new HashMap<String,String>();
@@ -114,24 +121,35 @@ public class ProblemController implements ApplicationContextAware {
     	where.put("state", problem.getState());
     	
     	List<Problem> problems = problemMapper.selectByWhere(where);
-    	
-		return "problem_getSome("+JSONObject.toJSONString(problems)+")";	
+    	Writer w = null;
+		try {
+			w = res.getWriter();
+			w.write("problem_getSome("+JSONObject.toJSONString(problems)+")");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
     }
         @RequestMapping(value = "gotoModify" , method=RequestMethod.GET) 
-    public String gotoModify(HttpServletResponse res , HttpServletRequest req ,HttpSession session
-            , Problem problem  ){
+    public void gotoModify(HttpServletResponse res , HttpServletRequest req ,HttpSession session
+            , Problem problem ,String callback ){
     	String json= "" ;
     	Map<String,String> where = new HashMap<String,String>();
     	
     	where.put("proName", problem.getProName());
     	where.put("problemObject", problem.getProblemObject());
     	where.put("state", problem.getState());
+    	 where.put("problemId", problem.getProblemId());
     	
     	List<Problem> problems = problemMapper.selectByWhere(where);
     	
     	json = JSONObject.toJSONString(problems.get(0));
-    	
-		return "redirect:/problemDetails.jsp?allThings=" + json;
+    	Writer w = null;
+		try {
+			w = res.getWriter();
+			w.write( callback + "("+json+")");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
     }
     
 	@Override

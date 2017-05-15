@@ -73,6 +73,10 @@
 			and problem.problem_object = #{problemObject}
 		</if>
 		
+		<if test="null != problemId and ''!= problemId">
+			and problem.problem_id = #{problemId}
+		</if>
+		
 	</where>    
 	    <if test="null != page and ''!= page">
 	    <if test="null != pageSize and ''!= pageSize">
@@ -320,7 +324,7 @@
         problem_plan = #{problemPlan,jdbcType=LONGVARCHAR},
       </if>
     </set>
-    where id = #{id,jdbcType=INTEGER}}
+    where id = #{id,jdbcType=INTEGER}
   </update>
   <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.intfocus.hdk.vo.Problem" >
     update problem
