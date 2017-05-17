@@ -239,6 +239,7 @@ var submit = function() {
       url: ctx + '/install/modify',
       type: 'post',
       data: {
+    	  files:JSON.stringify(imgs),
         'install.installId': $("#installCode").val(),
         'install.id': allObjs.install.id,
         'install.installStation': $('#installStation').html(),
@@ -310,15 +311,14 @@ var submit = function() {
 
 
   } else {
-    $.ajaxFileUpload({
+    $.ajax({
       url: ctx + '/install/submit', //用于文件上传的服务器端请求地址
-      secureuri: false, //是否需要安全协议，一般设置为false
-      fileElementId: 'fileImg', //文件上传域的ID
-      dataType: 'text', //返回值类型 一般设置为json
+      dataType: 'json', //返回值类型 一般设置为json
+      type:'post',
       data: {
-        'install.installId': $("#installCode").val()
-          //          ,'install.id':allObjs.install.id
-          ,
+    	  files:JSON.stringify(imgs),
+        'install.installId': $("#installCode").val(),
+          //          ,'install.id':allObjs.install.id,
         'install.installStation': $('#installStation').html(),
         'install.proId': $('#proName').html(),
         'install.shopId': $('#shopCode').html(),
@@ -380,11 +380,11 @@ var submit = function() {
       success: function(data, status) //服务器成功响应处理函数
       {
         console.log(data);
-        location.href = ctx + "/installList.jsp";
+       // location.href = ctx + "/installList.jsp";
       },
       error: function(data, status, e) //服务器响应失败处理函数
       {
-        alert(e);
+        console.log(e);
         console.log(data);
         console.log(status);
 

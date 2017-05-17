@@ -38,6 +38,21 @@ public class Install {
 
     private String installRemarks;
 
+    public String modifyAtachement(String picUrls){
+    	
+    	if(null == picUrls){
+    		return null ;
+    	}else{
+    		if(null == this.attachmentUrl){
+    			this.attachmentUrl = picUrls;
+    		}else{
+    			this.attachmentUrl = "," + picUrls;
+    		}
+    	}
+    	
+    	return null ;
+    	
+    }
     public Integer getId() {
         return id;
     }

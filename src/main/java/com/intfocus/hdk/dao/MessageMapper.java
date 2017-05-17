@@ -1,5 +1,8 @@
 package com.intfocus.hdk.dao;
 
+import java.util.List;
+import java.util.Map;
+
 import com.intfocus.hdk.vo.Message;
 
 public interface MessageMapper {
@@ -16,4 +19,6 @@ public interface MessageMapper {
     int updateByPrimaryKeyWithBLOBs(Message record);
 
     int updateByPrimaryKey(Message record);
+
+	List<Message> selectByWhere(Map<String, String> where);
 }

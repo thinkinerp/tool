@@ -26,6 +26,28 @@
     from message
     where id = #{id,jdbcType=INTEGER}
   </select>
+  <select id="selectByWhere" parameterType="java.util.Map" resultMap="ResultMapWithBLOBs">
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from message
+            	<where>
+    	1=1
+    		<if test="null != problemId  and '' != problemId">
+				and problem_id = #{problemId,jdbcType=INTEGER}
+			</if>	
+    		<if test="null != mesUser  and '' != mesUser">
+				and mes_user = #{mesUser,jdbcType=VARCHAR}
+			</if>	
+    </where>    
+    
+    <if test="null != page and ''!= page">
+	    <if test="null != pageSize and ''!= pageSize">
+			limit 	#{page,jdbcType=VARCHAR}, #{pageSize,jdbcType=VARCHAR}		    	
+	    </if>
+    </if>
+  </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from message
     where id = #{id,jdbcType=INTEGER}

@@ -75,45 +75,33 @@ public class InstallController implements ApplicationContextAware {
     @ResponseBody
  public String submit(HttpServletResponse res , HttpServletRequest req ,HttpSession session
     		              ,  Install install,Printer printer,Cash cash,Equipment equipment ,
-    		              @RequestParam(value = "fileImg", required = false) MultipartFile[] files) throws Exception {
-	  try{ 
-	   String path = req.getSession().getServletContext().getRealPath("upload");
-	   String fileName =null;
-	   List<String> filePaths = new ArrayList<String>(); 
-	   String fileNameStr =null;
-	   File targetFile = null;
-	   for(MultipartFile file: files){
-		   fileName = file.getOriginalFilename();
-		   fileNameStr = (new Date().getTime())+"__"+fileName;
-		   filePaths.add(path+"/"+fileNameStr);
-		   targetFile = new File(path, fileNameStr);
-		       if(!targetFile.exists()){
-		           targetFile.mkdirs();
-		       }
-		       //保存
-		       try {
-		           file.transferTo(targetFile);
-		       } catch (Exception e) {
-		           e.printStackTrace();
-		       }
-	   }
- 	   Map<String, String> where = new HashMap<String,String>();
-	   where.put("proName",install.getProId());
-	   
-		List<Project> projects = projectMapper.selectByWhere(where );
-		Project i = projects.get(0);
-		install.setProId(i.getProId());	
-		equipment.setProId(i.getProId());
-		
-		install.setAttachment_url(org.apache.commons.lang.StringUtils.join(filePaths.toArray(),","));
-    	installmapper.insertSelective(install);
-    	printerMapper.insertSelective(printer);
-    	cashMapper.insertSelective(cash);
-    	equipmentMapper.insertSelective(equipment);
-    	return "{'message':success}";
+    		              @RequestParam(value = "files", required = false) String files) throws Exception {
+    	Map<String,String> rs = null ;
+    	try{
+	    	if(null != files && !"".equalsIgnoreCase(files)){
+	    		rs = new HashMap<String,String>();
+	    		rs = ComUtil.savePicture(files, req.getSession().getServletContext().getRealPath("upload"));
+	    		if(!"ok".equalsIgnoreCase(rs.get("message"))){
+	    			return "{'message':'"+rs.get("message")+"'}";
+	    		}
+	    	}
+	    	Map<String, String> where = new HashMap<String,String>();
+		   where.put("proName",install.getProId());
+		   
+			List<Project> projects = projectMapper.selectByWhere(where );
+			Project i = projects.get(0);
+			install.setProId(i.getProId());	
+			equipment.setProId(i.getProId());
+			
+			install.setAttachment_url(null != rs ? rs.get("urls") :null );
+	    	installmapper.insertSelective(install);
+	    	printerMapper.insertSelective(printer);
+	    	cashMapper.insertSelective(cash);
+	    	equipmentMapper.insertSelective(equipment);
+	    	return "{'message':'success'}";
 	  }catch(Exception e){
 		  e.printStackTrace();
-		  return "{'message':fail}";
+		  return "{'message':'fail'}";
 	  }
 	  
     }
@@ -205,8 +193,19 @@ public class InstallController implements ApplicationContextAware {
     @RequestMapping(value = "modify" , method=RequestMethod.POST)
     @ResponseBody
     public String modify(HttpServletResponse res , HttpServletRequest req ,HttpSession session
-    ,  Install install,Printer printer,Cash cash,Equipment equipmengt ){
+    ,  Install install,Printer printer,Cash cash,Equipment equipmengt ,String files ){
     	try{
+    		
+        	Map<String,String> rs = null ;
+    	    	if(null != files && !"".equalsIgnoreCase(files)){
+    	    		rs = new HashMap<String,String>();
+    	    		rs = ComUtil.savePicture(files, req.getSession().getServletContext().getRealPath("upload"));
+    	    		if(!"ok".equalsIgnoreCase(rs.get("message"))){
+    	    			return "{'message':'"+rs.get("message")+"'}";
+    	    		}
+    	    	}
+        	
+    		install.modifyAtachement(rs.get("urls"));
 			installmapper.updateByPrimaryKeySelective(install);
 			printerMapper.updateByPrimaryKeySelective(printer);
 			cashMapper.updateByPrimaryKeySelective(cash);
@@ -216,7 +215,7 @@ public class InstallController implements ApplicationContextAware {
 			e.printStackTrace();
 			return "fail" ;
     	}
-		return "success";
+		return "{'message':'success'}" ;
     }
 	@Override
 	public void setApplicationContext(ApplicationContext ctx)

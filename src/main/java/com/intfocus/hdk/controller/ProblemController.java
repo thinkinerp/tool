@@ -25,12 +25,14 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.alibaba.fastjson.JSONObject;
 import com.intfocus.hdk.dao.CashMapper;
 import com.intfocus.hdk.dao.EquipmentMapper;
+import com.intfocus.hdk.dao.MessageMapper;
 import com.intfocus.hdk.dao.PrinterMapper;
 import com.intfocus.hdk.dao.ProblemMapper;
 import com.intfocus.hdk.dao.ProjectMapper;
 import com.intfocus.hdk.dao.ShopsMapper;
 import com.intfocus.hdk.util.ComUtil;
 import com.intfocus.hdk.vo.Equipment;
+import com.intfocus.hdk.vo.Message;
 import com.intfocus.hdk.vo.Problem;
 
 @Controller
@@ -53,7 +55,8 @@ public class ProblemController implements ApplicationContextAware {
     
     @Resource
     private ShopsMapper shopsMapper;
-    
+    @Resource
+    private MessageMapper messageMapper ; 
     
     @RequestMapping(value = "getEquipmentList " , method=RequestMethod.GET)
     @ResponseBody     
@@ -193,7 +196,46 @@ public class ProblemController implements ApplicationContextAware {
 			}
 		}
     }
-    
+        @RequestMapping(value = "saveMessage" , method=RequestMethod.GET)
+        @ResponseBody
+        public String saveMessage(HttpServletResponse res , HttpServletRequest req ,HttpSession session
+        		, Message message ,String callback){
+        	
+        	       try{
+        	    	   messageMapper.insertSelective(message); 
+        	       }catch(Exception e ){
+        	    	   e.printStackTrace();
+        	    	  return  callback + "({'message':'fail'})";
+        	       }
+    			 return callback + "({'message':'success'})";
+        }
+        @RequestMapping(value = "getMessageSome" , method=RequestMethod.GET)
+        @ResponseBody
+        public void getMessageSome(HttpServletResponse res , HttpServletRequest req ,HttpSession session
+        		, Message message ,String callback){
+        	Writer w = null ;
+        	try{
+        		 w = res.getWriter();
+        		
+        		Map<String,String> where = new HashMap<String,String>();
+        		where.put("problemId", message.getProblemId());
+        		where.put("mesUser", message.getMesUser());
+    			w.write( callback + "("+JSONObject.toJSONString(messageMapper.selectByWhere(where ))+")");
+        	}catch(Exception e ){
+        		e.printStackTrace();
+        		  try {
+        			  if(w != null ){
+        				  w.write("{'message':'fail'}");
+        			  }else{
+						 w = res.getWriter();
+						 w.write("{'message':'fail'}");
+        			  }
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
+        	}
+        }
+         
 	@Override
 	public void setApplicationContext(ApplicationContext ctx)
 			throws BeansException {
