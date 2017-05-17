@@ -38,6 +38,17 @@ public class Survey {
 
     private String surRemarks;
 
+    public  void modifyAtachement(String picUrls){
+    	
+    	if(null != picUrls){
+    		if(null == this.attachmentUrl){
+    			this.attachmentUrl = picUrls;
+    		}else{
+    			this.attachmentUrl = "," + picUrls;
+    		}
+    	}
+    }
+    
     public Integer getId() {
         return id;
     }

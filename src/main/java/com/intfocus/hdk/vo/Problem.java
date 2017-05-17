@@ -59,6 +59,16 @@ public class Problem {
     
     private Integer Count;
 
+    public  void modifyAtachement(String picUrls){
+    	
+    	if(null != picUrls){
+    		if(null == this.problemEnclosure){
+    			this.problemEnclosure = picUrls;
+    		}else{
+    			this.problemEnclosure = "," + picUrls;
+    		}
+    	}
+    }
     public Integer getId() {
         return id;
     }

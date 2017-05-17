@@ -111,7 +111,7 @@ public class ProblemController implements ApplicationContextAware {
 				if(!"ok".equalsIgnoreCase(result.get("message"))){
 					return (callback + "(" + result.get("message") + ")");
 				}
-				problem.setProblemEnclosure(result.get("urls"));
+				problem.modifyAtachement((result.get("urls")));
     		}
     		problemMapper.updateByPrimaryKeySelective(problem);
     		return callback+"({'message':'success'}"+")";

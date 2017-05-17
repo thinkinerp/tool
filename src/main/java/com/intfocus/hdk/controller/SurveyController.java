@@ -59,13 +59,11 @@ public class SurveyController implements ApplicationContextAware {
 		try {
 			   if("".equalsIgnoreCase(files)){	
 					Map<String,String> result = ComUtil.savePicture(files, req.getSession().getServletContext().getRealPath("upload"));
-					
-					
 					if(!"ok".equalsIgnoreCase(result.get("message"))){
 						return result.get("message");
 					}
-					survey.setAttachmentUrl((result.get("urls")).toString());
-				   }
+					survey.modifyAtachement(((result.get("urls")).toString()));
+			   }
 
 				surveymapper.updateByPrimaryKeyWithBLOBs(survey);
 				printerMapper.updateByPrimaryKeySelective(printer);
