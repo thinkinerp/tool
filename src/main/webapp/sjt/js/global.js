@@ -9,9 +9,6 @@ var app ={
 	selectOverFun:'',  //选择后要执行的方法
 	alert:function(msg,style,fun){ //消息内容    状态(1为只有确定按钮 2为是否按钮)  fun点确定后要执行的方法
 		var html = [];
-		if(undefined != $('#g-popup').attr("id")){
-			return;
-		}	
 		html.push('<div class="g-popup" id="g-popup">');
 		html.push('<div class="g-popup-main">');
 		html.push('<div class="g-popup-main-title">提示</div>');
@@ -36,6 +33,11 @@ var app ={
 		$("#g-popupNo").click(function(){
 			$("#g-popup").remove();
 		})
+	},
+	getUrlSearch:function(name){	//获取url里面的参数值 name=参数名 如：getUrlSearch("userid") 返回userid的值
+		var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
+		var r = window.location.search.substr(1).match(reg);
+		if (r != null) return unescape(r[2]); return null;
 	},
 	select:function(obj,type,fun){ //obj(有data-select的那个标签,传this 例如 app.select(this))    type: 1只能选择   2可以选择也可以输入 输入匹配   3可以选择可以输入 输入匹配 并可选择没匹配项
 		app.put = obj;
@@ -144,6 +146,7 @@ var app ={
 		app.imgsShow();
 	},
 	imgsShow:function(){	//显示图片
+		$("#imgShow").find('div').hide();
 		$("#imgShow").find('div').find('img').remove();
 		for(var i = 0; i<imgs.length; i++){
 			$("#imgShow").find('div').eq(i).html('<img src="'+imgs[i]+'"/>');
@@ -228,9 +231,9 @@ $(function(){
 		app.upStyle(index);
 	})
 	
-	$("#save").click(function(){ //保存按钮
-		app.alert("确定要保存吗？",2,app.saveDate)
-	})
+//	$("#save").click(function(){ //保存按钮
+//		app.alert("确定要保存吗？",2,app.saveDate)
+//	})
 	
 	$(".i-choice-row div").click(function(){	//单选
 		$(this).addClass('on').parent('div').siblings('.i-choice-row').find('div').removeClass('on');

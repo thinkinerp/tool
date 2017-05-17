@@ -1,6 +1,8 @@
 /**
  * 
  */
+//shopStateSeach();
+
  loadCombobox("installState","install");			
  loadCombobox("eqType","equipment_type");					
 

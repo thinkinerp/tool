@@ -59,7 +59,7 @@ public class StateController implements ApplicationContextAware {
     @RequestMapping(value = "getSome" , method=RequestMethod.GET)
     @ResponseBody
     public void getSome(HttpServletResponse res , HttpServletRequest req ,HttpSession session
-    		              , State state ,String time ,String callbackparam){
+    		              , State state ,String time ,String callback){
     	Map<String, String> where = new HashMap<String,String>();
     	
     	where.put("ownerTable", state.getOwnerTable());

@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no"/>
+		<meta content="yes" name="apple-mobile-web-app-capable" />
+		<meta content="telephone=no" name="format-detection" />
+		<meta name="browsermode" content="application">
+		<meta name="renderer" content="webkit">
+		<title>调研列表</title>
+		<link rel="stylesheet" type="text/css" href="css/global.css"/>
+		<script src="js/jquery.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/global.js" type="text/javascript" charset="utf-8"></script>
+	</head>
+	<body>
+		<!-- 选择项目名称 -->
+		<div  class="i-itemName">
+			<div class="i-itemName-name">项目名称</div>
+			<div class="i-itemName-list">
+				<div id="itemName" onclick="app.select(this,1,me.selectItem)"></div>
+			</div>
+		</div>
+		<!-- 项目状态 -->
+		<div class="i-itemStyle">
+			<div class="i-itemStyle-title"></div>
+			<div class="i-itemStyle-list"></div>
+		</div>
+		
+		<!-- 搜索 -->
+		<div class="i-itemSeek">
+			<input id="mendian" type="text" placeholder="请输入门店名称"/>
+			<div onclick="me.list()"></div>
+		</div>
+		<!-- 2个下拉 -->
+		<div class="i-itemXl">		
+			<div class="i-itemXl-list">
+				<div id='order' data-select="正序,倒序" onclick="app.select(this,1,me.upOrder)">正序</div>
+			</div>
+			<div class="i-itemXl-list">
+				<div id='surveyState' onclick="app.select(this,1,me.upShopStation)" ></div>
+			</div>
+		</div>
+		<!-- 项目详情 -->
+		<div class="i-itemDetail">
+			<!--
+			<div class="i-itemDetail-area">
+				<div class="i-itemDetail-area-title">
+					<div>必胜客</div>
+					<p>详情</p>
+				</div>
+				<div class="i-itemDetail-area-content">
+					<div class="content-row">
+						<p>铺位号</p>
+						<p>101</p>
+					    i标签 on1无需安装   on2已安装   on3安装失败  on4未安装   on5未开业  on6已拆除
+						<p><i class="on1"></i>无需安装</p>
+					</div>
+					<div class="content-row">
+						<p>铺位号</p>
+						<p>101</p>
+					</div>
+					<div class="content-row">
+						<p>铺位号</p>
+						<p>win7/64</p>
+					</div>
+				</div>
+			</div>	
+			-->
+		</div>
+		<!-- 新建抄表 -->
+		<a href="javascript:void(0)" onclick="window.location='surveyDetails.html'" class="i-addTable">
+			<div class="icon"></div>
+			<div class="text">新建</div>
+		</a>
+		
+		<script type="text/javascript">
+			var me = {
+				proName:null,	//项目名称
+				shopName:null,	//商铺名称
+				order:'正序',	//正序 倒序
+				shopStation:null,	//商铺状态
+				init:function(){
+					this.parName()		
+					//this.lastName()
+					//this.surveyState()
+				},
+				upOrder:function(){
+					me.order = $('#order').html();
+					me.list();
+				},
+				upShopStation:function(){
+					me.shopStation = $('#shopStation').html();
+					me.list();
+				},
+				parName:function(){	//项目名称
+					$.ajax({	
+					   url: "http://www.onetoend.cn/hdk/project/getSome",
+					   type: "get",
+					   dataType:"jsonp",
+					   jsonpCallback:"project_null_getSome",
+					   success:function(data){
+					   		var text = ''
+					   		for(var i = 0 ; i<data.length; i++){
+					   			if(i == data.length -1){
+					   				text += data[i].proName
+					   			}else{
+					   				text += data[i].proName + ','
+					   			}
+					   		}
+					   		$('#itemName')[0].dataset.select = text
+					   		me.lastName()
+					   }					   
+					})
+				},
+				lastName:function(){	//上次的项目名称
+					$.ajax({	
+					   url: "http://www.onetoend.cn/hdk/project/getSome",
+					   data:{"isLast":1},
+					   type: "get",
+					   dataType:"jsonp",
+					   jsonpCallback:"project_null_getSome",
+					   success:function(data){
+					   		me.upItemStyle(data);
+					   		me.surveyState()
+					   }					   
+					})
+				},
+				surveyState:function(){	//调研状态
+					$.ajax({	
+					   url: "http://www.onetoend.cn/hdk/state/getSome",
+					   data:{"ownerTable":"shop_mer_station"},
+					   type: "get",
+					   dataType:"jsonp",
+					   jsonpCallback:"state_null_getSome",
+					   success:function(data){
+					   		me.shopStation = data[0].staName;
+					   		$('#surveyState').html(me.shopStation);
+					   		var text = ''
+					   		for(var i = 0 ; i<data.length; i++){
+					   			if(i == data.length -1){
+					   				text += data[i].staName
+					   			}else{
+					   				text += data[i].staName + ','
+					   			}
+					   		}
+					   		$('#surveyState')[0].dataset.select = text
+					   		me.list();
+					   }					   
+					})
+				},
+				selectItem:function(){	//选择项目
+					$.ajax({	
+					   url: "http://www.onetoend.cn/hdk/project/getSome",
+					   data:{"proName":$('#itemName').html()},
+					   type: "get",
+					   dataType:"jsonp",
+					   jsonpCallback:"project_null_getSome",
+					   success:function(data){
+					   		me.upItemStyle(data);
+					   		//me.list();
+					   		me.surveyState();
+					   }					   
+					})
+				},
+				upItemStyle:function(data){	//更改显示项目信息
+					this.proName = data[0].proName;					
+					$('#itemName,.i-itemStyle-title').html(this.proName);	
+			   		var itemStyleDom = [];
+			   		itemStyleDom.push('<div>');
+			   		itemStyleDom.push('<p>项目经理</p>');
+			   		itemStyleDom.push('<p>'+data[0].proManagerPro+'</p>');
+			   		itemStyleDom.push('<p>项目版本</p>');
+			   		itemStyleDom.push('<p>'+data[0].proEdition+'</p>');
+			   		itemStyleDom.push('</div>');
+			   		itemStyleDom.push('<div>');
+			   		itemStyleDom.push('<p>项目状态</p>');
+			   		itemStyleDom.push('<p>'+data[0].proStation+'</p>');
+			   		itemStyleDom.push('<p>更新时间</p>');
+			   		itemStyleDom.push('<p>'+data[0].updatedAt+'</p>');
+			   		itemStyleDom.push('</div>');
+			   		$('.i-itemStyle-list').html(itemStyleDom.join(''));
+				},
+				list:function(){
+					this.shopName = $('#mendian').val();
+					var obj = {"proName":me.proName,"shopName":me.shopName,"order":me.order,"shopMerStation":me.shopStation};
+					$.ajax({	
+					   url: "http://www.onetoend.cn/hdk/survey/getSome",
+					   data:obj,
+					   type: "get",
+					   dataType:"jsonp",
+					   jsonpCallback:"getSome",
+					   success:function(data){
+					   		var dom = [];
+					   		for(var i = 0; i<data.length; i++){
+					   			dom.push('<div class="i-itemDetail-area">');
+					   			dom.push('<div class="i-itemDetail-area-title">');
+					   			dom.push('<div>'+data[i].shopName+'</div>');
+					   			dom.push('<p onclick="me.tz(\''+data[i].surId+'\')">详情</p>');
+					   			dom.push('</div>');
+					   			dom.push('<div class="i-itemDetail-area-content">');
+					   			dom.push('<div class="content-row">');
+					   			dom.push('<p>铺位号</p>');
+					   			dom.push('<p>'+data[i].shopId+'</p>');
+					   			dom.push('<p><i class="on1"></i>无需安装</p>');
+					   			dom.push('</div>');
+					   			dom.push('<div class="content-row">');
+					   			dom.push('<p>状态</p>');
+					   			dom.push('<p>'+data[i].shopMerStation+'</p>');
+					   			dom.push('</div>');
+					   			dom.push('<div class="content-row">');
+					   			dom.push('<p>更新时间</p>');
+					   			dom.push('<p>'+data[i].updatedAt+'</p>');
+					   			dom.push('</div>');
+					   			dom.push('</div>');
+					   			dom.push('</div>');
+					   		}
+					   		$('.i-itemDetail').html(dom.join(''));
+					   }					   
+					})
+				},
+				tz:function(id){
+					window.location = "surveyDetails.html?surId=" + id;
+				}
+			}
+			$(function(){
+				me.init();				
+			})
+		</script>
+	</body>
+</html>

@@ -4,13 +4,16 @@
   <resultMap id="BaseResultMap" type="com.intfocus.hdk.vo.Survey" >
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="pro_id" property="proId" jdbcType="VARCHAR" />
+    <result column="pro_name" property="proName" jdbcType="VARCHAR" />
     <result column="shop_id" property="shopId" jdbcType="VARCHAR" />
     <result column="sur_network" property="surNetwork" jdbcType="VARCHAR" />
     <result column="shop_mer_station" property="shopMerStation" jdbcType="VARCHAR" />
     <result column="sur_power" property="surPower" jdbcType="VARCHAR" />
     <result column="sur_vip" property="surVip" jdbcType="VARCHAR" />
     <result column="sur_vip_data" property="surVipData" jdbcType="VARCHAR" />
+    <result column="shop_name" property="shopName" jdbcType="VARCHAR" />
     <result column="created_at" property="createdAt" jdbcType="VARCHAR" />
+    <result column="attachment_url" property="attachmentUrl" jdbcType="VARCHAR" />
     <result column="sur_id" property="surId" jdbcType="VARCHAR" />
     <result column="updated_at" property="updatedAt" jdbcType="VARCHAR" />
   </resultMap>
@@ -20,7 +23,7 @@
 
   <sql id="Base_Column_List" >
       survey.id, survey.pro_id, survey.shop_id, survey.sur_network, survey.sur_power, survey.sur_vip, survey.sur_vip_data
-      , survey.created_at, survey.updated_at,survey.sur_id,shops.shop_name,shops.shop_mer_station
+      , survey.created_at, survey.updated_at,survey.sur_id,shops.shop_name,shops.shop_mer_station,project.pro_name,survey.attachement_url
   </sql>
   
   <sql id="extra_Column_List" >
@@ -40,6 +43,7 @@
 
     from survey
         inner join shops on shops.shop_id = survey.shop_id
+        inner join project on project.pro_id = survey.pro_id
     <where>
     	1=1
             <if test="null != proId  and '' != proId">
@@ -74,6 +78,9 @@
 			</if>	
     		<if test="null != surRemarks  and '' != surRemarks">
 				and sur_remarks  = #{surRemarks,jdbcType=VARCHAR}
+			</if>	
+    		<if test="null != surId  and '' != surId">
+				and survey.sur_id   = #{surId,jdbcType=VARCHAR}
 			</if>	
  
     </where>  

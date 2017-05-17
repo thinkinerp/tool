@@ -334,7 +334,20 @@
               <target>1.8</target>
             </configuration>
       </plugin>
-        
+       <plugin>  
+                <groupId>org.apache.maven.plugins</groupId>  
+                <artifactId>maven-war-plugin</artifactId>  
+                <version>2.1.1</version>  
+                <configuration>  
+                    <webResources>  
+                        <resource>  
+                            <!-- this is relative to the pom.xml directory -->  
+                            <directory>src/main/webapp</directory>  
+                        </resource>  
+                    </webResources>  
+                <warName>hdk</warName>  
+                </configuration>  
+            </plugin>  
     </plugins>
  </build>
 

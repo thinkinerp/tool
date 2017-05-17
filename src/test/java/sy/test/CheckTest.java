@@ -45,11 +45,11 @@ public class CheckTest {
     @Test
     public void testSurveyMapperSelectByWhere(){
     	Map<String, String> where = new HashMap<String,String>();
-    	where.put("shopName","项目A");
-    	where.put("proName", "d");
-    	where.put("order", "desc");
-    	where.put("shopStation", "dd");
-		System.out.println(surveyMapper.selectByWhere(where));
+//    	where.put("shopName","项目A");
+    	where.put("surId", "sur_001");
+//    	where.put("order", "desc");
+//    	where.put("shopStation", "dd");
+		System.out.println(JSONObject.toJSONString(surveyMapper.selectByWhere(where)));
     }
     
     @Test

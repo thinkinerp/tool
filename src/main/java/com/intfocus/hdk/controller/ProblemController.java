@@ -1,6 +1,7 @@
 package com.intfocus.hdk.controller;
 import java.io.IOException;
 import java.io.Writer;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,6 +29,8 @@ import com.intfocus.hdk.dao.PrinterMapper;
 import com.intfocus.hdk.dao.ProblemMapper;
 import com.intfocus.hdk.dao.ProjectMapper;
 import com.intfocus.hdk.dao.ShopsMapper;
+import com.intfocus.hdk.util.ComUtil;
+import com.intfocus.hdk.vo.Equipment;
 import com.intfocus.hdk.vo.Problem;
 
 @Controller
@@ -54,20 +57,39 @@ public class ProblemController implements ApplicationContextAware {
     
     @RequestMapping(value = "getEquipmentList " , method=RequestMethod.GET)
     @ResponseBody     
-    public String getEquipmentList (HttpServletResponse res , HttpServletRequest req ,HttpSession session
+    public void getEquipmentList (HttpServletResponse res , HttpServletRequest req ,HttpSession session
     		, Problem problem ){
     		Map<String, String> where = new HashMap<String ,String>();
     		where.put("proName",problem.getProName());
     		where.put("shopName",problem.getShopName());
-			;
-    		return "problem_getEquipmentList("+JSONObject.toJSONString(equipmentMapper.selectByWhere(where))+")";
+    		List<Equipment> es = equipmentMapper.selectByWhere(where);
+    		
+			Writer w = null;
+			try {
+				w = res.getWriter();
+				w.write("problem_getEquipmentList("+JSONObject.toJSONString(es)+")");
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			
 
     }
-    @RequestMapping(value = "submit" , method=RequestMethod.GET)
+    
+    @RequestMapping(value = "submit" , method=RequestMethod.POST)
     @ResponseBody     
     public String submit(HttpServletResponse res , HttpServletRequest req ,HttpSession session
-            , Problem problem ,String callback){
+            , Problem problem ,String callback , String files){
     	try{
+
+    		if(null != files && !"".equalsIgnoreCase(files)){
+				Map<String,String> result = ComUtil.savePicture(files, req.getSession().getServletContext().getRealPath("upload"));
+				
+				if(!"ok".equalsIgnoreCase(result.get("message"))){
+					return (callback + "(" + result.get("message") + ")");
+				}
+				
+				problem.setProblemEnclosure(result.get("urls"));
+    		}
     		problemMapper.insertSelective(problem);
 	    	return callback+"({'message':'success'})";
 	  }catch(Exception e){
@@ -75,11 +97,19 @@ public class ProblemController implements ApplicationContextAware {
 		  return callback+"({'message':'fail'})";
 	  }
     }
-    @RequestMapping(value = "modify" , method=RequestMethod.GET)
+    @RequestMapping(value = "modify" , method=RequestMethod.POST)
     @ResponseBody     
     public String modify(HttpServletResponse res , HttpServletRequest req ,HttpSession session
-    		, Problem problem ,String callback){
+    		, Problem problem ,String callback ,String files){
     	try{
+    		if(null != files && !"".equalsIgnoreCase(files)){
+				Map<String,String> result = ComUtil.savePicture(files, req.getSession().getServletContext().getRealPath("upload"));
+				
+				if(!"ok".equalsIgnoreCase(result.get("message"))){
+					return (callback + "(" + result.get("message") + ")");
+				}
+				problem.setProblemEnclosure(result.get("urls"));
+    		}
     		problemMapper.updateByPrimaryKeySelective(problem);
     		return callback+"({'message':'success'}"+")";
     	}catch(Exception e){
@@ -131,24 +161,36 @@ public class ProblemController implements ApplicationContextAware {
     }
         @RequestMapping(value = "gotoModify" , method=RequestMethod.GET) 
     public void gotoModify(HttpServletResponse res , HttpServletRequest req ,HttpSession session
-            , Problem problem ,String callback ){
+            , Problem problem ,String callback){
     	String json= "" ;
-    	Map<String,String> where = new HashMap<String,String>();
-    	
-    	where.put("proName", problem.getProName());
-    	where.put("problemObject", problem.getProblemObject());
-    	where.put("state", problem.getState());
-    	 where.put("problemId", problem.getProblemId());
-    	
-    	List<Problem> problems = problemMapper.selectByWhere(where);
-    	
-    	json = JSONObject.toJSONString(problems.get(0));
     	Writer w = null;
-		try {
+    	try {	
+    	
+			
 			w = res.getWriter();
+			Map<String,String> where = new HashMap<String,String>();
+			
+			where.put("proName", problem.getProName());
+			where.put("problemObject", problem.getProblemObject());
+			where.put("state", problem.getState());
+			 where.put("problemId", problem.getProblemId());
+			
+			List<Problem> problems = problemMapper.selectByWhere(where);
+			if(0  == problems.size()){
+				w.write(callback + "({'message':'无此问题'})");
+			}
+			json = JSONObject.toJSONString(problems.get(0));
+
+
+
 			w.write( callback + "("+json+")");
 		} catch (IOException e) {
 			e.printStackTrace();
+			try {
+				w.write(callback + "({'message':'fail'})");
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			}
 		}
     }
     

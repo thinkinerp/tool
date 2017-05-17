@@ -18,7 +18,8 @@
 		<link rel="stylesheet" type="text/css" href="${ctx}/casher/css/global.css"/>
 		<script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
 		<script src="${ctx}/casher/js/global.js" type="text/javascript" charset="utf-8"></script>
-<script type="text/javascript" src="${ctx}/js/comUtil.js"></script>  
+		<script type="text/javascript" src="${ctx}/js/comUtil.js"></script>  
+		<script src="${ctx}/js/install.js" type="text/javascript" charset="utf-8"></script>
 </head>
 <body>
 		<!-- 选择项目名称 -->
@@ -70,7 +71,7 @@
 		<!-- 新建抄表 -->
 		<div class="i-addTable">
 			<div class="icon"></div>
-			<div class="text" id = 'create'><a href="javascript:void(0)"  onClick = "gotoDetail()"target="_self">新建抄表</a></div>
+			<div class="text" id = 'create'><a href="javascript:void(0)"  onClick = "gotoDetail()"target="_self">新建</a></div>
 		</div>
 
 		
@@ -124,7 +125,7 @@
 						jsonp: "callback",
 				 		dataType:'jsonp',
 				 		success:function(rs){
-								
+
 				 			//加载最后一次选择的项目信息
 				 			 $(".i-itemStyle-title").html(rs[0].proName);
 				 			$('#itemName').html(rs[0].proName);
@@ -204,6 +205,7 @@
 					 		}
 					  });
 				};
+				shopStateSeach();
 				/*
 				 *	弹窗的使用方法  代码在global.js  app.alert
 				*/
@@ -218,7 +220,7 @@
 			})
 
 </script>
-		<script src="${ctx}/js/install.js" type="text/javascript" charset="utf-8"></script>
+
 
 </body>
 </html>

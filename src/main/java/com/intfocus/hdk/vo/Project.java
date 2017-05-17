@@ -1,5 +1,7 @@
 package com.intfocus.hdk.vo;
 
+import com.intfocus.hdk.util.ComUtil;
+
 
 public class Project {
     private Integer id;
@@ -183,7 +185,8 @@ public class Project {
     }
 
     public String getUpdatedAt() {
-        return updatedAt;
+    	
+        return ComUtil.dateFormat(updatedAt);
     }
 
     public void setUpdatedAt(String updatedAt) {

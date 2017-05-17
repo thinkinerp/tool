@@ -353,10 +353,10 @@
 				<div class="swiper-slide">
 					<div class="i-addImg">
 						<div class="img" id="imgShow">
-							<div onclick="fullImg(0)"></div>
-							<div onclick="fullImg(1)"></div> 
+							<div onclick="app.fullImg(0)"></div>
+							<div onclick="app.fullImg(1)"></div> 
 						</div>
-						<div class="add"><input name ="fileImg" multiple="multiple" type="file" id="fileImg" onchange="getImgUrl();"/></div>
+						<div class="add"><input name ="fileImg" multiple="multiple" type="file" id="fileImg" onchange="app.getImgUrl();"/></div>
 					</div>
 				</div>
 				<!-- 安装详情7(附件) -->
@@ -369,7 +369,7 @@
 		
 		<script src="${ctx}/casher/js/swiper.js" type="text/javascript" charset="utf-8"></script>
 		<script>
-			var imgs = [];	//2个图片都会在这个数组里
+ 			//var imgs = [];	//2个图片都会在这个数组里
 			
 			var swiper1 = new Swiper('.swiper-container1', {	//菜单区滑块
 				paginationClickable: true,
@@ -386,7 +386,7 @@
 					upStyle(swiper.activeIndex);
 				}
 			});
-			
+
 			$("#menu div").click(function() {	//顶部菜单点击下面内容区改变
 				var index = $(this).index();
 				upStyle(index);
@@ -398,7 +398,7 @@
 				swiper2.slideTo(index, 0);
 			}
 						
-	    	function getImgUrl(){	//本地图片浏览 base64
+			/*		    	function getImgUrl(){	//本地图片浏览 base64
 				var file = document.getElementById("fileImg").files;
 
 /* 	    	    file = file[0];
@@ -407,7 +407,7 @@
 				reader.onload = function(e){ 
         			addImg(this.result)
    				}  */
-   				for(var i = 0 ; i < file.length ; i++){
+/*    				for(var i = 0 ; i < file.length ; i++){
    					var reader = new FileReader(); 
    	    			reader.readAsDataURL(file[i]); 
    					reader.onload = function(e){ 
@@ -429,13 +429,13 @@
 	    		for(var i = 0; i<imgs.length; i++){
 	    			$("#imgShow").find('div').eq(i).html('<img src="'+imgs[i]+'"/>');
 	    		}	
-	    	}
+	    	} */
 	    	
 	    	$("#save").click(function(){ //保存按钮
 	    		app.alert("确定要保存吗？",2,submit)
 	    	})
 	    	
-	    	function fullImg(index){	//图片全屏查看
+	    	/* function fullImg(index){	//图片全屏查看
 	    		var base = imgs[index];
 	    		if(base == undefined){ return; }
 	    		var dom = [];
@@ -455,7 +455,7 @@
 					imgsShow();
 					$('.fullimg').remove();
 				})
-	    	}
+	    	} */
 	    	
 	    	$(".i-choice-row div").click(function(){	//单选
 	    		$(this).addClass('on').parent('div').siblings('.i-choice-row').find('div').removeClass('on');

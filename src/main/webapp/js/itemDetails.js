@@ -29,6 +29,7 @@ if(allThing != '{}' && allThing !='' && allThing !='null' ){
 			sum = sum + item.count;
 		}else if('其他'==isUndefined(item.problemType )&& '客户'==isUndefined(item.problemObject)){
 			setValue('customer',item.count);
+			setValue('customerOther',item.count);
 			sum = sum + item.count;
 		}
 	});

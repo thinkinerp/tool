@@ -1,5 +1,7 @@
 package com.intfocus.hdk.controller;
 
+import java.io.IOException;
+import java.io.Writer;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -35,20 +37,34 @@ public class UserController {
     	
     }
     
-	@RequestMapping(value = "getDepartment" , method=RequestMethod.POST)
+	@RequestMapping(value = "getDepartment" , method=RequestMethod.GET)
 	@ResponseBody
-	public String getDepartment(){
-		return "getDepartment"+JSONObject.toJSONString(usermapper.getDepartment())+")";
+	public void getDepartment(HttpServletResponse res , HttpServletRequest req ){
 		
+		Writer writer = null ;
+		
+		try{
+		writer =  res.getWriter();
+		writer.write("getDepartment("+JSONObject.toJSONString(usermapper.getDepartment())+")");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}	
 	}
-    @RequestMapping(value = "getSome" , method=RequestMethod.POST)
+    @RequestMapping(value = "getSome" , method=RequestMethod.GET)
     @ResponseBody
-    public String getSome(HttpServletResponse res , HttpServletRequest req ,HttpSession session
+    public void getSome(HttpServletResponse res , HttpServletRequest req ,HttpSession session
     		              , User user ){
     	
     	Map<String, String> where = new HashMap<String,String>();
     	where.put("name", user.getName());
-		return "getSome"+JSONObject.toJSONString(usermapper.selectByWhere(where ))+")";
+		Writer writer = null ;
+		
+		try{
+			writer = res.getWriter();
+			writer.write("getSome("+JSONObject.toJSONString(usermapper.selectByWhere(where ))+")");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}	
     	
     }
     @RequestMapping(value = "modify" , method=RequestMethod.POST)

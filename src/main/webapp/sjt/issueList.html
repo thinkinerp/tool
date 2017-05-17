@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no"/>
+		<meta content="yes" name="apple-mobile-web-app-capable" />
+		<meta content="telephone=no" name="format-detection" />
+		<meta name="browsermode" content="application">
+		<meta name="renderer" content="webkit">
+		<title>问题列表</title>
+		<link rel="stylesheet" type="text/css" href="css/global.css"/>
+		<script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
+		<script src="js/global.js" type="text/javascript" charset="utf-8"></script>
+	</head>
+	<body>
+		<!-- 选择项目名称 -->
+		<div  class="i-itemName">
+			<div class="i-itemName-name">项目名称</div>
+			<div class="i-itemName-list">
+				<div id="itemName" onclick="app.select(this,1,me.selectItem)"></div>
+			</div>
+		</div>
+		<!-- 项目状态 -->
+		<div class="i-itemStyle">
+			<div class="i-itemStyle-title">上海新天地时尚</div>
+			<div class="i-itemStyle-list"></div>
+		</div>
+		<!-- 1 -->
+		<div class="i-qk">
+			<div class="i-qk-title">海鼎：0</div>
+			<div class="i-qk-content">
+				<p>运维：0</p>
+				<p>技术：0</p>
+				<p>商务：0</p>
+			</div>
+		</div>
+		<div class="i-kh">
+			<div class="i-kh-title">客户</div>
+			<div class="i-kh-content">0</div>
+		</div>
+		<!-- 2个下拉 -->
+		<div class="i-itemXl">		
+			<div class="i-itemXl-list">
+				<div data-select="海鼎,客户" id="order" onclick="app.select(this,1,me.upOrder)">海鼎</div>
+			</div>
+			<div class="i-itemXl-list">
+				<div onclick="app.select(this,1,me.upShopStation)" id="surveyState" ></div>
+			</div>
+		</div>
+		<!-- 项目详情 -->
+		<div class="i-itemDetail"></div>
+		<!-- 新建抄表 -->
+		<a  href="javascript:void(0)" onclick="window.location='issueDetails.html'" class="i-addTable">
+			<div class="icon"></div>
+			<div class="text">新建</div>
+		</a>
+		
+		<script type="text/javascript">
+			var me  = {
+				proName:null,	
+				shopStation:null,
+				order:'海鼎',
+				init:function(){
+					this.parName()		
+				},				
+				upOrder:function(){
+					me.order = $('#order').html();
+					me.list();
+				},
+				upShopStation:function(){
+					me.shopStation = $('#surveyState').html();
+					me.list();
+				},
+				selectItem:function(){	//选择项目
+					$.ajax({	
+					   url: "http://www.onetoend.cn/hdk/project/getSome",
+					   data:{"proName":$('#itemName').html()},
+					   type: "get",
+					   dataType:"jsonp",
+					   jsonpCallback:"project_null_getSome",
+					   success:function(data){
+					   		me.upItemStyle(data);
+					   }					   
+					})
+				},
+				parName:function(){	//项目名称
+					$.ajax({	
+					   url: "http://www.onetoend.cn/hdk/project/getSome",
+					   type: "get",
+					   dataType:"jsonp",
+					   jsonpCallback:"project_null_getSome",
+					   success:function(data){
+					   		var text = ''
+					   		for(var i = 0 ; i<data.length; i++){
+					   			if(i == data.length -1){
+					   				text += data[i].proName
+					   			}else{
+					   				text += data[i].proName + ','
+					   			}
+					   		}
+					   		$('#itemName')[0].dataset.select = text
+					   		me.lastName()
+					   }					   
+					})
+				},lastName:function(){	//上次的项目名称
+					$.ajax({	
+					   url: "http://www.onetoend.cn/hdk/project/getSome",
+					   data:{"isLast":1},
+					   type: "get",
+					   dataType:"jsonp",
+					   jsonpCallback:"project_null_getSome",
+					   success:function(data){
+					   		me.upItemStyle(data);
+					   }					   
+					})
+				},upItemStyle:function(data){	//更改显示项目信息
+					this.proName = data[0].proName;	
+					$('#itemName,.i-itemStyle-title').html(this.proName);	
+					var itemStyleDom = [];
+			   		itemStyleDom.push('<div>');
+			   		itemStyleDom.push('<p>项目经理</p>');
+			   		itemStyleDom.push('<p>'+data[0].proManagerPro+'</p>');
+			   		itemStyleDom.push('<p>项目版本</p>');
+			   		itemStyleDom.push('<p>'+data[0].proEdition+'</p>');
+			   		itemStyleDom.push('</div>');
+			   		itemStyleDom.push('<div>');
+			   		itemStyleDom.push('<p>项目状态</p>');
+			   		itemStyleDom.push('<p>'+data[0].proStation+'</p>');
+			   		itemStyleDom.push('<p>更新时间</p>');
+			   		itemStyleDom.push('<p>'+data[0].updatedAt+'</p>');
+			   		itemStyleDom.push('</div>');
+			   		$('.i-itemStyle-list').html(itemStyleDom.join(''));
+			   		me.issueClass();
+				},
+				issueClass:function(){	//问题分类汇总
+					$.ajax({	
+					   url: "http://www.onetoend.cn/hdk/problem/getCount",
+					   data:{"getCount":$('#itemName').html()},
+					   type: "get",
+					   dataType:"jsonp",
+					   jsonpCallback:"problem_getCount",
+					   success:function(data){
+					   		console.log(data);
+					   		me.staName();
+					   }					   
+					})
+				},
+				staName:function(){
+					$.ajax({	
+					   url: "http://www.onetoend.cn/hdk/state/getSome",
+					   data:{"ownerTable":'shop_mer_station'},
+					   type: "get",
+					   dataType:"jsonp",
+					   jsonpCallback:"state_null_getSome",
+					   success:function(data){
+					   		me.shopStation = data[0].staName;
+					   		$('#surveyState').html(me.shopStation);
+					   		var text = ''
+					   		for(var i = 0 ; i<data.length; i++){
+					   			if(i == data.length -1){
+					   				text += data[i].staName
+					   			}else{
+					   				text += data[i].staName + ','
+					   			}
+					   		}
+					   		$('#surveyState')[0].dataset.select = text
+					   		me.list();	   	
+					   }					   
+					})
+				},
+				list:function(){
+					this.shopName = $('#mendian').val();
+					var obj = {"proName":me.proName,"order":me.order,"shopMerStation":me.shopStation};
+					$.ajax({	
+					   url: "http://www.onetoend.cn/hdk/survey/getSome",
+					   data:obj,
+					   type: "get",
+					   dataType:"jsonp",
+					   jsonpCallback:"getSome",
+					   success:function(data){
+					   		var dom = [];
+					   		for(var i = 0; i<data.length; i++){
+					   			dom.push('<div class="i-itemDetail-area">');
+					   			dom.push('<div class="i-itemDetail-area-title">');
+					   			dom.push('<div>'+data[i].shopName+'</div>');
+					   			dom.push('<p onclick="me.tz(\''+data[i].surId+'\')">详情</p>');
+					   			dom.push('</div>');
+					   			dom.push('<div class="i-itemDetail-area-content">');
+					   			dom.push('<div class="content-row">');
+					   			dom.push('<p>铺位号</p>');
+					   			dom.push('<p>'+data[i].shopId+'</p>');
+					   			dom.push('<p><i class="on1"></i>无需安装</p>');
+					   			dom.push('</div>');
+					   			dom.push('<div class="content-row">');
+					   			dom.push('<p>状态</p>');
+					   			dom.push('<p>'+data[i].shopMerStation+'</p>');
+					   			dom.push('</div>');
+					   			dom.push('<div class="content-row">');
+					   			dom.push('<p>更新时间</p>');
+					   			dom.push('<p>'+data[i].updatedAt+'</p>');
+					   			dom.push('</div>');
+					   			dom.push('</div>');
+					   			dom.push('</div>');
+					   		}
+					   		$('.i-itemDetail').html(dom.join(''));
+					   }					   
+					})
+				},
+				tz:function(id){
+					window.location = "issueDetails.html?surId=" + id;
+				}
+			}
+			
+			$(function(){
+				me.init()
+				/*
+				 *	弹窗的使用方法  代码在global.js  app.alert
+				*/
+				//临时的方法 测试弹窗用
+				//function ls(){
+				//	alert("点了弹窗按钮");
+				//}
+				//app.alert("确定要退出吗？")			//只有确定按钮  		点击后关闭弹窗不执行任何操作		
+				//app.alert("确定要退出吗？",2)			//有确定取消按钮  	点击2个按钮关闭弹窗都不执行任何操作
+				//app.alert("确定要退出吗？",1,ls)		//只有确定按钮		点击后关闭弹窗并执行方法
+				//app.alert("确定要退出吗？",2,ls)		//有确定取消按钮		点击确定关闭弹窗执行方法	点击取消弹窗关闭不执行方法
+			})
+		</script>
+	</body>
+</html>

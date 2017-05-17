@@ -1,15 +1,25 @@
 package com.intfocus.hdk.vo;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
+
+import com.intfocus.hdk.util.ComUtil;
 
 public class Survey {
     private Integer id;
 
     private String proId;
+
+    private String proName;
+    
     private String surId;
+    
     private String order;
 
     private String shopId;
+    
+    private String shopName;
+    
     private String shopMerStation;
 
     private String surNetwork;
@@ -20,9 +30,11 @@ public class Survey {
 
     private String surVipData;
 
-    private Date createdAt;
+    private String attachmentUrl;
+    
+    private String createdAt;
 
-    private Date updatedAt;
+    private String updatedAt;
 
     private String surRemarks;
 
@@ -82,19 +94,19 @@ public class Survey {
         this.surVipData = surVipData == null ? null : surVipData.trim();
     }
 
-    public Date getCreatedAt() {
+    public String getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(Date createdAt) {
+    public void setCreatedAt(String createdAt) {
         this.createdAt = createdAt;
     }
 
-    public Date getUpdatedAt() {
-        return updatedAt;
+    public String getUpdatedAt() {
+        return (null == this.updatedAt ?null : ComUtil.dateFormat(this.updatedAt.toString()));
     }
 
-    public void setUpdatedAt(Date updatedAt) {
+    public void setUpdatedAt(String updatedAt) {
         this.updatedAt = updatedAt;
     }
 
@@ -129,4 +141,30 @@ public class Survey {
 	public void setShopMerStation(String shopMerStation) {
 		this.shopMerStation = shopMerStation;
 	}
+
+	public String getProName() {
+		return proName;
+	}
+
+	public void setProName(String proName) {
+		this.proName = proName;
+	}
+
+	public String getAttachmentUrl() {
+		return attachmentUrl;
+	}
+
+	public void setAttachmentUrl(String attachmentUrl) {
+		this.attachmentUrl = attachmentUrl;
+	}
+
+	public String getShopName() {
+		return shopName;
+	}
+
+	public void setShopName(String shopName) {
+		this.shopName = shopName;
+	}
+
+
 }

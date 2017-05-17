@@ -20,6 +20,7 @@ import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.fastjson.JSONObject;
@@ -28,6 +29,7 @@ import com.intfocus.hdk.dao.PrinterMapper;
 import com.intfocus.hdk.dao.ProjectMapper;
 import com.intfocus.hdk.dao.ShopsMapper;
 import com.intfocus.hdk.dao.SurveyMapper;
+import com.intfocus.hdk.util.ComUtil;
 import com.intfocus.hdk.vo.Cash;
 import com.intfocus.hdk.vo.Printer;
 import com.intfocus.hdk.vo.Shops;
@@ -49,21 +51,33 @@ public class SurveyController implements ApplicationContextAware {
     @Resource
     private CashMapper cashMapper ;
     
-    @RequestMapping(value = "modify" , method=RequestMethod.GET)
+    @RequestMapping(value = "modify" , method=RequestMethod.POST)
     @ResponseBody
     public String modify(HttpServletResponse res , HttpServletRequest req ,HttpSession session
-    		, Survey survey , Printer printer , Cash cash , Shops shops,String callback){
+    		, Survey survey , Printer printer , Cash cash , Shops shops,String callback, String files){
     	
 		try {
+			   if("".equalsIgnoreCase(files)){	
+					Map<String,String> result = ComUtil.savePicture(files, req.getSession().getServletContext().getRealPath("upload"));
+					
+					
+					if(!"ok".equalsIgnoreCase(result.get("message"))){
+						return result.get("message");
+					}
+					survey.setAttachmentUrl((result.get("urls")).toString());
+				   }
+
 				surveymapper.updateByPrimaryKeyWithBLOBs(survey);
 				printerMapper.updateByPrimaryKeySelective(printer);
 				cashMapper.updateByPrimaryKeySelective(cash);
 				shopsMapper.updateByPrimaryKeySelective(shops);
 		}catch(Exception e){
 			e.printStackTrace();
-			return callback+"({'message':'fail'})";
+//			return callback+"({'message':'fail'})";
+			return "{'message':'fail'}";
 		}
-		return callback+"({'message':'success'})";
+//		return callback+"({'message':'success'})";
+		return "{'message':'success'}";
     	
     	
     	
@@ -77,13 +91,16 @@ public class SurveyController implements ApplicationContextAware {
     
     @RequestMapping(value = "getSome" , method=RequestMethod.GET)
     @ResponseBody
-    public String getSome(HttpServletResponse res , HttpServletRequest req ,HttpSession session
+    public void getSome(HttpServletResponse res , HttpServletRequest req ,HttpSession session
     		              , Survey survey ){
     	
     	Map<String,String> where = new HashMap<String,String>();
 		where.put("proName", survey.getProId());	
 		where.put("shopName", survey.getShopId());	
 		where.put("shopStation", survey.getShopMerStation());
+    	try {
+			Writer w = res.getWriter();
+
 		if("正序".equalsIgnoreCase(survey.getOrder())){
 			where.put("order", "asc");
 		}else if("倒序".equalsIgnoreCase(survey.getOrder())){
@@ -91,19 +108,23 @@ public class SurveyController implements ApplicationContextAware {
 		}
     	List<Survey> surveys = surveymapper.selectByWhere(where);
     	
-		return "getSome("+JSONObject.toJSONString(surveys) +")";	
+		w.write( "getSome("+JSONObject.toJSONString(surveys) +")");	
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
     }
 
     
     @RequestMapping(value = "gotoModify" , method=RequestMethod.GET)
     public void gotoModify(HttpServletResponse res , HttpServletRequest req ,HttpSession session
-    		              , Survey survey , String callback ){
+    		              , String surId , String callback ){
     	
 
     	// 取出相关的信息
     	JSONObject json = new JSONObject();
     	Map<String, String> where = new HashMap<String,String>();
-    	where.put("surveyId", survey.getSurId());
+    	where.put("surId", surId);
 		// 调研
     	List<Survey> surveys = surveymapper.selectByWhere(where ); 
     	Survey survey1 = surveys.get(0);
@@ -111,7 +132,9 @@ public class SurveyController implements ApplicationContextAware {
     	// 收银机 
     	List<Printer> printers = printerMapper.selectByWhere(where ); 
     	Printer printer = printers.get(0);
-    	json.put("printer", survey1);
+    	json.put("printer", printer);
+    	
+
     	
     	// 打印机
     	List<Cash> cashes = cashMapper.selectByWhere(where ); 
@@ -122,8 +145,7 @@ public class SurveyController implements ApplicationContextAware {
     	List<Shops> shops = shopsMapper.selectByWhere(where ); 
     	Shops shop = shops.get(0);
     	json.put("shops", shop);
-    	
-
+    	where.clear();  	
     	Writer w = null;
 		try {
 			w = res.getWriter();
@@ -132,21 +154,42 @@ public class SurveyController implements ApplicationContextAware {
 			e.printStackTrace();
 		}
     }
-	@RequestMapping(value = "submit" , method=RequestMethod.GET)
+	@RequestMapping(value = "submit" , method=RequestMethod.POST)
     @ResponseBody
     public String submit(HttpServletResponse res , HttpServletRequest req ,HttpSession session
-    		, Survey survey , Printer printer , Cash cash , Shops shops ,String callback){
+    		, Survey survey , Printer printer , Cash cash , Shops shops ,String callback, String files){
     	
+	   if("".equalsIgnoreCase(files)){	
+		Map<String,String> result = ComUtil.savePicture(files, req.getSession().getServletContext().getRealPath("upload"));
+		
+		
+		if(!"ok".equalsIgnoreCase(result.get("message"))){
+			return result.get("message");
+		}
+		survey.setAttachmentUrl((result.get("urls")).toString());
+	   }
 		try {
+
 				surveymapper.insertSelective(survey);
 				printerMapper.insertSelective(printer);
 				cashMapper.insertSelective(cash);
-				shopsMapper.insertSelective(shops);
+				
+				Map<String, String> where = new HashMap<String , String >();
+				where.put("shopId", shops.getShopId());
+				Shops s = new Shops();
+				List<Shops> shopss = shopsMapper.selectByWhere(where );
+				if(0 < shopss.size()){
+					s = shopss.get(0);	
+				}
+			    shops.setId(s.getId());
+				shopsMapper.updateByPrimaryKeySelective(shops);
 		}catch(Exception e){
 			e.printStackTrace();
-			return callback+"({'message':'fail'})";
+//			return callback+"({'message':'fail'})";
+			return "{'message':'fail'}";
 		}
-		return callback+"({'message':'success'})";
+//		return callback+"({'message':'success'})";
+		return "{'message':'success'}";
     }
 	
 	   @InitBinder("survey")    

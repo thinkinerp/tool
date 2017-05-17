@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no" />
+		<meta content="yes" name="apple-mobile-web-app-capable" />
+		<meta content="telephone=no" name="format-detection" />
+		<meta name="browsermode" content="application">
+		<meta name="renderer" content="webkit">
+		<title>问题详情</title>
+		<link rel="stylesheet" type="text/css" href="css/global.css" />
+		<link rel="stylesheet" href="css/swiper.css">
+		<script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
+		<script src="js/global.js" type="text/javascript" charset="utf-8"></script>
+	</head>
+
+	<body>
+		<!-- 顶部菜单  -->
+		<div class="swiper-container swiper-container1">
+			<div class="swiper-wrapper" id="menu">
+				<div class="swiper-slide on">问题概述</div>
+				<div class="swiper-slide">商铺信息</div>
+				<div class="swiper-slide">问题描述</div>
+				<div class="swiper-slide">附件</div>
+				<div class="swiper-slide">解决方案</div>
+			</div>
+		</div>
+		<!-- 内容区 -->
+		<div class="swiper-container swiper-container2">
+			<div class="swiper-wrapper">				
+				<div class="swiper-slide">
+					<ul class="g-importList">
+						<li>
+							<div class="g-importList-title">问题编号</div>
+							<div class="g-importList-content">
+								<div class="i-import">
+									<input id="gs1" type="text" placeholder="请输入" />
+								</div>
+							</div>
+						</li>
+						<li>
+							<div class="g-importList-title">问题状态</div>
+							<div class="g-importList-content">
+								<div class="i-xiala-list">
+									<div id="gs2"class="on">未选择</div>
+								</div>
+							</div>
+						</li>
+						<li>
+							<div class="g-importList-title">跟进方</div>
+							<div class="g-importList-content">
+								<div class="i-xiala-list">
+									<div id="gs3" data-select="海鼎,客户" >海鼎</div>
+								</div>
+							</div>
+						</li>
+						<li>
+							<div class="g-importList-title">问题类型</div>
+							<div class="g-importList-content">
+								<div class="i-xiala-list">
+									<div  id="gs4" class="on">未选择</div>
+								</div>
+							</div>
+						</li>
+						<li>
+							<div class="g-importList-title">跟进人</div>
+							<div class="g-importList-content">
+								<div class="i-xiala-list">
+									<div id="gs5" class="on">未选择</div>
+								</div>
+							</div>
+						</li>
+						<li>
+							<div class="g-importList-title">跟进部门</div>
+							<div class="g-importList-content">
+								<div class="i-xiala-list">
+									<div  id="gs6" class="on">未选择</div>
+								</div>
+							</div>
+						</li>
+						<li>
+							<div class="g-importList-title">问题标签</div>
+							<div class="g-importList-content">
+								<div class="i-xiala-list">
+									<div  id="gs7" class="on">可多选</div>
+								</div>
+							</div>
+						</li>
+						<li>
+							<div class="g-importList-zp"></div>
+						</li>
+					</ul>
+				</div>
+				<div class="swiper-slide">
+					<ul class="g-importList">
+						<li>
+							<div class="g-importList-title">项目名称</div>
+							<div class="g-importList-content">
+								<div class="i-xiala-list">
+									<div id="sp1" class="on">未选择</div>
+								</div>
+							</div>
+						</li>
+						<li>
+							<div class="g-importList-title">商铺名称</div>
+							<div class="g-importList-content">
+								<div class="i-xiala-list">
+									<div id="sp2" class="on">未选择</div>
+								</div>
+							</div>
+						</li>
+
+						<li>
+							<div class="g-importList-title">商铺位置</div>
+							<div class="g-importList-content">
+								<div id="sp3" class="i-text"></div>
+							</div>
+						</li>
+						
+					</ul>
+				</div>
+				<div class="swiper-slide">
+					<ul class="g-importList">
+						<li>
+				    		<div class="g-importList-title">发生时间</div>
+				    		<div class="g-importList-content">
+				    			<div class="i-date">
+									<input id="ms1" type="date" placeholder="未选择" onchange="app.dateVerify(this,1)"/>
+								</div>
+				    		</div>
+				    	</li>
+				    	<li>
+				    		<div class="g-importList-title">提出时间</div>
+				    		<div class="g-importList-content">
+				    			<div class="i-date">
+									<input  id="ms2" type="date" placeholder="未选择" onchange="app.dateVerify(this,1)"/>
+								</div>
+				    		</div>
+				    	</li>
+				    	<li>
+				    		<div class="g-importList-title">预计解决时间</div>
+				    		<div class="g-importList-content">
+				    			<div class="i-date">
+									<input  id="ms3" type="date" placeholder="未选择" onchange="app.dateVerify(this,2)"/>
+								</div>
+				    		</div>
+				    	</li>				    	
+						<li>
+							<div class="g-importList-title">解决人</div>
+							<div class="g-importList-content">
+								<div class="i-import">
+									<input  id="ms4" type="text" placeholder="请输入" />
+								</div>
+							</div>
+						</li>
+						<li>
+				    		<div class="g-importList-title">解决时间</div>
+				    		<div class="g-importList-content">
+				    			<div class="i-date">
+									<input  id="ms5" type="date" placeholder="未选择" onchange="app.dateVerify(this,2)"/>
+								</div>
+				    		</div>
+				    	</li>
+				    	<li>
+							<div class="g-importList-title">采集点类型</div>
+							<div class="g-importList-content">
+								<div class="i-xiala-list">
+									<div  id="ms6" class="on">未选择</div>
+								</div>
+							</div>
+						</li>
+						<li>
+							<div class="g-importList-title">采集点方式</div>
+							<div class="g-importList-content">
+								<div class="i-xiala-list">
+									<div  id="ms7" class="on">未选择</div>
+								</div>
+							</div>
+						</li>
+						
+					</ul>
+					<div class="g-fa" placeholder="请输入问题描述" id="wtms" contenteditable="true" style="margin-top:0; height: 1.4rem;"></div>
+				</div>
+				<div class="swiper-slide">
+					<ul class="g-importList">
+				    	<div class="swiper-slide">
+							<div class="i-addImg">
+								<div class="img" id="imgShow">
+									<div onclick="app.fullImg(0)"></div>
+									<div onclick="app.fullImg(1)"></div>
+								</div>
+								<div class="add"><input type="file" id="fileImg" onchange="app.getImgUrl();"/></div>
+							</div>
+						</div>
+				    </ul>
+				</div>
+				<div class="swiper-slide">
+					<div class="g-fa" placeholder="请输入解决方案" id="jjfa" contenteditable="true"></div>
+				</div>
+				
+			</div>
+		</div>
+		<!-- 保存按钮 -->
+		<div class="g-ok">
+			<div id="save">保存</div>
+		</div>
+		
+		<script src="js/swiper.js"></script>
+		<script>
+			var sp = {	//商铺信息
+				sp1:null,	//项目名称
+				sp2:null,	//商铺名称
+				sp3:null,	//商铺位置
+				sp2Data:null,
+				proData:null,
+				proid:null,	
+				shopid:null,
+				init:function(){
+					sp.sp1Fun()
+				},
+				selectSp1:function(){
+					sp.sp1 = $("#sp1").html();
+					sp.sp2Fun();
+					for(var i = 0; i<sp.proData.length; i++){
+						if(sp.proData[i].proName == sp.sp1){
+							sp.proid = sp.proData[i].proId;
+							return;
+						}
+					}
+
+				},
+				sp1Fun:function(){
+					$.ajax({	
+					   url: "http://www.onetoend.cn/hdk/project/getSome",
+					   type: "get",
+					   dataType:"jsonp",
+					   jsonpCallback:"project_null_getSome",
+					   success:function(data){
+					   		sp.proData = data;
+					   		var text = ''
+					   		for(var i = 0 ; i<data.length; i++){
+					   			if(i == data.length -1){
+					   				text += data[i].proName
+					   			}else{
+					   				text += data[i].proName + ','
+					   			}
+					   		}
+					   		$('#sp1')[0].dataset.select = text
+					   		$("#sp1").click(function(){
+					   			app.select(this,1,sp.selectSp1);
+					   		})
+					   }					   
+					})
+				},
+				selectSp2:function(){
+					sp.sp2 = $("#sp2").html();
+					for(var i = 0; i<sp.sp2Data.length; i++){
+						if(sp.sp2 == sp.sp2Data[i].shopName){
+							sp.sp3 = sp.sp2Data[i].shopPosition;
+							sp.shopid = sp.sp2Data[i].shopId;
+							$('#sp3').html(sp.sp3);
+							return;
+						}
+					}
+				},
+				sp2Fun:function(){
+					$.ajax({	
+					   url: "http://www.onetoend.cn/hdk/shops/selectForCombobox",
+					   type: "post",
+					   data:{"proName":sp.sp1},
+					   dataType:"jsonp",
+					   jsonpCallback:"shops_selectForCombobox",
+					   success:function(data){
+					   		sp.sp2Data = data;
+					   		var text = ''
+					   		for(var i = 0 ; i<data.length; i++){
+					   			if(i == data.length -1){
+					   				text += data[i].shopName
+					   			}else{
+					   				text += data[i].shopName + ','
+					   			}
+					   		}
+					   		$('#sp2')[0].dataset.select = text
+					   		$("#sp2").click(function(){
+					   			app.select(this,1,sp.selectSp2);
+					   		})
+					   }					   
+					})
+				}
+			}
+			
+			var gs = {//问题概述
+				gs1:null,		//问题编号
+				gs2:null,		//问题状态
+				gs3:'海鼎',		//跟进方
+				gs4:null,		//问题类型
+				gs5:null,		//跟进人
+				gs6:null,		//跟进部门
+				gs7:null,		//问题标签
+				gs7Arr:[],		//问题标签数组
+				gs7String:'',	//问题标签字符串
+				init:function(){
+					gs.gs1Fun();
+				},
+				gs1Fun:function(){
+					$('#gs1').on('input propertychange', function() { 
+						gs.gs1 = $(this).val();					
+					});
+					gs.gs2Fun();
+				},
+				selectGs2:function(){
+					gs.gs2 = $("#gs2").html();
+				},
+				gs2Fun:function(){
+					$.ajax({	
+					   url: "http://www.onetoend.cn/hdk/state/getSome",
+					   type: "get",
+					   data:{"ownerTable":"problem_sation"},
+					   dataType:"jsonp",
+					   jsonpCallback:"state_null_getSome",
+					   success:function(data){
+					   		var text = ''
+					   		for(var i = 0 ; i<data.length; i++){
+					   			if(i == data.length -1){
+					   				text += data[i].shopName
+					   			}else{
+					   				text += data[i].shopName + ','
+					   			}
+					   		}
+					   		$('#gs2')[0].dataset.select = text
+					   		$("#gs2").click(function(){
+					   			app.select(this,1,gs.selectGs2);
+					   		})
+					   		gs.gs3Fun();
+					   }					   
+					})
+				},
+				selectGs3:function(){
+					gs.gs3 = $("#gs3").html();
+				},
+				gs3Fun:function(){
+					$("#gs3").click(function(){
+					   	app.select(this,1,gs.selectGs3);
+					})
+					gs.gs4Fun();
+				},
+				selectGs4:function(){
+					gs.gs4 = $("#gs4").html();
+				},
+				gs4Fun:function(){	
+					$.ajax({	
+					   url: "http://www.onetoend.cn/hdk/state/getSome",
+					   type: "get",					
+					   dataType:"jsonp",
+					   data:{'ownerTable':'problem_type'},
+					   jsonpCallback:"state_null_getSome",
+					   jsonp: "callback",
+					   success:function(data){
+					   		var text = ''
+					   		for(var i = 0 ; i<data.length; i++){
+					   			if(i == data.length -1){
+					   				text += data[i].staName
+					   			}else{
+					   				text += data[i].staName + ','
+					   			}
+					   		}
+					   		$('#gs4')[0].dataset.select = text
+					   		$("#gs4").click(function(){
+							   	app.select(this,1,gs.selectGs4);
+							})
+					   		gs.gs5Fun();
+					   }					   
+					})	
+					
+					
+				},
+				selectGs5:function(){
+					gs.gs5 = $("#gs5").html();
+				},
+				gs5Fun:function(){
+					$.ajax({	
+					   url: "http://www.onetoend.cn/hdk/user/getSome",
+					   type: "get",					
+					   dataType:"jsonp",
+					   jsonpCallback:"getSome",
+					   jsonp: "callback",
+					   success:function(data){
+					   		var text = ''
+					   		for(var i = 0 ; i<data.length; i++){
+					   			if(i == data.length -1){
+					   				text += data[i].userName
+					   			}else{
+					   				text += data[i].userName + ','
+					   			}
+					   		}
+					   		$('#gs5')[0].dataset.select = text
+					   		$("#gs5").click(function(){
+							   	app.select(this,1,gs.selectGs5);
+							})
+					   		gs.gs6Fun();
+					   }					   
+					})					
+				},
+				selectGs6:function(){
+					gs.gs6 = $("#gs6").html();
+				},
+				gs6Fun:function(){
+				
+					$.ajax({	
+					   url: "http://www.onetoend.cn/hdk/user/getDepartment",
+					   type: "get",					
+					   dataType:"jsonp",
+					   jsonpCallback:"getDepartment",
+					   jsonp: "callback",
+					   success:function(data){
+					   		var text = ''
+					   		for(var i = 0 ; i<data.length; i++){
+					   			if(i == data.length -1){
+					   				text += data[i].department
+					   			}else{
+					   				text += data[i].department + ','
+					   			}
+					   		}
+					   		$('#gs6')[0].dataset.select = text
+					   		$("#gs6").click(function(){
+							   	app.select(this,1,gs.selectGs6);
+							})
+					   		gs.gs7Fun();
+					   }					   
+					})					
+				},
+				selectGs7:function(){
+					gs.gs7 = $("#gs7").html();		
+					gs.gs7Arr.push(gs.gs7);
+					gs.gs7Man();
+					$("#gs7").html('可多选');
+					$("#gs7").addClass('on');
+				},
+				gs7Man:function(){					
+					if(gs.gs7Arr.length > 3){
+						gs.gs7Arr.splice(0,1);
+					}
+					gs.gs7String = gs.gs7Arr.join(",");
+					var dom = [];
+					for(var i = 0; i<gs.gs7Arr.length; i++){
+						dom.push('<p>'+gs.gs7Arr[i]+'</p>');
+					}
+					$('.g-importList-zp').html(dom.join(''));
+				},
+				gs7Fun:function(){	
+					$.ajax({	
+					   url: "http://www.onetoend.cn/hdk/state/getSome",
+					   type: "get",			
+					   data:{'ownerTable':'problem_table'},
+					   dataType:"jsonp",
+					   jsonpCallback:"state_null_getSome",
+					   jsonp: "callback",
+					   success:function(data){
+					   		var text = ''
+					   		for(var i = 0 ; i<data.length; i++){
+					   			if(i == data.length -1){
+					   				text += data[i].staName
+					   			}else{
+					   				text += data[i].staName + ','
+					   			}
+					   		}
+					   		$('#gs7')[0].dataset.select = text
+					   		$("#gs7").click(function(){
+							   	app.select(this,3,gs.selectGs7);
+							})
+					   }					   
+					})					
+				}
+			}
+			
+			var ms ={//问题描述
+				init:function(){
+					$.ajax({	
+					   url: "http://www.onetoend.cn/hdk/problem/getEquipmentList",
+					   type: "get",					
+					   dataType:"jsonp",
+					   jsonpCallback:"problem_getEquipmentList",
+					   jsonp: "callback",
+					   success:function(data){
+					   		var text = ''
+					   		var text2 = ''
+					   		for(var i = 0 ; i<data.length; i++){
+					   			if(i == data.length -1){
+					   				text += data[i].eqType
+					   				text2 += data[i].eqStyle
+					   			}else{
+					   				text += data[i].eqType + ','
+					   				text2 += data[i].eqStyle + ','
+					   			}
+					   		}
+					   		$('#ms6')[0].dataset.select = text
+					   		$('#ms7')[0].dataset.select = text2
+					   		$("#ms6,#ms7").click(function(){
+							   	app.select(this,1);
+							})
+					   }					   
+					})	
+				}
+			}
+			function submit(){ //新建保存
+				var obj = {
+					'problem.state':gs.gs2		//问题状态
+					,'problem.proId':sp.proid		//项目编号
+					,'problem.shopId':sp.shopid	//商铺编号
+					,'problem.eqId':$('#ms6').html()		//采集点编号?
+					,'problem.mesId':gs.gs1		//跟踪编号?
+					,'problem.problemType':gs.gs4	//问题类型
+					,'problem.problemObject':gs.gs3		//跟踪方
+					,'problem.problemDepartment':gs.gs6	//跟踪部门
+					,'problem.problemUser':gs.gs5	//跟踪人
+					,'problem.problemHappen':$('#ms1').val()	//问题发生时间
+					,'problem.problemPut':$('#ms2').val()	//问题提出时间
+					,'problem.problemEstimate':$('#ms3').val()	//预计完成时间
+					,'problem.problemResloveTime':$('#ms5').val()	//解决时间
+					,'problem.problemResolveUser':$('#ms4').val()	//解决人
+					,'problem.problemDetails':$('#wtms').html()		//问题描述
+					,'problem.problemEnclosure':JSON.stringify(imgs)	//附件信息
+					,'problem.problemTable':gs.gs7String	//标签
+					,'problem.problemPlan':$('#jjfa').html()	//解决方案
+				}
+				$.ajax({	
+				   url: "http://www.onetoend.cn/hdk/problem/submit",
+				   type: "post",		
+				   data:obj,
+				   dataType:"jsonp",	   
+				   success:function(data){
+				   		if(data.message == "success"){
+				   			alert('保存成功');		
+				   			window.location='issueList.html'
+				   		}else if(data.message == "fail"){
+				   			alert('保存失败');
+				   		}
+				   }					   
+				})	
+			}
+			$(function(){
+				sp.init();
+				gs.init();
+				ms.init();
+				$("#save").click(function(){ //保存按钮
+					app.alert("确定要保存吗？",2,submit)
+				})
+			})
+			swiper1 = new Swiper('.swiper-container1', {	//菜单区滑块
+				paginationClickable: true,
+				slidesPerView: 'auto',
+				freeMode: true
+			});
+			
+			swiper2 = new Swiper('.swiper-container2', {	//内容区滑块
+				autoHeight: true,
+				onSlidePrevStart: function(swiper) {
+					app.upStyle(swiper.activeIndex);
+				},
+				onSlideNextStart: function(swiper) {
+					app.upStyle(swiper.activeIndex);
+				}
+			});
+		</script>
+	</body>
+
+</html>

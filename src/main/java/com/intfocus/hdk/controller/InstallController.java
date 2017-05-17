@@ -66,51 +66,15 @@ public class InstallController implements ApplicationContextAware {
     @ResponseBody
     public String test(HttpServletResponse res , HttpServletRequest req ,HttpSession session,
     		              @RequestParam String files)  {
-       String dataPrix = "";
-       String data = "";
-       
-       JSONArray  jsonArray  = JSONArray.parseArray(files);
-       String [] d = null ; 
-	   if(0 != jsonArray.size() ){ 
-		   for(int i =0 ; i < jsonArray.size();i = i +1){
-			    d = jsonArray.getString(i).split("base64,"); 
-			    if(d != null && d.length == 2){
-			    	
-			    	dataPrix =d[0];
-			    	data = d[1];
-			    }else{
-			    	return "{'message':'上传失败，数据不合法'}";
-			    }
-               
-               String suffix = "";
-               if("data:image/jpeg;".equalsIgnoreCase(dataPrix)){//data:image/jpeg,base64编码的jpeg图片数据
-                   suffix = ".jpg";
-               } else if("data:image/x-icon;".equalsIgnoreCase(dataPrix)){//data:image/x-icon,base64编码的icon图片数据
-                   suffix = ".ico";
-               } else if("data:image/gif;".equalsIgnoreCase(dataPrix)){//data:image/gif;base64,base64编码的gif图片数据
-                   suffix = ".gif";
-               } else if("data:image/png;".equalsIgnoreCase(dataPrix)){//data:image/png;base64,base64编码的png图片数据
-                   suffix = ".png";
-               }
-               
-               String tempFileName = ComUtil.getRandomFileName()+ suffix;
-               byte[] bs = Base64Utils.decodeFromString(data);
-               try{
-                   //使用apache提供的工具类操作流
-                   FileUtils.writeByteArrayToFile(new File(req.getSession().getServletContext().getRealPath("upload"), tempFileName), bs);  
-               }catch(Exception ee){
-                  ee.printStackTrace();
-                  return "{'messsage':'fail'}";
-               }
-		   }
-	  }
+	   
+	   ComUtil.savePicture(files, req.getSession().getServletContext().getRealPath("upload"));
 	   return  "{'messsage':'success'}";
    
    }
     @RequestMapping(value = "submit" , method=RequestMethod.POST)
     @ResponseBody
  public String submit(HttpServletResponse res , HttpServletRequest req ,HttpSession session
-    		              ,  Install install,Printer printer,Cash cash,Equipment equipmengt ,
+    		              ,  Install install,Printer printer,Cash cash,Equipment equipment ,
     		              @RequestParam(value = "fileImg", required = false) MultipartFile[] files) throws Exception {
 	  try{ 
 	   String path = req.getSession().getServletContext().getRealPath("upload");
@@ -139,13 +103,13 @@ public class InstallController implements ApplicationContextAware {
 		List<Project> projects = projectMapper.selectByWhere(where );
 		Project i = projects.get(0);
 		install.setProId(i.getProId());	
-		equipmengt.setProId(i.getProId());
+		equipment.setProId(i.getProId());
 		
 		install.setAttachment_url(org.apache.commons.lang.StringUtils.join(filePaths.toArray(),","));
     	installmapper.insertSelective(install);
     	printerMapper.insertSelective(printer);
     	cashMapper.insertSelective(cash);
-    	equipmentMapper.insertSelective(equipmengt);
+    	equipmentMapper.insertSelective(equipment);
     	return "{'message':success}";
 	  }catch(Exception e){
 		  e.printStackTrace();

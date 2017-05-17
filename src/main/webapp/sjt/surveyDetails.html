@@ -1,0 +1,776 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no" />
+		<meta content="yes" name="apple-mobile-web-app-capable" />
+		<meta content="telephone=no" name="format-detection" />
+		<meta name="browsermode" content="application">
+		<meta name="renderer" content="webkit">
+		<title>调研详情</title>
+		<link rel="stylesheet" type="text/css" href="css/global.css" />
+		<link rel="stylesheet" href="css/swiper.css">
+		<script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
+		<script src="js/global.js" type="text/javascript" charset="utf-8"></script>
+	</head>
+
+	<body>
+		<!-- 顶部菜单  -->
+		<div class="swiper-container swiper-container1">
+			<div class="swiper-wrapper" id="menu">
+				<div class="swiper-slide on">调研概述</div>
+				<div class="swiper-slide">商铺信息</div>
+				<div class="swiper-slide">收银机信息</div>
+				<div class="swiper-slide">打印机信息</div>
+				<div class="swiper-slide">其他信息</div>
+				<div class="swiper-slide">附件</div>
+			</div>
+		</div>
+		<!-- 内容区 -->
+		<div class="swiper-container swiper-container2">
+			<div class="swiper-wrapper">
+				<div class="swiper-slide">
+					<ul class="g-importList">
+		
+						<li>
+							<div class="g-importList-title">调研编号：</div>
+							<div class="g-importList-content">
+								<div class="i-import">
+									<input type="text" id="dyid" placeholder="请输入" />
+								</div>
+							</div>
+						</li>
+						<li>
+							<div class="g-importList-title">商铺编号：</div>
+							<div class="g-importList-content">
+								<div class="i-text" id="shopID"></div>
+							</div>
+						</li>
+						<li>
+							<div class="g-importList-title">收银机编号：</div>
+							<div class="g-importList-content">
+								<div class="i-text" id="shouyinid"></div>
+							</div>
+						</li>
+						<li>
+							<div class="g-importList-title">打印机编号：</div>
+							<div class="g-importList-content">
+								<div class="i-text" id="dayingid"></div>
+							</div>
+						</li>
+					</ul>
+				</div>
+				<div class="swiper-slide">
+					<ul class="g-importList">
+						<li>
+							<div class="g-importList-title">项目名称</div>
+							<div class="g-importList-content">
+								<div class="i-xiala-list">
+									<div id="itemName"onclick="app.select(this,1,shop.selectPorName)" class="on">未选择</div>
+								</div>
+							</div>
+						</li>
+						<li>
+							<div class="g-importList-title">商铺名称</div>
+							<div class="g-importList-content">
+								<div class="i-xiala-list">
+									<div id="shopName"  onclick="app.select(this,1,shop.selectShopName)" class="on">未选择</div>
+								</div>
+							</div>
+						</li>
+						<li>
+							<div class="g-importList-title">商铺状态</div>
+							<div class="g-importList-content">
+								<div class="i-text" id="shopState"></div>
+							</div>
+						</li>
+						<li>
+							<div class="g-importList-title">商铺位置</div>
+							<div class="g-importList-content">
+								<div class="i-text" id="shopSite"></div>
+							</div>
+						</li>
+						<li>
+							<div class="g-importList-title">经营分类</div>
+							<div class="g-importList-content">
+								<div class="i-text" id="shopFl1"></div>
+							</div>
+						</li>
+						<li>
+							<div class="g-importList-title">经营次分类</div>
+							<div class="g-importList-content">
+								<div class="i-text" id="shopFl2"></div>
+							</div>
+						</li>
+					</ul>
+				</div>
+				<div class="swiper-slide">
+					<ul class="g-importList">
+						<li>
+							<div class="g-importList-title">收银机编号</div>
+							<div class="g-importList-content">
+								<div class="i-import">
+									<input id="syjId" type="text" placeholder="请输入" />
+								</div>
+							</div>
+						</li>
+						<li>
+							<div class="g-importList-title">收银机操作系统</div>
+							<div class="g-importList-content">
+								<div class="i-xiala-list">
+									<div class="on" id="syjSystem">未选择</div>									
+								</div>
+							</div>
+						</li>
+						<li>
+							<div class="g-importList-title">账户收银系统品牌</div>
+							<div class="g-importList-content">
+								<div class="i-xiala-list">
+									<div class="on" id="syjBrand">未选择</div>
+								</div>
+							</div>
+						</li>
+						<li>
+							<div class="g-importList-title">收银机端接口</div>
+							<div class="g-importList-content">
+								<div class="i-xiala-list">
+									<div class="on" id="syjPort">未选择</div>
+								</div>
+							</div>
+						</li>
+						<li>
+							<div class="g-importList-title">有无驱动</div>
+							<div class="g-importList-content">
+								<div class="i-choice">
+									<div class="i-choice-row">
+										<div id="drive1" class="on" onclick="syj.qudong('是')"></div>
+										<p>是</p>
+									</div>
+									<div class="i-choice-row">
+										<div  id="drive2" onclick="syj.qudong('否')"></div>
+										<p>否</p>
+									</div>
+								</div>
+							</div>
+						</li>
+					</ul>
+				</div>
+				<div class="swiper-slide">
+					<ul class="g-importList">
+				    	<li>
+				    		<div class="g-importList-title">打印机编号</div>
+				    		<div class="g-importList-content">
+				    			<div class="i-import">
+									<input type="text" id="dyjId" placeholder="请输入" />
+								</div>
+				    		</div>
+				    	</li>
+				    	<li>
+				    		<div class="g-importList-title">打印机品牌型号</div>
+				    		<div class="g-importList-content">
+				    			<div class="i-import">
+									<input type="text"  id="dyjxh" placeholder="请输入" />
+								</div>
+				    		</div>
+				    	</li>
+				    	<li>
+				    		<div class="g-importList-title">打印机端口</div>
+				    		<div class="g-importList-content">
+				    			<div class="i-xiala-list">
+									<div class="on" id="dyjPort">未选择</div>
+								</div>
+				    		</div>
+				    	</li>
+				    </ul>
+				</div>
+				<div class="swiper-slide">
+					<ul class="g-importList">
+				    	<li>
+				    		<div class="g-importList-title" style="width: 3.1rem;">客户网络情况</div>
+				    		<div class="g-importList-content">
+				    			<div class="i-choice">
+				    				<div class="i-choice-row">
+				    					<div id="qt1" onclick="qt.selectNetwork('外网')"></div>
+				    					<p>外网</p>
+				    				</div>
+				    				<div class="i-choice-row">
+				    					<div id="qt2" onclick="qt.selectNetwork('wifi')"></div>
+				    					<p>wifi</p>
+				    				</div>
+				    			</div>
+				    		</div>
+				    	</li>
+				    	<li>
+				    		<div class="g-importList-title" style="width: 3.1rem;">空余电源插口情况</div>
+				    		<div class="g-importList-content">
+				    			<div class="i-choice">
+				    				<div class="i-choice-row">
+				    					<div id="qt3" onclick="qt.selectPlug('有')"></div>
+				    					<p>有</p>
+				    				</div>
+				    				<div class="i-choice-row">
+				    					<div id="qt4" onclick="qt.selectPlug('无')"></div>
+				    					<p>无</p>
+				    				</div>
+				    			</div>
+				    		</div>
+				    	</li>
+				    	<li>
+				    		<div class="g-importList-title" style="width: 3.1rem;">租户是否有会员系统</div>
+				    		<div class="g-importList-content">
+				    			<div class="i-choice">
+				    				<div class="i-choice-row">
+				    					<div id="qt5" onclick="qt.selectVip('是')"></div>
+				    					<p>是</p>
+				    				</div>
+				    				<div class="i-choice-row">
+				    					<div id="qt6" onclick="qt.selectVip('否')"></div>
+				    					<p>否</p>
+				    				</div>
+				    			</div>
+				    		</div>
+				    	</li>
+				    	<li>
+				    		<div class="g-importList-title" style="width: 3.1rem;">会员信息是否小票上体现</div>
+				    		<div class="g-importList-content">
+				    			<div class="i-choice">
+				    				<div class="i-choice-row">
+				    					<div id="qt7" onclick="qt.selectNote('是')"></div>
+				    					<p>是</p>
+				    				</div>
+				    				<div class="i-choice-row">
+				    					<div id="qt8" onclick="qt.selectNote('否')"></div>
+				    					<p>否</p>
+				    				</div>
+				    			</div>
+				    		</div>
+				    	</li>
+				    	<li style="visibility: hidden;" id="subnote">
+				    		<div class="g-importList-title" style="width: 3.1rem;"> </div>
+				    		<div class="g-importList-content">
+				    			<div class="i-import">
+									<input  type="text" id="vipinfo" placeholder="请输入" />
+								</div>
+				    		</div>
+				    	</li>
+				    </ul>
+				</div>
+				<div class="swiper-slide">
+					<div class="i-addImg">
+						<div class="img" id="imgShow">
+							<div onclick="app.fullImg(0)"></div>
+							<div onclick="app.fullImg(1)"></div>
+						</div>
+						<div class="add"><input type="file" id="fileImg" onchange="app.getImgUrl();"/></div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- 保存按钮 -->
+		<div class="g-ok">
+			<div id="save">保存</div>
+		</div>
+		
+		<script src="js/swiper.js"></script>
+		<script>
+			var shop = {	//商铺
+				itemName:null,	//项目名称
+				shop:null,		//商店集合
+				shopName:null,	//商店名称
+				item:null,		//项目集合
+				itemId:null,	//项目id
+				init:function(){
+					this.initPorName();
+				},
+				selectPorName:function(){//选择项目名称
+					shop.itemName = $('#itemName').html();
+					shop.initShopName();
+					for(var i = 0 ; i<shop.item.length; i++){
+						if(shop.itemName == shop.item[i].proName){
+							shop.itemId =  shop.item[i].proId;
+						}
+					}
+				},
+				initPorName:function(){	//初始化项目名称
+					var time  =  new Date().getTime();
+					$.ajax({	
+					   url: "http://www.onetoend.cn/hdk/project/getSome",
+					   type: "get",
+					   data:{"time":time},
+					   dataType:"jsonp",
+					   jsonpCallback:"project_"+time+"_getSome",
+					   success:function(data){	
+					   		shop.item = data;
+					   		var text = ''
+					   		for(var i = 0 ; i<data.length; i++){
+					   			if(i == data.length -1){
+					   				text += data[i].proName
+					   			}else{
+					   				text += data[i].proName + ','
+					   			}
+					   		}
+					   		$('#itemName')[0].dataset.select = text
+					   }					   
+					})
+				},
+				selectShopName:function(){
+					shop.shopName = $('#shopName').html();
+					for(var i = 0 ; i<shop.shop.length; i++){
+						if(shop.shopName == shop.shop[i].shopName){
+							$("#shopState").html(shop.shop[i].shopMerStation);
+							$("#shopSite").html(shop.shop[i].shopFloor);
+							$("#shopFl1").html(shop.shop[i].shopType);
+							$("#shopFl2").html(shop.shop[i].shopSecType);
+							$("#shopID").html(shop.shop[i].proId);
+						}
+					}
+				},
+				initShopName:function(){ //初始化商店名称
+					
+					$.ajax({	
+					   url: "http://www.onetoend.cn/hdk/shops/selectForCombobox",
+					   type: "get",
+					   data:{"proName":shop.itemName},
+					   dataType:"jsonp",
+					   jsonpCallback:"shops_selectForCombobox",
+					   success:function(data){
+					   		$('#shopName').addClass('on').html('未选择');
+					   		$("#shopState").html('');
+							$("#shopSite").html('');
+							$("#shopFl1").html('');
+							$("#shopFl2").html('');
+							$("#shopID").html('');
+					   		shop.shop = data;
+					   		var text = ''
+					   		for(var i = 0 ; i<data.length; i++){
+					   			if(i == data.length -1){
+					   				text += data[i].shopName
+					   			}else{
+					   				text += data[i].shopName + ','
+					   			}
+					   		}
+					   		$('#shopName')[0].dataset.select = text
+					   }					   
+					})
+				}
+			}
+			
+			var syj = {	//收银机
+				system:null,   //收银机系统
+				brand:null,  //收银机器品牌
+				port:null,   //收银机端口
+				id:null,	//收银机编号
+				drive:'是',	//有无驱动
+				init:function(){
+					syj.syjSystem();
+					syj.syjBrand();
+					syj.syjPort();
+			
+					$('#syjId').on('input propertychange', function() { 
+						syj.id = $(this).val();
+						$("#shouyinid").html(syj.id);
+					});
+				},
+				qudong:function(data){
+					syj.drive = data;
+				},
+				selectSyjSystem:function(){
+					syj.system = $('#syjSystem').html();
+				},
+				syjSystem:function(){
+					var time  =  new Date().getTime();
+					$.ajax({	
+					   url: "http://www.onetoend.cn/hdk/state/getSome",
+					   type: "get",
+					   data:{"ownerTable":"cash_system","time":time},
+					   dataType:"jsonp",
+					   jsonpCallback:"state_"+time+"_getSome",
+					   success:function(data){
+					   		var text = ''
+					   		for(var i = 0 ; i<data.length; i++){
+					   			if(i == data.length -1){
+					   				text += data[i].staName
+					   			}else{
+					   				text += data[i].staName + ','
+					   			}
+					   		}
+					   		$('#syjSystem')[0].dataset.select = text;
+					   		$('#syjSystem').click(function(){
+					   			app.select(this,1,syj.selectSyjSystem)
+					   		})					   		
+					   }					   
+					})
+				},
+				selectSyjBrand:function(){
+					syj.brand = $('#syjBrand').html();
+				},
+				syjBrand:function(){	
+					var time  =  new Date().getTime();
+					$.ajax({	
+					   url: "http://www.onetoend.cn/hdk/state/getSome",
+					   type: "get",
+					   data:{"ownerTable":"cash_brand","time":time},
+					   dataType:"jsonp",
+					   jsonpCallback:"state_"+time+"_getSome",
+					   success:function(data){
+					   		var text = ''
+					   		for(var i = 0 ; i<data.length; i++){
+					   			if(i == data.length -1){
+					   				text += data[i].staName
+					   			}else{
+					   				text += data[i].staName + ','
+					   			}
+					   		}
+					   		$('#syjBrand')[0].dataset.select = text;
+					   		$('#syjBrand').click(function(){
+					   			app.select(this,1,syj.selectSyjBrand)
+					   		})
+					   }					   
+					})
+				},
+				selectSyjPort:function(){
+					syj.port = $('#syjPort').html();
+				},
+				syjPort:function(){
+					var time  =  new Date().getTime();
+					$.ajax({	
+					   url: "http://www.onetoend.cn/hdk/state/getSome",
+					   type: "get",
+					   data:{"ownerTable":"cash_port","time":time},
+					   dataType:"jsonp",
+					   jsonpCallback:"state_"+time+"_getSome",
+					   success:function(data){
+					   		var text = ''
+					   		for(var i = 0 ; i<data.length; i++){
+					   			if(i == data.length -1){
+					   				text += data[i].staName
+					   			}else{
+					   				text += data[i].staName + ','
+					   			}
+					   		}
+					   		$('#syjPort')[0].dataset.select = text;
+					   		$('#syjPort').click(function(){
+					   			app.select(this,1,syj.selectSyjPort)
+					   		})
+					   }					   
+					})
+				}
+			}
+			
+			var dyj = {	//打印机
+				port:null,	//打印机端口
+				id:null,	//打印机ID
+				init:function(){
+					dyj.dyjPort();
+					$('#dyjId').on('input propertychange', function() { 
+						dyj.id = $(this).val();
+						$("#dayingid").html(dyj.id);
+					});
+				},
+				selectDyjPort:function(){
+					dyj.port = $('#dyjPort').html();
+				},
+				dyjPort:function(){
+					var time  =  new Date().getTime();
+					$.ajax({	
+					   url: "http://www.onetoend.cn/hdk/state/getSome",
+					   type: "get",
+					   data:{"ownerTable":"printer_port","time":time},
+					   dataType:"jsonp",
+					   jsonpCallback:"state_"+time+"_getSome",
+					   success:function(data){
+					   		var text = ''
+					   		for(var i = 0 ; i<data.length; i++){
+					   			if(i == data.length -1){
+					   				text += data[i].staName
+					   			}else{
+					   				text += data[i].staName + ','
+					   			}
+					   		}
+					   		$('#dyjPort')[0].dataset.select = text;
+					   		$('#dyjPort').click(function(){
+					   			app.select(this,1,syj.selectDyjPort)
+					   		})
+					   		
+					   }					   
+					})
+				}
+			}
+			
+			var qt = {//其他
+				network:null,	//网络情况
+				plug:null,		//电源插口情况 
+				vip:null,       //租户是否有会员系统
+				note:null,		//是否小票
+				selectNetwork:function(data){
+					qt.network = data;
+				},		
+				selectPlug:function(data){
+					qt.plug = data;
+				},		
+				selectVip:function(data){
+					qt.vip = data;
+				},		
+				selectNote:function(data){
+					qt.note = data;
+					if(data == "是"){
+						$("#subnote").css("visibility","inherit");
+					}else{
+						$("#subnote").css("visibility","hidden");
+					}
+				}
+			}
+			
+			function submit(){//提交
+				var obj = {
+					//调研
+					'survey.proId':shop.itemId,		//项目编号
+					'survey.shopId':$("#shopID").html(),	//商铺编号
+					'survey.surNetwork':qt.network,			//网络环境
+					'survey.surPower':qt.plug,				//电源插口
+					'survey.surVip':qt.vip,					//会员系统
+					'survey.surVipData':$("#vipinfo").val(),	//会员信息
+					'survey.surId':$("#dyid").val(),		  //调研编号
+//					'survey.surRemarks':'',				 //备注？
+					//收银机
+					'cash.cashId':syj.id,				//收银机编号
+					'cash.cashBrand':syj.brand,			//收银机品牌
+					'cash.cashRegister':syj.system,		//收银系统
+					'cash.cashSystem':syj.system,		//收银操作系统
+					'cash.cashPort':syj.port,			//收银机端口
+					'cash.printerDriver':syj.drive,		//是否有驱动
+					'cash.surId':$("#dyid").val(),		//调研编号
+//					'cash.installId':'',				//安装编号？
+					//打印机
+					'printer.printerId':dyj.id,			//打印机编号
+					'printer.printerBrand':$("#dyjxh").val(),			//打印机品牌
+					'printer.printerModel':$("#dyjxh").val(),		//打印机型号
+					'printer.printerPort':dyj.port,		//打印机端口
+					'printer.printer.surId':$("#dyid").val(),	//调研编号
+//					'installId':'',						//安装编号？			
+					//门店信息
+					'shops.shopId':$("#shopID").html(),	//门店编号
+					'shops.shopPosition':$("#shopSite").html(),	//门店位置
+					'shops.shopFloor':$("#shopSite").html(),	//门店楼层
+					'shops.shopMerName':shop.itemName,	//商铺名称
+					'shops.shopMerStation':$("#shopState").html(),	//商铺状态
+					'shops.shopType':$("#shopFl1").html(),				//商铺分类
+					'shops.shopSecType':$("#shopFl2").html(),			//商铺次分类
+					'shops.shopName':$("#shopName").html(),	//商铺简称
+					'shops.proId':shop.itemId,			//项目编号
+//					'shops.eqType':'',					//采集点类型？
+//					'shops.installId':'',				//安装编号？
+//					'shops.installStation':'',		//安装状态？
+//					'shops.eqId':''				//采集点编号？ 
+				}
+				$.ajax({	
+					   url: "http://www.onetoend.cn/hdk/survey/submit",
+					   type: "post",
+					   data:obj,
+					   dataType:"json",			
+					  // jsonpCallback:"state_null_getSome",
+					   success:function(data){
+					   		if(data.message == "success"){
+					   			alert('提交成功');				
+					   			window.location='surveyList.html'
+					   		}else if(data.message == "fail"){
+					   			alert('提交失败');
+					   		}
+					   }					   
+					})
+			}
+			
+			function xgsubmit(){	//修改
+				var obj={
+					'survey.proId':xg.data.survey.proId,	//项目编号
+					'survey.shopId':$('#shopID').html(),		//门店编号
+					'survey.surNetwork':qt.network,	//商户网络环境
+					'survey.surPower':qt.plug,		//电源插卡
+					'survey.surVip':qt.vip,		//会员系统
+					'survey.surVipData':$("#vipinfo").val(),	//会员信息
+//					'survey.createdAt':'',	//创建时间？
+					'survey.surId':$('#dyid').val(),		//调研编码
+//					'survey.updatedAt':'',	//更新时间？
+//					'survey.surRemarks':'',   //备注
+					'survey.id':xg.data.survey.id,		//自增id
+					'cash.cashId':$('#shouyinid').html(),	//收音机编号
+					'cash.cashBrand':$('#syjBrand').html(),	//收银机品牌
+					'cash.cashRegister':$('#syjSystem').html(),	//收银机系统
+					'cash.cashSystem':$('#syjSystem').html(),		//收银机操作系统
+					'cash.cashPort':$('#syjPort').html(),	//收银机端口
+					'cash.printerDriver':syj.drive,	//是否有驱动
+					'cash.surId':$('#dyid').val(),	//调研编号
+					'cash.id':xg.data.cash.id,	//自增id
+					'printer.id':xg.data.printer.id,	//打印机自增id
+					'printer.printerId':$('#dyjId').val(),	//打印机编号
+					'printer.printerBrand':$("#dyjxh").val(),	//打印机品牌
+					'printer.printerModel':$("#dyjxh").val(),	//打印机型号
+					'printer.printerPort':$('#dyjPort').html(),	//打印机端口
+					'printer.surId':$('#dyid').val(),	//调研编号
+					'shops.id':xg.data.shops.id,	//门店自增id
+					'shops.shopId':$("#shopID").html(),	//门店编号
+					'shops.shopPosition':$('#shopSite').html(), //门店位置
+					'shops.shopFloor':$('#shopSite').html(),	//楼层
+					'shops.shopMerName':$('#shopName').html(),	//商铺名称
+					'shops.shopMerStation':$('#shopState').html(),	//商品状态
+					'shops.shopType':$('#shopFl1').html(),	//商品分类
+					'shops.shopSecType':$('#shopFl2').html(),	//商品次分类
+					'shops.shopName':$("#shopName").html(),	//商品简称
+					'shops.proId':xg.data.shops.proId	//项目编号
+				}
+				$.ajax({	
+					   url: "http://www.onetoend.cn/hdk/survey/modify",
+					   type: "post",
+					   data:obj,
+					   dataType:"json",			
+					  // jsonpCallback:"state_null_getSome",
+					   success:function(data){
+					   		if(data.message == "success"){
+					   			alert('修改成功');			
+					   			window.location='surveyList.html'
+					   		}else if(data.message == "fail"){
+					   			alert('修改失败');
+					   		}
+					   }					   
+					})
+			}
+			
+			var xg = {
+				surId:null,	
+				data:null,
+				init:function(id){
+					xg.surId = id;
+					xg.getData();
+				},
+				getData:function(){
+					$.ajax({	
+					   url: "http://www.onetoend.cn/hdk/survey/gotoModify",
+					   type: "get",
+					   data:{"surId":xg.surId},
+					   dataType:"jsonp",			
+					  // jsonpCallback:"forword:/surveyDetails.jsp",
+					   success:function(data){
+					   		xg.upStyle(data);
+					   		xg.data = data;
+					   }					   
+					})
+				},
+				upStyle:function(data){
+					//调研概述
+					$("#dyid").val(xg.surId);
+					xg.zhidu("dyid");
+					$("#shopID").html(data.shops.proId);					
+					$("#shouyinid").html(data.cash.cashId);
+					$("#dayingid").html(data.printer.printerId);
+					//商铺信息
+					$("#itemName").html(data.survey.proName);
+					xg.zhidu("itemName");
+					$("#shopName").html(data.shops.shopMerName);
+					xg.zhidu("shopName");
+					$("#shopState").html(data.shops.shopMerStation);
+					$("#shopSite").html(data.shops.shopPosition);
+					$("#shopFl1").html(data.shops.shopType);
+					$("#shopFl2").html(data.shops.shopSecType);
+					//收银机
+					$("#syjId").val(data.cash.cashId);
+					$("#syjSystem").html(data.cash.cashSystem);
+					xg.youzhi("syjSystem");
+					$("#syjBrand").html(data.cash.cashBrand);
+					xg.youzhi("syjBrand");
+					$("#syjPort").html(data.cash.cashPort);
+					xg.youzhi("syjPort");
+					if(data.cash.printerDriver == "是"){
+					}else{
+						syj.drive = "否";
+						$("#drive1").removeClass('on');
+						$("#drive2").addClass('on');
+					}
+					//打印机
+					$("#dyjId").val(data.printer.printerId);
+					$("#dyjxh").val(data.printer.printerBrand);
+					$("#dyjPort").html(data.printer.printerPort);
+					xg.youzhi("dyjPort");
+					//其他
+					if(data.survey.surNetwork == "外网"){
+						$('#qt1').addClass('on');
+						qt.network = "外网";
+					}else if(data.survey.surNetwork == "wifi"){
+						$('#qt2').addClass('on');
+						qt.network = "wifi";
+					}
+
+					if(data.survey.surPower == "有"){
+						$('#qt3').addClass('on');
+						qt.plug = "有";
+					}else if(data.survey.surPower == "无"){
+						$('#qt4').addClass('on');
+						qt.plug = "无";
+					}
+					
+					if(data.survey.surVip == "是"){
+						$('#qt5').addClass('on');
+						qt.vip = "是";
+					}else if(data.survey.surVip == "否"){
+						$('#qt6').addClass('on');
+						qt.vip = "否";
+					}
+					
+					if(data.survey.surVipData != null){
+						$('#qt7').addClass('on');
+						qt.note = "是";
+						$("#subnote").css("visibility","inherit");
+					}else if(data.survey.surVipData == null){
+						$('#qt8').addClass('on');
+						qt.note = "否";
+					}
+
+				},
+				zhidu:function(id){
+					$("#" + id).removeClass('on');
+					$("#" + id).parent('div').css('border','none');
+					$("#" + id).css('background','none');
+					$("#" + id).attr('readonly','readonly');
+				},
+				youzhi:function(id){
+					$("#" + id).removeClass('on');
+				}
+			}
+			$(function(){				
+				var surId = app.getUrlSearch("surId");
+				if(surId == null){	// 新建
+					shop.init();
+					syj.init();
+					dyj.init();
+					
+					$("#save").click(function(){ //保存按钮
+						app.alert("确定要保存吗？",2,submit)
+					})
+				}else{	//修改
+					xg.init(surId);
+					syj.init();
+					dyj.init();
+					$("#save").click(function(){ //保存按钮
+						app.alert("确定要保存吗？",2,xgsubmit)
+					})
+				}
+			})
+			swiper1 = new Swiper('.swiper-container1', {	//菜单区滑块
+				paginationClickable: true,
+				slidesPerView: 'auto',
+				freeMode: true
+			});
+			
+			swiper2 = new Swiper('.swiper-container2', {	//内容区滑块
+				autoHeight: true,
+				onSlidePrevStart: function(swiper) {
+					app.upStyle(swiper.activeIndex);
+				},
+				onSlideNextStart: function(swiper) {
+					app.upStyle(swiper.activeIndex);
+				}
+			});
+		</script>
+	</body>
+
+</html>
