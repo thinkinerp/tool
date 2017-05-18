@@ -322,7 +322,7 @@
 							$("#shopSite").html(shop.shop[i].shopFloor);
 							$("#shopFl1").html(shop.shop[i].shopType);
 							$("#shopFl2").html(shop.shop[i].shopSecType);
-							$("#shopID").html(shop.shop[i].proId);
+							$("#shopID").html(shop.shop[i].shopId);
 						}
 					}
 				},
@@ -532,6 +532,7 @@
 					'survey.surVip':qt.vip,					//会员系统
 					'survey.surVipData':$("#vipinfo").val(),	//会员信息
 					'survey.surId':$("#dyid").val(),		  //调研编号
+					'survey.attachmentUrl':JSON.stringify(imgs),
 //					'survey.surRemarks':'',				 //备注？
 					//收银机
 					'cash.cashId':syj.id,				//收银机编号
@@ -568,14 +569,14 @@
 					   url: "http://www.onetoend.cn/hdk/survey/submit",
 					   type: "post",
 					   data:obj,
-					   dataType:"json",			
+					   dataType:"jsonp",			
 					  // jsonpCallback:"state_null_getSome",
 					   success:function(data){
 					   		if(data.message == "success"){
-					   			alert('提交成功');				
+					   			app.alert('保存成功',1);			
 					   			window.location='surveyList.html'
 					   		}else if(data.message == "fail"){
-					   			alert('提交失败');
+					   			app.alert('保存失败',1);
 					   		}
 					   }					   
 					})
@@ -593,6 +594,7 @@
 					'survey.surId':$('#dyid').val(),		//调研编码
 //					'survey.updatedAt':'',	//更新时间？
 //					'survey.surRemarks':'',   //备注
+					'survey.attachmentUrl':JSON.stringify(imgs),
 					'survey.id':xg.data.survey.id,		//自增id
 					'cash.cashId':$('#shouyinid').html(),	//收音机编号
 					'cash.cashBrand':$('#syjBrand').html(),	//收银机品牌
@@ -623,14 +625,14 @@
 					   url: "http://www.onetoend.cn/hdk/survey/modify",
 					   type: "post",
 					   data:obj,
-					   dataType:"json",			
+					   dataType:"jsonp",			
 					  // jsonpCallback:"state_null_getSome",
 					   success:function(data){
 					   		if(data.message == "success"){
-					   			alert('修改成功');			
+					   			app.alert('修改成功',1);			
 					   			window.location='surveyList.html'
 					   		}else if(data.message == "fail"){
-					   			alert('修改失败');
+					   			app.alert('修改失败',1);
 					   		}
 					   }					   
 					})
@@ -724,7 +726,13 @@
 						$('#qt8').addClass('on');
 						qt.note = "否";
 					}
-
+					
+					if( data.survey.attachmentUrl != '' &&  data.survey.attachmentUrl != null &&  data.survey.attachmentUrl != undefined){
+						data.survey.attachmentUrl = data.survey.attachmentUrl.split(",");
+						for(var i = 0; i<data.survey.attachmentUrl.length; i++){
+							app.addImg(data.survey.attachmentUrl[i]);
+						}
+					}
 				},
 				zhidu:function(id){
 					$("#" + id).removeClass('on');

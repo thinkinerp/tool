@@ -27,7 +27,7 @@
 		</div>
 		<!-- 1 -->
 		<div class="i-qk">
-			<div class="i-qk-title">海鼎：0</div>
+			<div class="i-qk-title">海鼎</div>
 			<div class="i-qk-content">
 				<p>运维：0</p>
 				<p>技术：0</p>
@@ -36,7 +36,7 @@
 		</div>
 		<div class="i-kh">
 			<div class="i-kh-title">客户</div>
-			<div class="i-kh-content">0</div>
+			<div class="i-kh-content">其他：0</div>
 		</div>
 		<!-- 2个下拉 -->
 		<div class="i-itemXl">		
@@ -135,7 +135,7 @@
 				issueClass:function(){	//问题分类汇总
 					$.ajax({	
 					   url: "http://www.onetoend.cn/hdk/problem/getCount",
-					   data:{"getCount":$('#itemName').html()},
+					   data:{"proName":$('#itemName').html()},
 					   type: "get",
 					   dataType:"jsonp",
 					   jsonpCallback:"problem_getCount",
@@ -172,28 +172,29 @@
 					this.shopName = $('#mendian').val();
 					var obj = {"proName":me.proName,"order":me.order,"shopMerStation":me.shopStation};
 					$.ajax({	
-					   url: "http://www.onetoend.cn/hdk/survey/getSome",
+					   url: "http://www.onetoend.cn/hdk/problem/getSome",
 					   data:obj,
 					   type: "get",
 					   dataType:"jsonp",
-					   jsonpCallback:"getSome",
+					   jsonpCallback:"problem_getSome",
 					   success:function(data){
+					       console.log(data)
 					   		var dom = [];
 					   		for(var i = 0; i<data.length; i++){
 					   			dom.push('<div class="i-itemDetail-area">');
 					   			dom.push('<div class="i-itemDetail-area-title">');
 					   			dom.push('<div>'+data[i].shopName+'</div>');
-					   			dom.push('<p onclick="me.tz(\''+data[i].surId+'\')">详情</p>');
+					   			dom.push('<p onclick="me.tz(\''+data[i].problemId+'\')">详情</p>');
 					   			dom.push('</div>');
 					   			dom.push('<div class="i-itemDetail-area-content">');
 					   			dom.push('<div class="content-row">');
 					   			dom.push('<p>铺位号</p>');
 					   			dom.push('<p>'+data[i].shopId+'</p>');
-					   			dom.push('<p><i class="on1"></i>无需安装</p>');
+					   			//dom.push('<p><i class="on1"></i>无需安装</p>');
 					   			dom.push('</div>');
 					   			dom.push('<div class="content-row">');
 					   			dom.push('<p>状态</p>');
-					   			dom.push('<p>'+data[i].shopMerStation+'</p>');
+					   			dom.push('<p>'+data[i].state+'</p>');
 					   			dom.push('</div>');
 					   			dom.push('<div class="content-row">');
 					   			dom.push('<p>更新时间</p>');
@@ -207,7 +208,7 @@
 					})
 				},
 				tz:function(id){
-					window.location = "issueDetails.html?surId=" + id;
+					window.location = "issueDetails.html?problemId=" + id;
 				}
 			}
 			

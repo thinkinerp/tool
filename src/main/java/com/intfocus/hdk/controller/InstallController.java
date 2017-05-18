@@ -75,7 +75,10 @@ public class InstallController implements ApplicationContextAware {
     @ResponseBody
  public String submit(HttpServletResponse res , HttpServletRequest req ,HttpSession session
     		              ,  Install install,Printer printer,Cash cash,Equipment equipment ,
-    		              @RequestParam(value = "files", required = false) String files) throws Exception {
+    		              @RequestParam(value = "files", required = false) String files 
+    		              ,String userName ,String userNum) throws Exception {
+    	
+    	log.info("userName:"+userName+"userNum:"+userNum);
     	Map<String,String> rs = null ;
     	try{
 	    	if(null != files && !"".equalsIgnoreCase(files)){
@@ -136,7 +139,9 @@ public class InstallController implements ApplicationContextAware {
 	   if(null != installs && installs.size() > 0 ){
 		   
 		   Install i = installs.get(0);
-		   i.setAttachment_url(i.getAttachmentUrl().replace(path.substring(0,path.indexOf("upload")), "/hdk/"));
+		   if( null != i.getAttachmentUrl() && !"".equalsIgnoreCase(i.getAttachmentUrl())){
+			   i.setAttachment_url(i.getAttachmentUrl().replace(path.substring(0,path.indexOf("upload")), "/hdk/"));
+		   }
 		   json.put("install", i);
 		   where.clear();
 		   //找到门店
@@ -193,7 +198,8 @@ public class InstallController implements ApplicationContextAware {
     @RequestMapping(value = "modify" , method=RequestMethod.POST)
     @ResponseBody
     public String modify(HttpServletResponse res , HttpServletRequest req ,HttpSession session
-    ,  Install install,Printer printer,Cash cash,Equipment equipmengt ,String files ){
+    ,  Install install,Printer printer,Cash cash,Equipment equipmengt ,String files 
+    ,String userName ,String userNum){
     	try{
     		
         	Map<String,String> rs = null ;
@@ -204,7 +210,6 @@ public class InstallController implements ApplicationContextAware {
     	    			return "{'message':'"+rs.get("message")+"'}";
     	    		}
     	    	}
-        	
     		install.modifyAtachement(rs.get("urls"));
 			installmapper.updateByPrimaryKeySelective(install);
 			printerMapper.updateByPrimaryKeySelective(printer);

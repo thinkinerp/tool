@@ -81,43 +81,53 @@ public class ProblemController implements ApplicationContextAware {
     @RequestMapping(value = "submit" , method=RequestMethod.POST)
     @ResponseBody     
     public String submit(HttpServletResponse res , HttpServletRequest req ,HttpSession session
-            , Problem problem ,String callback , String files){
+            , Problem problem ,String callback , String files
+            ,String userName ,String userNum){
+    	JSONObject rs = new JSONObject();
     	try{
 
     		if(null != files && !"".equalsIgnoreCase(files)){
 				Map<String,String> result = ComUtil.savePicture(files, req.getSession().getServletContext().getRealPath("upload"));
 				
 				if(!"ok".equalsIgnoreCase(result.get("message"))){
-					return (callback + "(" + result.get("message") + ")");
+					rs.put("message",  result.get("message"));
+					return rs.toJSONString();
 				}
 				
 				problem.setProblemEnclosure(result.get("urls"));
     		}
     		problemMapper.insertSelective(problem);
-	    	return callback+"({'message':'success'})";
+    		rs.put("message", "success");
+	    	return rs.toJSONString();
 	  }catch(Exception e){
 		  e.printStackTrace();
-		  return callback+"({'message':'fail'})";
+		  rs.put("message","success" );
+		  return "{'message':'fail'}";
 	  }
     }
     @RequestMapping(value = "modify" , method=RequestMethod.POST)
     @ResponseBody     
     public String modify(HttpServletResponse res , HttpServletRequest req ,HttpSession session
-    		, Problem problem ,String callback ,String files){
+    		, Problem problem ,String callback ,String files
+    		,String userName ,String userNum){
+       JSONObject rs = new JSONObject();
     	try{
     		if(null != files && !"".equalsIgnoreCase(files)){
 				Map<String,String> result = ComUtil.savePicture(files, req.getSession().getServletContext().getRealPath("upload"));
 				
 				if(!"ok".equalsIgnoreCase(result.get("message"))){
-					return (callback + "(" + result.get("message") + ")");
+					rs.put("message", result.get("message"));
+					return rs.toJSONString();
 				}
 				problem.modifyAtachement((result.get("urls")));
     		}
     		problemMapper.updateByPrimaryKeySelective(problem);
-    		return callback+"({'message':'success'}"+")";
+    		rs.put("message", "success");
+    		return rs.toJSONString();
     	}catch(Exception e){
     		e.printStackTrace();
-    		return callback+"({'message':'fail'}"+")";
+    		rs.put("message", "fail");
+    		return rs.toJSONString();
     	}
     }
     @InitBinder("problem")    
@@ -165,13 +175,11 @@ public class ProblemController implements ApplicationContextAware {
         @RequestMapping(value = "gotoModify" , method=RequestMethod.GET) 
     public void gotoModify(HttpServletResponse res , HttpServletRequest req ,HttpSession session
             , Problem problem ,String callback){
-    	String json= "" ;
     	Writer w = null;
     	try {	
-    	
-			
 			w = res.getWriter();
 			Map<String,String> where = new HashMap<String,String>();
+			String path = req.getSession().getServletContext().getRealPath("upload");
 			
 			where.put("proName", problem.getProName());
 			where.put("problemObject", problem.getProblemObject());
@@ -182,11 +190,13 @@ public class ProblemController implements ApplicationContextAware {
 			if(0  == problems.size()){
 				w.write(callback + "({'message':'无此问题'})");
 			}
-			json = JSONObject.toJSONString(problems.get(0));
+			
+			Problem p = problems.get(0);
+			if(null != p.getProblemEnclosure() && !"".equalsIgnoreCase(p.getProblemEnclosure())){
+				p.setProblemEnclosure(p.getProblemEnclosure().replace(path.substring(0,path.indexOf("upload")), "/hdk/"));
+			}
 
-
-
-			w.write( callback + "("+json+")");
+			w.write( callback + "("+JSONObject.toJSONString(p)+")");
 		} catch (IOException e) {
 			e.printStackTrace();
 			try {

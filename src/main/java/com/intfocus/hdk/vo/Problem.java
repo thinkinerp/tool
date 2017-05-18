@@ -58,6 +58,8 @@ public class Problem {
     private String problemPlan;
     
     private Integer Count;
+    
+    
 
     public  void modifyAtachement(String picUrls){
     	
@@ -158,7 +160,7 @@ public class Problem {
     }
 
     public String getProblemHappen() {
-        return problemHappen;
+        return ComUtil.dateFormat(problemHappen, "yyyy-MM-dd");
     }
 
     public void setProblemHappen(String problemHappen) {
@@ -166,7 +168,7 @@ public class Problem {
     }
 
     public String getProblemPut() {
-        return problemPut;
+        return ComUtil.dateFormat(problemPut, "yyyy-MM-dd");
     }
 
     public void setProblemPut(String problemPut) {
@@ -174,7 +176,7 @@ public class Problem {
     }
 
     public String getProblemEstimate() {
-        return problemEstimate;
+        return ComUtil.dateFormat(problemEstimate, "yyyy-MM-dd");
     }
 
     public void setProblemEstimate(String problemEstimate) {
@@ -182,7 +184,7 @@ public class Problem {
     }
 
     public String getProblemResloveTime() {
-        return problemResloveTime;
+        return ComUtil.dateFormat(problemResloveTime, "yyyy-MM-dd");
     }
 
     public void setProblemResloveTime(String problemResloveTime) {
@@ -222,7 +224,7 @@ public class Problem {
     }
 
     public String getCreatedAt() {
-        return createdAt;
+        return ComUtil.dateFormat(createdAt, "yyyy-MM-dd");
     }
 
     public void setCreatedAt(String createdAt) {

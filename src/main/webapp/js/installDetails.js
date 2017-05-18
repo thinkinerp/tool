@@ -293,8 +293,8 @@ var submit = function() {
         'equipment.softwareVersion': $('#softwareVersion').val(),
         'equipment.proId': allObjs.project.proId,
         'equipment.shopId': $('#shopCode').html(),
-        'userName': params.syp_user_name,
-        'userNum': params.syp_user_num
+        'userName': params.userName,
+        'userNum': params.userNums
         //          ,'remark1':''
         //          ,'remark2':''
         //          ,'createdAt':''
@@ -370,8 +370,8 @@ var submit = function() {
         'equipment.softwareVersion': $('#softwareVersion').val(),
         'equipment.proId': $('#proName').html(),
         'equipment.shopId': $('#shopCode').html(),
-        'userName': params.syp_user_name,
-        'userNum': params.syp_user_num
+        'userName': params.userName,
+        'userNum': params.userNum
         //          ,'remark1':''
         //          ,'remark2':''
         //          ,'createdAt':''
@@ -380,7 +380,7 @@ var submit = function() {
       success: function(data, status) //服务器成功响应处理函数
       {
         console.log(data);
-       // location.href = ctx + "/installList.jsp";
+       location.href = ctx + "/installList.jsp";
       },
       error: function(data, status, e) //服务器响应失败处理函数
       {

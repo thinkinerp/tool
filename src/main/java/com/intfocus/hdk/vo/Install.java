@@ -2,6 +2,8 @@ package com.intfocus.hdk.vo;
 
 import java.util.Date;
 
+import com.intfocus.hdk.util.ComUtil;
+
 public class Install {
     private Integer id;
 
@@ -121,7 +123,7 @@ public class Install {
     }
 
     public String getInstallTime() {
-        return installTime;
+        return ComUtil.dateFormat(installTime, "yyyy-MM-dd");
     }
 
     public void setInstallTime(String installTime) {

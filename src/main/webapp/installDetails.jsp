@@ -490,18 +490,18 @@
 			for(var i = 0 ; i <files.length ; i ++){
 				imgs.push(files[i])
 			}
-			imgsShow();
+			
 			$('.fullimg').remove();
 		}
 		
-		var i = new Date(isUndefined(allObjs.install["installTime"])).Format("yyyy-MM-dd");
+		//var i = new Date(isUndefined()).Format("yyyy-MM-dd");
 		
 		$("#installCode").attr("readonly","readonly"); 
 
 		
 		$('#proName').html(isUndefined(allObjs.project.proName));
 		$('#installRemote').val(isUndefined(allObjs.install.installRemote));
-		$('#installTime').val( i);
+		$('#installTime').val(allObjs.install["installTime"]);
 		// 门店信息		
 		$('#shopName').html(isUndefined(allObjs.shop.shopName));
 		$('#shopState').html(isUndefined(allObjs.shop.shopMerStation));
@@ -541,7 +541,7 @@
 		}
 		$('#eqStyle').html(isUndefined(allObjs.equipment.eqStyle));
 		$('#softwareVersion').val(isUndefined(allObjs.equipment.softwareVersion));
-		$('#installTime').val(isUndefined(allObjs.equipment.installTime));
+		/* $('#installTime').val(isUndefined(allObjs.equipment.installTime)); */
 		
 		//其他
 		if("硬件" == isUndefined(allObjs.install.installNetwork)){

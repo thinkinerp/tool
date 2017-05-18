@@ -90,7 +90,7 @@
     <where>
     	1=1
     	<if test="null != proName and '' != proName">
-    		  pro_id in (select pro_id from project where pro_name =#{proName} )
+    		  and pro_id in (select pro_id from project where pro_name =#{proName} )
  	   </if>
     </where>
      order by problem_object ,problem_type

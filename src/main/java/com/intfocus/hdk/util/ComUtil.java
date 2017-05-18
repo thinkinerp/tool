@@ -41,7 +41,7 @@ public class ComUtil {
 	       JSONArray  jsonArray  = JSONArray.parseArray(files);
 	       String [] d = null ; 
 	       List<String> urls = new ArrayList<String>();
-		   if(0 != jsonArray.size() ){ 
+		   if(null != jsonArray && 0 != jsonArray.size()){ 
 			   for(int i =0 ; i < jsonArray.size();i = i +1){
 				    d = jsonArray.getString(i).split("base64,"); 
 				    if(d != null && d.length == 2){
@@ -89,6 +89,23 @@ public class ComUtil {
 	public static String dateFormat(String  date){
 		
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm");
+		
+		try {
+			if(null != date){
+				return sdf.format( sdf.parse(date));
+			}else{
+				return null ;
+			}
+			
+		} catch (ParseException e) {
+			e.printStackTrace();
+			
+			return null ;
+		}
+	}
+	public static String dateFormat(String  date, String formatter){
+		
+		SimpleDateFormat sdf = new SimpleDateFormat(formatter);
 		
 		try {
 			if(null != date){

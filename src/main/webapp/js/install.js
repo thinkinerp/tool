@@ -10,7 +10,19 @@ $('#middle').bind('click',function(){
 	shopStateSeach();
 	 
 });
+var params = function() {
+	  var query = {},
+	    search = window.location.search.substring(1),
+	    parts = search.split('&'),
+	    pairs = [];
 
+	  for (var i = 0, len = parts.length; i < len; i++) {
+	    pairs = parts[i].split('=');
+	    query[pairs[0]] = (pairs.length > 1 ? decodeURIComponent(pairs[1]) : null);
+	  }
+
+	  return query;
+	}();
 var shopStateSeach = function(){
 	var shopSta = '';
 	 $.ajax({ 

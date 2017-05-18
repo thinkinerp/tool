@@ -54,7 +54,8 @@ public class SurveyController implements ApplicationContextAware {
     @RequestMapping(value = "modify" , method=RequestMethod.POST)
     @ResponseBody
     public String modify(HttpServletResponse res , HttpServletRequest req ,HttpSession session
-    		, Survey survey , Printer printer , Cash cash , Shops shops,String callback, String files){
+    		, Survey survey , Printer printer , Cash cash , Shops shops,String callback, String files
+    		,String userName ,String userNum){
     	
 		try {
 			   if("".equalsIgnoreCase(files)){	
@@ -155,7 +156,8 @@ public class SurveyController implements ApplicationContextAware {
 	@RequestMapping(value = "submit" , method=RequestMethod.POST)
     @ResponseBody
     public String submit(HttpServletResponse res , HttpServletRequest req ,HttpSession session
-    		, Survey survey , Printer printer , Cash cash , Shops shops ,String callback, String files){
+    		, Survey survey , Printer printer , Cash cash , Shops shops ,String callback, String files
+    		,String userName ,String userNum){
     	
 	   if("".equalsIgnoreCase(files)){	
 		Map<String,String> result = ComUtil.savePicture(files, req.getSession().getServletContext().getRealPath("upload"));

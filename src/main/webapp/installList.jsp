@@ -77,7 +77,7 @@
 		
 		<script type="text/javascript">
 		 var gotoDetail =  function(){
-				location.href = ctx + "/installDetails.jsp";
+				location.href = ctx + "/installDetails.jsp?userNum="+params['syp_user_num']+"&userName="+params['syp_user_name'];
 			} 
 			$(function(){
 			//	comboboxForProState();
