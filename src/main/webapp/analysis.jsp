@@ -31,6 +31,9 @@
 
 </head>
 <body>
+
+<button id="scheduler" >set scheduler</button>
+
 报表名称：<br/>
    <input id = "kpi" class = 'easyui-combobox'/><br/>
 账号：<br/>
@@ -61,5 +64,25 @@
 		</table>
 </body>
 <script type="text/javascript" src="${ctx}/js/analysis.js"></script>
+<script type="text/javascript">
 
+$("#scheduler").click(function(){
+	setS();
+});
+
+ function setS(){
+	$.ajax({
+	 	type : "post",  
+	 	url : ctx +  "/tool/add",
+	 	success : function(result) {  
+	 		console.log(result)
+	 	},  
+	 	error : function(errorMsg) {  
+	 		console.log(errorMsg)
+	 	}  
+	});
+}
+
+
+</script>
 </html>

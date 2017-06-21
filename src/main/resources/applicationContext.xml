@@ -95,4 +95,8 @@
          </property>
      </bean>
 		
+	 <bean id="scheduler"
+			class="org.springframework.scheduling.quartz.SchedulerFactoryBean"
+			lazy-init="false">
+		   <property name="configLocation" value="classpath:quartz.properties" />	</bean>	 
 </beans>

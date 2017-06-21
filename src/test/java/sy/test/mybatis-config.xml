@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+
+	<properties resource="sy/test/config.properties"></properties>
+	<typeAliases>
+		<package name="org.wang.tools.vo.*"></package>
+	</typeAliases>
+	<environments default="development">
+		<environment id="development">
+			    <transactionManager type="JDBC">
+    				</transactionManager>
+			<dataSource type="POOLED">
+				<property name="driver" value="${driver}"/>
+				<property name="url" value="${url}"/>
+				<property name="username" value="${username}"/>
+				<property name="password" value="${password}"/>
+			</dataSource>
+		</environment>
+	</environments>
+
+	<!-- 将mapper文件加入到配置文件中  这里指定实体类配置文件了，那spring文件就不用指定-->
+	 <mappers>
+	<package name="org.wang.tools.daoMapper"/>
+	</mappers>
+</configuration>

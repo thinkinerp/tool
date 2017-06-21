@@ -1,5 +1,10 @@
 package org.wang.tools.controller;
 
+import static org.quartz.DateBuilder.futureDate;
+import static org.quartz.JobBuilder.newJob;
+import static org.quartz.SimpleScheduleBuilder.simpleSchedule;
+import static org.quartz.TriggerBuilder.newTrigger;
+
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -24,6 +29,15 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
+import org.quartz.JobDetail;
+import org.quartz.Scheduler;
+import org.quartz.SchedulerException;
+import org.quartz.SchedulerFactory;
+import org.quartz.SimpleTrigger;
+import org.quartz.DateBuilder.IntervalUnit;
+import org.springframework.beans.BeansException;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -37,6 +51,7 @@ import org.wang.tools.dao.toolMapper;
 import org.wang.tools.util.ColumnLoader;
 import org.wang.tools.util.ComUtil;
 import org.wang.tools.util.ExcelReader;
+import org.wang.tools.util.HelloWorldQuartz;
 import org.wang.tools.util.ProcedureUtil;
 import org.wang.tools.vo.ColProperty;
 import org.wang.tools.vo.Columns;
@@ -50,10 +65,11 @@ import com.alibaba.fastjson.JSONObject;
 
 @Controller
 @RequestMapping("/tool")
-public class ToolsController {
+public class ToolsController implements ApplicationContextAware {
     private final static Logger log =  Logger.getLogger(ToolsController.class);
 	@Resource private toolMapper tm;
 	@Resource private Procdure p;
+    private static ApplicationContext applicationContext;
     @RequestMapping(value = "getColums" , method=RequestMethod.POST)
     @ResponseBody
     public void getColums(HttpServletResponse res , HttpServletRequest req 
@@ -564,4 +580,50 @@ public class ToolsController {
     public void updateDishWeighting(String dish_name){
     	          tm.updateDishWeighting(dish_name);
     }
+    
+	@RequestMapping(value="add" , method=RequestMethod.POST)
+	@ResponseBody
+	public void add() throws SchedulerException{
+		Scheduler sched = (Scheduler) applicationContext.getBean("scheduler");
+		
+	    sched.clear();
+
+	      String schedId = sched.getSchedulerInstanceId();
+
+	      int count = 1;
+
+	      JobDetail job = newJob(HelloWorldQuartz.class).withIdentity("job_" + count, schedId) // put triggers in group
+	                                                                                            // named after the cluster
+	                                                                                            // node instance just to
+	                                                                                            // distinguish (in logging)
+	                                                                                            // what was scheduled from
+	                                                                                            // where
+	          .requestRecovery() // ask scheduler to re-execute this job if it was in progress when the scheduler went
+	                             // down...
+	          .build();
+
+	      SimpleTrigger trigger = newTrigger().withIdentity("triger_" + count, schedId)
+	          .startAt(futureDate(1, IntervalUnit.SECOND))
+	          .withSchedule(simpleSchedule().withIntervalInSeconds(2).repeatForever()).build();
+
+	      System.out.println(job.getKey() + " will run at: " + trigger.getNextFireTime() + " and repeat: "
+	                + trigger.getRepeatCount() + " times, every " + trigger.getRepeatInterval() / 1000 + " seconds");
+	      sched.scheduleJob(job, trigger);
+	      
+	      sched.start();
+	      
+	      try {
+	          Thread.sleep(100L * 1000L);
+	        } catch (Exception e) {
+	          //
+	        }
+
+	      System.out.println("------- Shutting Down --------------------");
+	        sched.shutdown(true);	     
+	}
+	@Override
+	public void setApplicationContext(ApplicationContext ctx)
+			throws BeansException {
+		applicationContext = ctx;
+	}   
 }
