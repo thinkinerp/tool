@@ -192,7 +192,6 @@
             <artifactId>commons-lang</artifactId>
             <version>2.6</version>
         </dependency>
-        
 		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>javax.servlet-api</artifactId>
@@ -315,6 +314,7 @@
 		<artifactId>quartz-jobs</artifactId>
 		<version>2.2.3</version>
 	</dependency>
+
   
 <dependency>
     <groupId>net.sf.json-lib</groupId>
@@ -322,6 +322,7 @@
     <version>2.3</version>
     <classifier>jdk15</classifier><!--指定jdk版本--> 
 </dependency>
+  
 	</dependencies>  
 
  <build>
@@ -350,5 +351,4 @@
             </plugin>  
     </plugins>
  </build>
-
 </project>
