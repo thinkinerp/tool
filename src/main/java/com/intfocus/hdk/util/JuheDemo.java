@@ -35,7 +35,7 @@ public class JuheDemo {
     
     public static Map<String , String> check(String uuid  , String keyid){
     	String result =null;
-    	String url ="http://wd.hddc.test.hd123.cn:8180/HDDataCenterSvr.dll/ShopVerify";//请求接口地址
+    	String url =StaticVariableUtil.SALE_DATA_UPLOAD_URL;//请求接口地址
         Map<String , String> params = new HashMap<String , String>();
         params.put("uuid",uuid);
         params.put("keyid",keyid);
@@ -62,7 +62,7 @@ public class JuheDemo {
    
     public static Map<String , String> uplaodSalesData( SalesData sd){
     	String result =null;
-    	String url ="http://wd.hddc.test.hd123.cn:8180/HDDataCenterSvr.dll/UploadData?";
+    	String url = StaticVariableUtil.CHECK_STORE_URL ;
         Map<String , String> params = new HashMap<String , String>();
         params.put("uuid", sd.getStoreUuid());
         params.put("dct", "0004");
