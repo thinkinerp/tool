@@ -35,7 +35,7 @@ public class JuheDemo {
     
     public static Map<String , String> check(String uuid  , String keyid){
     	String result =null;
-    	String url =StaticVariableUtil.SALE_DATA_UPLOAD_URL;//请求接口地址
+    	String url =StaticVariableUtil.CHECK_STORE_URL;//请求接口地址
         Map<String , String> params = new HashMap<String , String>();
         params.put("uuid",uuid);
         params.put("keyid",keyid);
